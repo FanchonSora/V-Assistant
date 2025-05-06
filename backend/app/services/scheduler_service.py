@@ -9,7 +9,8 @@ scheduler = AsyncIOScheduler(timezone="UTC")
 
 
 def init_scheduler() -> AsyncIOScheduler:
-    scheduler.start()
+    if not scheduler.running:
+        scheduler.start()
     return scheduler
 
 

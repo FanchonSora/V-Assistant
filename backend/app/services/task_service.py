@@ -1,6 +1,7 @@
 # app/services/task_service.py
 from datetime import datetime
 
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from fastapi import HTTPException, Depends
@@ -38,7 +39,7 @@ class TaskService:
         stmt = select(Task).where(Task.owner_id == user.id)
         if date:
             target = datetime.fromisoformat(date)
-            stmt = stmt.where(Task.due.cast(date) == target.date())
+            stmt = stmt.where(func.date(Task.due) == target.date())
         rows = await session.scalars(stmt)
         return [TaskRead.model_validate(t) for t in rows]
 

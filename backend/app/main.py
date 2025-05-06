@@ -7,12 +7,6 @@ from app.services.scheduler_service import init_scheduler
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# Database
-init_db()
-
-# Scheduler
-scheduler = init_scheduler()
-
 # Routers
 app.include_router(auth.router)
 app.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
@@ -20,5 +14,7 @@ app.include_router(dsl.router, prefix="/dsl", tags=["DSL"])
 
 @app.on_event("startup")
 async def on_startup():
+    # khởi tạo DB
     await init_db()
-    init_scheduler()  
+    # khởi chạy scheduler (sync)
+    init_scheduler()
