@@ -1,0 +1,17 @@
+# ---> Python
+.venv/
+__pycache__/
+*.py[cod]
+.env
+# ---> Node / React
+frontend/node_modules/
+npm-debug.log*
+yarn.lock
+# ---> VS Code
+.vscode/*
+!.vscode/settings.json
+# ---> Mac / Linux
+.DS_Store
+# ---> Docker
+*.log
+docker-data/
