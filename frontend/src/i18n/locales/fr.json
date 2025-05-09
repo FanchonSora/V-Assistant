@@ -1,0 +1,32 @@
+{
+  "welcome": {
+    "title": "Bienvenue sur V-Assistant",
+    "subtitle": "Votre plateforme d'assistant virtuel intelligent",
+    "getStarted": "Commencez avec V-Assistant aujourd'hui et découvrez le futur de l'assistance virtuelle."
+  },
+  "features": {
+    "smartAssistant": {
+      "title": "Assistant Intelligent",
+      "description": "Assistant virtuel alimenté par l'IA pour vous aider dans vos tâches quotidiennes"
+    },
+    "easyIntegration": {
+      "title": "Intégration Facile",
+      "description": "Intégrez facilement vos outils et flux de travail existants"
+    },
+    "support": {
+      "title": "Support 24/7",
+      "description": "Assistance disponible à tout moment"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance": {
+      "title": "Apparence",
+      "darkMode": "Mode Sombre"
+    },
+    "language": {
+      "title": "Langue",
+      "select": "Langue"
+    }
+  }
+}
