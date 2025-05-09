@@ -1,0 +1,32 @@
+{
+  "welcome": {
+    "title": "Welcome to V-Assistant",
+    "subtitle": "Your intelligent virtual assistant platform",
+    "getStarted": "Get started with V-Assistant today and experience the future of virtual assistance."
+  },
+  "features": {
+    "smartAssistant": {
+      "title": "Smart Assistant",
+      "description": "AI-powered virtual assistant to help you with daily tasks"
+    },
+    "easyIntegration": {
+      "title": "Easy Integration",
+      "description": "Seamlessly integrate with your existing tools and workflows"
+    },
+    "support": {
+      "title": "24/7 Support",
+      "description": "Round-the-clock assistance whenever you need it"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "darkMode": "Dark Mode"
+    },
+    "language": {
+      "title": "Language",
+      "select": "Language"
+    }
+  }
+}
