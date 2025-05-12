@@ -16,6 +16,10 @@
     "support": {
       "title": "Support 24/7",
       "description": "Assistance disponible à tout moment"
+    },
+    "customization": {
+      "title": "Personnalisation",
+      "description": "Personnalisez votre assistant pour répondre à vos besoins uniques"
     }
   },
   "settings": {

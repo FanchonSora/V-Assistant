@@ -21,6 +21,97 @@ import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
+import Calendar from "react-calendar"; // Import react-calendar
+import "react-calendar/dist/Calendar.css"; // Import default styles
+
+// Add custom styles for the calendar
+const calendarStyles = {
+  width: "100%",
+  border: "none",
+  color: "black",
+  "& .react-calendar": {
+    width: "100%",
+    fontSize: "0.75rem",
+    borderRadius: "8px",
+    overflow: "hidden",
+  },
+  "& .react-calendar__navigation": {
+    backgroundColor: "transparent",
+    marginBottom: "4px",
+  },
+  "& .react-calendar__navigation button": {
+    color: "black",
+    minWidth: "32px",
+    background: "none",
+    fontSize: "0.875rem",
+    marginTop: "4px",
+    padding: "4px",
+    "&:enabled:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "rgba(0, 0, 0, 0.08)",
+    },
+  },
+  "& .react-calendar__navigation__label": {
+    fontWeight: "bold",
+    color: "black",
+    fontSize: "0.875rem",
+  },
+  "& .react-calendar__month-view__weekdays": {
+    backgroundColor: "transparent",
+    textTransform: "none",
+    fontWeight: "bold",
+    fontSize: "0.75rem",
+    color: "black",
+  },
+  "& .react-calendar__month-view__weekdays__weekday": {
+    padding: "4px",
+  },
+  "& .react-calendar__month-view__weekdays__weekday abbr": {
+    textDecoration: "none",
+  },
+  "& .react-calendar__tile": {
+    padding: "4px",
+    fontSize: "0.75rem",
+    color: "black",
+    "&:enabled:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "rgba(0, 0, 0, 0.08)",
+    },
+  },
+  "& .react-calendar__tile--now": {
+    backgroundColor: "transparent",
+    color: "black",
+    "&:enabled:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "rgba(0, 0, 0, 0.08)",
+    },
+  },
+  "& .react-calendar__tile--active": {
+    backgroundColor: "primary.main",
+    color: "white",
+    "&:enabled:hover": {
+      backgroundColor: "primary.dark",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "primary.dark",
+    },
+  },
+  "& .react-calendar__tile--now .highlight": {
+    backgroundColor: "primary.main",
+    color: "white",
+    borderRadius: "50%",
+    padding: "2px",
+  },
+  "& .react-calendar__month-view": {
+    padding: "4px",
+  },
+};
 
 interface LayoutProps {
   children: ReactNode;
@@ -39,6 +130,7 @@ const Layout = ({ children }: LayoutProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const [date, setDate] = useState(new Date()); // State for calendar
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -69,6 +161,21 @@ const Layout = ({ children }: LayoutProps) => {
           </ListItem>
         ))}
       </List>
+      {/* Mini Calendar */}
+      <Box sx={{ p: 1 }}>
+        <Box sx={calendarStyles}>
+          <Calendar
+            onChange={(value) => setDate(value as Date)}
+            value={date}
+            tileClassName={({ date, view }) =>
+              view === "month" &&
+              date.toDateString() === new Date().toDateString()
+                ? "highlight"
+                : null
+            }
+          />
+        </Box>
+      </Box>
     </Box>
   );
 

@@ -16,6 +16,10 @@
     "support": {
       "title": "24/7 Support",
       "description": "Round-the-clock assistance whenever you need it"
+    },
+    "customization": {
+      "title": "Personalization",
+      "description": "Personalize your assistant to match your unique needs"
     }
   },
   "settings": {
