@@ -12,7 +12,8 @@ import {
   Avatar,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { post } from "../utils/api";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -77,6 +78,7 @@ const Home = () => {
   const [isListening, setIsListening] = useState(false);
   const [isChatMode, setIsChatMode] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const token = localStorage.getItem("token"); // đã login trước đó
 
   /**
    * Handle sending messages and mock bot response
@@ -84,31 +86,27 @@ const Home = () => {
    * - Generates mock bot response
    * - Switches to chat mode if not already active
    */
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      // Add user message
-      const userMessage: ChatMessage = {
-        text: message,
-        isUser: true,
-        timestamp: new Date(),
-      };
+  const handleSendMessage = useCallback(async () => {
+    if (!message.trim()) return;
 
-      // Add mock bot response
-      const botMessage: ChatMessage = {
-        text: `This is a mock response to: "${message}"`,
-        isUser: false,
-        timestamp: new Date(),
-      };
+    /* ---- push user message ngay lập tức ---- */
+    const userMsg: ChatMessage = { text: message, isUser: true, timestamp: new Date() };
+    setChatMessages((prev) => [...prev, userMsg]);
+    setMessage("");
+    if (!isChatMode) setIsChatMode(true);
 
-      setChatMessages((prev) => [...prev, userMessage, botMessage]);
-      setMessage("");
+    /* ---- gọi backend /chat ---- */
+    try {
+      type ChatResp = { reply: string };
+      const data = await post<ChatResp>("/chat", { text: userMsg.text }, token || undefined);
 
-      // Switch to chat mode if not already in it
-      if (!isChatMode) {
-        setIsChatMode(true);
-      }
+      const botMsg: ChatMessage = { text: data.reply, isUser: false, timestamp: new Date() };
+      setChatMessages((prev) => [...prev, botMsg]);
+    } catch (err) {
+      const botMsg: ChatMessage = { text: "⚠️ Lỗi máy chủ!", isUser: false, timestamp: new Date() };
+      setChatMessages((prev) => [...prev, botMsg]);
     }
-  };
+  }, [message, token, isChatMode]);
 
   /**
    * Handle Enter key press for sending messages

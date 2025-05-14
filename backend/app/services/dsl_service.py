@@ -1,24 +1,20 @@
-# app/services/dsl_service.py
-"""
-Real life: generate Lexer/Parser with ANTLR and walk the AST.
-Here we stub it so /dsl/parse works and tests can evolve.
-"""
-import re
-from datetime import datetime, timedelta
+# backend/app/services/dsl_service.py
+
+from app.gen.dsl_parser import parse as antlr_parse
 
 class DSLService:
     @staticmethod
     async def parse(text: str) -> dict:
         """
-        Very simple grammar:
-        “remind me to <title> in <N> minutes”
-        returns {"title":…, "due": …}
+        Wrapper xung quanh antlr_parse để luôn trả về
+        {'error': 'cannot_parse'} chứ không ném.
         """
-        m = re.fullmatch(r"remind me to (.+) in (\d+) minutes", text.strip(), re.I)
-        if not m:
+        try:
+            result = antlr_parse(text)
+        except Exception:
+            # bất cứ lỗi gì trong parser hay visitor
             return {"error": "cannot_parse"}
-        title, mins = m.groups()
-        return {
-            "title": title,
-            "due": (datetime.utcnow() + timedelta(minutes=int(mins))).isoformat()
-        }
+        # nếu parser trả None hoặc dict không có key 'title'
+        if not isinstance(result, dict) or "title" not in result:
+            return {"error": "cannot_parse"}
+        return result
