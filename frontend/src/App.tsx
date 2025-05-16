@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import CalendarDayPageWrapper from "./pages/CalendarDayPageWrapper";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/calendar/:date" element={<CalendarDayPageWrapper  />} />
             </Routes>
           </Layout>
         </Router>

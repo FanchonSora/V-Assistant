@@ -24,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import default styles
 
+type Value = Date | null | [Date | null, Date | null];
+
 // Add custom styles for the calendar
 const calendarStyles = {
   width: "100%",
@@ -130,12 +132,22 @@ const Layout = ({ children }: LayoutProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
-  const [date, setDate] = useState(new Date()); // State for calendar
+  const [date, setDate] = useState<Date | null>(new Date()); // State for calendar
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleDateClick = (value: Value) => {
+    if (value instanceof Date) {
+      setDate(value);
+      const yyyy = value.getFullYear();
+      const mm = String(value.getMonth() + 1).padStart(2, "0");
+      const dd = String(value.getDate()).padStart(2, "0");
+      navigate(`/calendar/${yyyy}-${mm}-${dd}`);
+    }
+  };
+  
   const drawer = (
     <Box>
       <Toolbar>
@@ -165,7 +177,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Box sx={{ p: 1 }}>
         <Box sx={calendarStyles}>
           <Calendar
-            onChange={(value) => setDate(value as Date)}
+            onChange={handleDateClick}
             value={date}
             tileClassName={({ date, view }) =>
               view === "month" &&
