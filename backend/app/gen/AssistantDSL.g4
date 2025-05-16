@@ -1,16 +1,10 @@
 grammar AssistantDSL;
 
-program: expression;
+program: sentence EOF;
 
-expression: expression operation2nd expression | term | opeexpression;
+sentence: 'remind' 'me' 'to' TITLE 'in' INT;
 
-opeexpression: opeexpression operation1st opeexpression | term;
+TITLE: [a-zA-Z ]+;
+INT: [0-9]+;
 
-operation1st: '*' | '/';
-operation2nd: '+' | '-';
-
-term: Integer;
-
-Integer: [0-9]+;
-
-WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
+WS : [ \t\r\n]+ -> skip;
