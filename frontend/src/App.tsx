@@ -5,7 +5,10 @@ import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
-import CalendarDayPageWrapper from "./pages/CalendarDayPageWrapper";
+
+import CalendarWeekPageWrapper from "./pages/CalendarWeekPageWrapper";
+import CalendarDayPage from "./pages/CalendarDayPage";
+import CalendarMonthPage from "./pages/CalendarMonthPage";
 
 function App() {
   return (
@@ -17,7 +20,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/calendar/:date" element={<CalendarDayPageWrapper  />} />
+              <Route path="/calendar/day/:date" element={<CalendarDayPage  />} />
+              <Route path="/calendar/week/:date" element={<CalendarWeekPageWrapper  />} />
+              <Route path="/calendar/month/:date" element={<CalendarMonthPage  />} />
+              <Route path="/calendar/:date" element={<CalendarWeekPageWrapper />} />
             </Routes>
           </Layout>
         </Router>

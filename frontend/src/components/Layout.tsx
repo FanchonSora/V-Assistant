@@ -20,7 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import default styles
 
@@ -147,7 +147,7 @@ const Layout = ({ children }: LayoutProps) => {
       navigate(`/calendar/${yyyy}-${mm}-${dd}`);
     }
   };
-  
+
   const drawer = (
     <Box>
       <Toolbar>
@@ -179,6 +179,7 @@ const Layout = ({ children }: LayoutProps) => {
           <Calendar
             onChange={handleDateClick}
             value={date}
+            calendarType="gregory"
             tileClassName={({ date, view }) =>
               view === "month" &&
               date.toDateString() === new Date().toDateString()

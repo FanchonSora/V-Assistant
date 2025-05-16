@@ -1,7 +1,8 @@
 import { Box, Typography, Fab, Paper } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import CalendarViewSelector from "../components/CalendarViewSelector";
 
 const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 8pm
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -18,7 +19,7 @@ const dummyEvents = [
 
 export default function CalendarWeekView() {
   const { date } = useParams();
-  console.log("Calendar ID:", date);
+  const navigate = useNavigate();
 
   const inputDate = useMemo(() => {
   const parsed = date ? new Date(date) : new Date();
@@ -46,6 +47,8 @@ export default function CalendarWeekView() {
       <Typography variant="h4" gutterBottom>
         Weekly Calendar
       </Typography>
+
+      <CalendarViewSelector />
 
       {/* Calendar grid */}
       <Box display="grid" gridTemplateColumns="80px repeat(7, 1fr)" border="1px solid #ccc">
