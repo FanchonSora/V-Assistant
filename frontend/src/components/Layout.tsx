@@ -20,6 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import default styles
@@ -122,6 +123,7 @@ const drawerWidth = 240;
 const menuItems = [
   { text: "Home", icon: <HomeIcon />, path: "/" },
   { text: "Profile", icon: <PersonIcon />, path: "/profile" },
+  { text: "Calendar", icon: <CalendarMonthIcon />, path: "/calendar" },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 
@@ -250,10 +252,19 @@ const Layout = ({ children }: LayoutProps) => {
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           mt: "64px", // Height of AppBar
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "calc(100vh - 64px)", // Subtract AppBar height
         }}
       >
-        {children}
-        <Box component="footer" sx={{ mt: "auto", py: 3 }}>
+        <Box sx={{ flex: 1 }}>{children}</Box>
+        <Box
+          component="footer"
+          sx={{
+            py: 3,
+            mt: "auto",
+          }}
+        >
           <Container maxWidth="lg">
             <Typography variant="body2" color="text.secondary" align="center">
               © {new Date().getFullYear()} V-Assistant. All rights reserved.

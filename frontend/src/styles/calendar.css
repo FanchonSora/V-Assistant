@@ -1,0 +1,118 @@
+.calendar {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  color: black;
+}
+
+.calendar .react-calendar__navigation {
+  margin-bottom: 1em;
+}
+
+.calendar .react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  font-size: 16px;
+  margin-top: 8px;
+  color: black;
+}
+
+.calendar .react-calendar__navigation button:enabled:hover,
+.calendar .react-calendar__navigation button:enabled:focus {
+  background-color: #f8f8f8;
+}
+
+.calendar .react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  color: black;
+}
+
+.calendar .react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+.calendar .react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  color: black;
+}
+
+.calendar .react-calendar__month-view__days__day {
+  padding: 0.75em 0.5em;
+  font-size: 0.875em;
+  position: relative;
+  color: black;
+}
+
+.calendar .react-calendar__month-view__days__day--weekend {
+  color: black;
+}
+
+.calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575;
+}
+
+.calendar .react-calendar__tile {
+  max-width: 100%;
+  text-align: center;
+  padding: 0.75em 0.5em;
+  background: none;
+  color: black;
+}
+
+.calendar .react-calendar__tile:enabled:hover,
+.calendar .react-calendar__tile:enabled:focus {
+  background-color: #f8f8f8;
+}
+
+/* Current date (today) styling */
+.calendar .react-calendar__tile--now {
+  background: #ff9800;
+  color: black;
+}
+
+.calendar .react-calendar__tile--now:enabled:hover,
+.calendar .react-calendar__tile--now:enabled:focus {
+  background: #1087ff;
+  color: white;
+}
+
+/* Selected date styling */
+.calendar .react-calendar__tile--active {
+  background: #006edc;
+  color: white;
+}
+
+.calendar .react-calendar__tile--active:enabled:hover,
+.calendar .react-calendar__tile--active:enabled:focus {
+  background: #006edc;
+  color: white;
+}
+
+.calendar .react-calendar__tile--hasActive {
+  background: #ff9800;
+  color: black;
+}
+
+.calendar .react-calendar__tile--hasActive:enabled:hover,
+.calendar .react-calendar__tile--hasActive:enabled:focus {
+  background: #ffb74d;
+  color: black;
+}
+
+.calendar .react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: #f8f8f8;
+}
+
+/* Navigation label styling */
+.calendar .react-calendar__navigation__label {
+  color: black;
+  font-weight: bold;
+}
+
+/* Navigation arrow styling */
+.calendar .react-calendar__navigation__arrow {
+  color: black;
+}

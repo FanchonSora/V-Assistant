@@ -3,8 +3,10 @@ import { CssBaseline } from "@mui/material";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
+import CalendarPage from "./pages/Calendar";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import "./styles/calendar.css";
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/calendar" element={<CalendarPage />} />
             </Routes>
           </Layout>
         </Router>
