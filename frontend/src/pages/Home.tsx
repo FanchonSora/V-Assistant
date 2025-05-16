@@ -12,7 +12,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { post } from "../utils/api";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
@@ -79,6 +79,15 @@ const Home = () => {
   const [isChatMode, setIsChatMode] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const token = localStorage.getItem("token"); // đã login trước đó
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Add useEffect to handle auto-scrolling
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   /**
    * Handle sending messages and mock bot response
@@ -90,7 +99,11 @@ const Home = () => {
     if (!message.trim()) return;
 
     /* ---- push user message ngay lập tức ---- */
-    const userMsg: ChatMessage = { text: message, isUser: true, timestamp: new Date() };
+    const userMsg: ChatMessage = {
+      text: message,
+      isUser: true,
+      timestamp: new Date(),
+    };
     setChatMessages((prev) => [...prev, userMsg]);
     setMessage("");
     if (!isChatMode) setIsChatMode(true);
@@ -98,12 +111,26 @@ const Home = () => {
     /* ---- gọi backend /chat ---- */
     try {
       type ChatResp = { reply: string };
-      const data = await post<ChatResp>("/chat", { text: userMsg.text }, token || undefined);
+      const data = await post<ChatResp>(
+        "/chat",
+        { text: userMsg.text },
+        token || undefined
+      );
 
-      const botMsg: ChatMessage = { text: data.reply, isUser: false, timestamp: new Date() };
+      const botMsg: ChatMessage = {
+        text: data.reply,
+        isUser: false,
+        timestamp: new Date(),
+      };
       setChatMessages((prev) => [...prev, botMsg]);
     } catch (err) {
-      const botMsg: ChatMessage = { text: "⚠️ Lỗi máy chủ!", isUser: false, timestamp: new Date() };
+      const botMsg: ChatMessage = {
+        text: `⚠️ Lỗi máy chủ: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`,
+        isUser: false,
+        timestamp: new Date(),
+      };
       setChatMessages((prev) => [...prev, botMsg]);
     }
   }, [message, token, isChatMode]);
@@ -183,6 +210,7 @@ const Home = () => {
   const renderChatMessages = () => {
     return (
       <Box
+        ref={chatContainerRef}
         sx={{
           height: "60vh",
           overflowY: "auto",
