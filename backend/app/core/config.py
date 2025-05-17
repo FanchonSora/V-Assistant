@@ -13,6 +13,6 @@ class Settings(BaseSettings):
     SMTP_FROM: str
 
     class Config:
-        env_file = ".env"
+        env_file = "app/.env"
 
 settings = Settings()

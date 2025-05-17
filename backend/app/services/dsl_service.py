@@ -11,8 +11,9 @@ class DSLService:
         """
         try:
             result = antlr_parse(text)
-        except Exception:
+        except Exception as e:
             # bất cứ lỗi gì trong parser hay visitor
+            print("Parser error:", e)
             return {"error": "cannot_parse"}
         # nếu parser trả None hoặc dict không có key 'title'
         if not isinstance(result, dict) or "title" not in result:

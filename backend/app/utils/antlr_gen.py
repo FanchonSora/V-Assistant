@@ -6,9 +6,9 @@ import time
 LOG = logging.getLogger("antlr_gen")
 
 # Cấu hình
-ANTLR_JAR    = os.getenv(
+ANTLR_JAR = os.getenv(
     "ANTLR_JAR_PATH",
-    r"C:\Program Files\antlr\antlr4-4.13.2-complete.jar"
+    r"D:\antlr\antlr-4.13.2-complete.jar"
 )
 # tuyệt đối cho dễ
 BASE_DIR     = os.path.abspath(os.path.dirname(__file__))
@@ -23,7 +23,6 @@ def generate():
       - GRAMMAR_FILE có thời gian sửa > LEXER_FILE (grammar mới)
     """
     LOG.info("Checking ANTLR parser…")
-
     # nếu đã tồn tại và parser cũ không "lỗi", skip
     if os.path.exists(LEXER_FILE):
         g_mtime = os.path.getmtime(GRAMMAR_FILE)
@@ -48,7 +47,8 @@ def generate():
 
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
-        LOG.error("ANTLR generation failed (stderr):\n%s", result.stderr)
+        LOG.error("ANTLR generation failed (stdout):\n%s", result.stdout)
+        print("ANTLR generation failed (stderr):\n", result.stderr)
         raise RuntimeError("ANTLR generation error")
 
     # touch a file so WatchFiles sees no change (avoid infinite reload)

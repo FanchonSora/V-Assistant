@@ -4,7 +4,6 @@ import logging
 import os
 import sys
 from app.utils.antlr_gen import generate as _generate_antlr_parser
-
 try:
     _generate_antlr_parser()
 except Exception as e:

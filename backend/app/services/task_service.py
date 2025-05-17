@@ -16,13 +16,16 @@ from app.services.scheduler_service import schedule_task_reminder
 class TaskService:
     @staticmethod
     async def create(data: TaskCreate,
+                     user,
                      session: AsyncSession = Depends(get_session),
-                     user=Depends(get_current_user)) -> TaskRead:
-        task = Task(owner_id=user.id,
-                    title=data.title,
-                    due=data.due,
-                    rrule=data.rrule,
-                    status=Status.pending)
+                     ) -> TaskRead:
+        task = Task(
+            owner_id=user.id,
+            title=data.title,
+            due=data.due,
+            rrule=data.rrule,
+            status=Status.pending
+        )
         session.add(task)
         await session.commit()
         await session.refresh(task)
@@ -30,7 +33,7 @@ class TaskService:
         if task.due:  # schedule email
             await schedule_task_reminder(task)
 
-        return TaskRead.model_validate(task)
+        return TaskRead.model_validate({k: v for k, v in vars(task).items() if not k.startswith('_')})
 
     @staticmethod
     async def list(date: str | None,
@@ -56,7 +59,7 @@ class TaskService:
         await session.commit()
         await session.refresh(task)
 
-        return TaskRead.model_validate(task)
+        return TaskRead.model_validate({k: v for k, v in vars(task).items() if not k.startswith('_')})
 
     @staticmethod
     async def delete(task_id: str,
