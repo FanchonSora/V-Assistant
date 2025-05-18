@@ -10,6 +10,11 @@ import CalendarWeekPageWrapper from "./pages/CalendarWeekPageWrapper";
 import CalendarDayPage from "./pages/CalendarDayPage";
 import CalendarMonthPage from "./pages/CalendarMonthPage";
 
+import Signup from "./pages/SignUpPage";
+import Login from "./pages/LoginPage";
+
+import ProtectedRoute from "./pages/ProtectedRoute";
+
 function App() {
   return (
     <ThemeProvider>
@@ -19,7 +24,13 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              } />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/calendar/day/:date" element={<CalendarDayPage  />} />
               <Route path="/calendar/week/:date" element={<CalendarWeekPageWrapper  />} />
               <Route path="/calendar/month/:date" element={<CalendarMonthPage  />} />

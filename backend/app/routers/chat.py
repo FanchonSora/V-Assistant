@@ -11,9 +11,8 @@ router = APIRouter()
 @router.post("", response_model=ChatResponse)
 async def chat(
     req: ChatRequest,
+    user=Depends(get_current_user),
     session: AsyncSession = Depends(get_session)
-    ):
-    class DummyUser:
-        id = "1"
+):
     svc = ChatService()
-    return await svc.handle(req, user=DummyUser(), session=session)
+    return await svc.handle(req, user=user, session=session)
