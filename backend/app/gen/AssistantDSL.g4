@@ -1,10 +1,30 @@
 grammar AssistantDSL;
 
-program: sentence EOF;
+options { caseInsensitive = true; }
 
-sentence: 'remind' 'me' 'to' TITLE 'in' INT;
+program   : command EOF ;
+command   : greetingCommand | actionCommand ;
 
-TITLE: [a-zA-Z ]+;
-INT: [0-9]+;
+/* greeting ---------------------------------------------------------*/
+greetingCommand : introduce | greeting ;
+introduce       : 'What' 'is' 'your' 'name' ;
+greeting        : ('Hi' | 'Hello' | 'Hey') ('my' 'name' 'is' Name)? ;
 
-WS : [ \t\r\n]+ -> skip;
+/* actions  ---------------------------------------------------------*/
+actionCommand : createAction | viewAction | deleteAction | modifyAction ;
+
+createAction : 'Remind' 'me' 'to' taskTitle dueSpec? ;
+viewAction   : ('Show' | 'List' | 'View') 'tasks' ;
+deleteAction : ('Delete' | 'Remove') 'task' taskTitle ;
+modifyAction : ('Update' | 'Modify') 'task' taskTitle 'set' fieldAssign (',' fieldAssign)* ;
+
+/* helpers  ---------------------------------------------------------*/
+dueSpec     : 'in' INT timeUnit ;
+timeUnit    : 'minute' 's'? | 'hour' 's'? | 'day' 's'? ;
+fieldAssign : IDENTIFIER '='? IDENTIFIER ;
+taskTitle   : IDENTIFIER (IDENTIFIER)* ;
+Name        : IDENTIFIER ;
+
+INT        : [0-9]+ ;
+IDENTIFIER : [a-zA-Z0-9]+ ;
+WS         : [ \t\r\n]+ -> skip ;
