@@ -26,6 +26,99 @@ interface Appointment {
   endTime: string;
 }
 
+const calendarStyles = {
+  width: "100%",
+  border: "none",
+  "& .react-calendar": {
+    width: "100%",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    overflow: "hidden",
+    backgroundColor: "background.paper",
+    color: "text.primary",
+  },
+  "& .react-calendar__navigation": {
+    backgroundColor: "transparent",
+    marginBottom: "4px",
+  },
+  "& .react-calendar__navigation button": {
+    color: "text.primary",
+    minWidth: "44px",
+    background: "none",
+    fontSize: "1rem",
+    marginTop: "8px",
+    padding: "8px",
+    "&:enabled:hover": {
+      backgroundColor: "action.hover",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "action.selected",
+    },
+  },
+  "& .react-calendar__navigation__label": {
+    fontWeight: "bold",
+    color: "text.primary",
+    fontSize: "1rem",
+  },
+  "& .react-calendar__month-view__weekdays": {
+    backgroundColor: "transparent",
+    textTransform: "none",
+    fontWeight: "bold",
+    fontSize: "0.875rem",
+    color: "text.primary",
+  },
+  "& .react-calendar__month-view__weekdays__weekday": {
+    padding: "8px",
+  },
+  "& .react-calendar__month-view__weekdays__weekday abbr": {
+    textDecoration: "none",
+    color: "text.primary",
+  },
+  "& .react-calendar__tile": {
+    padding: "8px",
+    fontSize: "0.875rem",
+    color: "text.primary",
+    "&:enabled:hover": {
+      backgroundColor: "action.hover",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "action.selected",
+    },
+  },
+  "& .react-calendar__tile--now": {
+    backgroundColor: "action.selected",
+    color: "text.primary",
+    "&:enabled:hover": {
+      backgroundColor: "action.hover",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "action.selected",
+    },
+  },
+  "& .react-calendar__tile--active": {
+    backgroundColor: "primary.main",
+    color: "primary.contrastText",
+    "&:enabled:hover": {
+      backgroundColor: "primary.dark",
+    },
+    "&:enabled:focus": {
+      backgroundColor: "primary.dark",
+    },
+  },
+  "& .react-calendar__tile--now .highlight": {
+    backgroundColor: "primary.main",
+    color: "primary.contrastText",
+    borderRadius: "50%",
+    padding: "4px",
+  },
+  "& .react-calendar__month-view__days__day--neighboringMonth": {
+    color: "text.disabled",
+  },
+  "& .react-calendar__month-view": {
+    padding: "8px",
+  },
+};
+
 const CalendarPage = () => {
   const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -92,15 +185,6 @@ const CalendarPage = () => {
     ) : null;
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString(undefined, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
@@ -116,112 +200,128 @@ const CalendarPage = () => {
         >
           <Box sx={{ flex: 2 }}>
             <Paper sx={{ p: 2 }}>
-              <Calendar
-                onChange={(value) => setSelectedDate(value as Date)}
-                value={selectedDate}
-                onClickDay={handleDateClick}
-                tileContent={tileContent}
-                className="calendar"
-              />
+              <Box sx={calendarStyles}>
+                <Calendar
+                  onChange={(value) => setSelectedDate(value as Date)}
+                  value={selectedDate}
+                  onClickDay={handleDateClick}
+                  tileContent={tileContent}
+                  className="calendar"
+                />
+              </Box>
             </Paper>
           </Box>
+
           <Box sx={{ flex: 1 }}>
-            <Paper sx={{ p: 2, position: "relative", minHeight: "400px" }}>
+            <Paper sx={{ p: 2, height: "100%" }}>
               <Typography variant="h6" gutterBottom>
-                {formatDate(selectedDate)}
+                {t("calendar.appointments", "Appointments")}
               </Typography>
-              <Box sx={{ mb: 2 }}>
-                {getAppointmentsForDate(selectedDate).map((apt) => (
-                  <Box key={apt.id} sx={{ mb: 2, p: 1, bgcolor: "grey.100" }}>
-                    <Typography variant="subtitle1">{apt.title}</Typography>
-                    <Typography variant="body2">
-                      {apt.startTime} - {apt.endTime}
+              {getAppointmentsForDate(selectedDate).map((appointment) => (
+                <Box
+                  key={appointment.id}
+                  sx={{
+                    p: 2,
+                    mb: 2,
+                    borderRadius: 1,
+                    backgroundColor: "action.hover",
+                  }}
+                >
+                  <Typography variant="subtitle1">
+                    {appointment.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {appointment.startTime} - {appointment.endTime}
+                  </Typography>
+                  {appointment.description && (
+                    <Typography variant="body2" color="text.secondary">
+                      {appointment.description}
                     </Typography>
-                    {apt.description && (
-                      <Typography variant="body2" color="text.secondary">
-                        {apt.description}
-                      </Typography>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-              <Fab
-                color="primary"
-                aria-label="add"
-                onClick={() => setIsDialogOpen(true)}
-                sx={{ position: "absolute", bottom: 16, right: 16 }}
-              >
-                <AddIcon />
-              </Fab>
+                  )}
+                </Box>
+              ))}
             </Paper>
           </Box>
         </Box>
-      </Box>
 
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-        <DialogTitle>
-          {t("calendar.addAppointment", "Add Appointment")}
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              label={t("calendar.title", "Title")}
-              value={newAppointment.title}
-              onChange={(e) =>
-                setNewAppointment({ ...newAppointment, title: e.target.value })
-              }
-              fullWidth
-            />
-            <TextField
-              label={t("calendar.description", "Description")}
-              value={newAppointment.description}
-              onChange={(e) =>
-                setNewAppointment({
-                  ...newAppointment,
-                  description: e.target.value,
-                })
-              }
-              fullWidth
-              multiline
-              rows={2}
-            />
-            <TextField
-              label={t("calendar.startTime", "Start Time")}
-              type="time"
-              value={newAppointment.startTime}
-              onChange={(e) =>
-                setNewAppointment({
-                  ...newAppointment,
-                  startTime: e.target.value,
-                })
-              }
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              label={t("calendar.endTime", "End Time")}
-              type="time"
-              value={newAppointment.endTime}
-              onChange={(e) =>
-                setNewAppointment({
-                  ...newAppointment,
-                  endTime: e.target.value,
-                })
-              }
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsDialogOpen(false)}>
-            {t("common.cancel", "Cancel")}
-          </Button>
-          <Button onClick={handleAddAppointment} variant="contained">
-            {t("common.add", "Add")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Fab
+          color="primary"
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          onClick={() => setIsDialogOpen(true)}
+        >
+          <AddIcon />
+        </Fab>
+
+        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+          <DialogTitle>
+            {t("calendar.addAppointment", "Add Appointment")}
+          </DialogTitle>
+          <DialogContent>
+            <Box
+              sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}
+            >
+              <TextField
+                label={t("calendar.title", "Title")}
+                value={newAppointment.title}
+                onChange={(e) =>
+                  setNewAppointment({
+                    ...newAppointment,
+                    title: e.target.value,
+                  })
+                }
+                fullWidth
+              />
+              <TextField
+                label={t("calendar.description", "Description")}
+                value={newAppointment.description}
+                onChange={(e) =>
+                  setNewAppointment({
+                    ...newAppointment,
+                    description: e.target.value,
+                  })
+                }
+                fullWidth
+                multiline
+                rows={2}
+              />
+              <TextField
+                label={t("calendar.startTime", "Start Time")}
+                type="time"
+                value={newAppointment.startTime}
+                onChange={(e) =>
+                  setNewAppointment({
+                    ...newAppointment,
+                    startTime: e.target.value,
+                  })
+                }
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label={t("calendar.endTime", "End Time")}
+                type="time"
+                value={newAppointment.endTime}
+                onChange={(e) =>
+                  setNewAppointment({
+                    ...newAppointment,
+                    endTime: e.target.value,
+                  })
+                }
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsDialogOpen(false)}>
+              {t("common.cancel", "Cancel")}
+            </Button>
+            <Button onClick={handleAddAppointment} variant="contained">
+              {t("common.add", "Add")}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Container>
   );
 };
