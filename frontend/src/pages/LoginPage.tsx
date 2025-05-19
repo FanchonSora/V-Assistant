@@ -64,18 +64,31 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const res = await fetch("http://localhost:8000/auth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ username, password }),
-    });
-    if (!res.ok) {
-      setError("Login failed");
-      return;
+    const formData = new URLSearchParams();
+    formData.append("username", form.username);
+    formData.append("password", form.password);
+
+      try {
+      const res = await fetch("http://localhost:8000/auth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        setError(`Login failed: ${errText}`);
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("token", data.access_token);
+      window.location.href = "/";
+    } catch (err) {
+    setError("An error occurred during login.");
     }
-    const data = await res.json();
-    localStorage.setItem("token", data.access_token);
-    window.location.href = "/dashboard"; // or wherever you want to go
   };
 
   return (

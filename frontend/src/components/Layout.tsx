@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -20,7 +20,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useNavigate, useParams } from "react-router-dom";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import default styles
 
@@ -30,34 +31,35 @@ type Value = Date | null | [Date | null, Date | null];
 const calendarStyles = {
   width: "100%",
   border: "none",
-  color: "black",
   "& .react-calendar": {
     width: "100%",
     fontSize: "0.75rem",
     borderRadius: "8px",
     overflow: "hidden",
+    backgroundColor: "background.paper",
+    color: "text.primary",
   },
   "& .react-calendar__navigation": {
     backgroundColor: "transparent",
     marginBottom: "4px",
   },
   "& .react-calendar__navigation button": {
-    color: "black",
+    color: "text.primary",
     minWidth: "32px",
     background: "none",
     fontSize: "0.875rem",
     marginTop: "4px",
     padding: "4px",
     "&:enabled:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: "action.hover",
     },
     "&:enabled:focus": {
-      backgroundColor: "rgba(0, 0, 0, 0.08)",
+      backgroundColor: "action.selected",
     },
   },
   "& .react-calendar__navigation__label": {
     fontWeight: "bold",
-    color: "black",
+    color: "text.primary",
     fontSize: "0.875rem",
   },
   "& .react-calendar__month-view__weekdays": {
@@ -65,38 +67,39 @@ const calendarStyles = {
     textTransform: "none",
     fontWeight: "bold",
     fontSize: "0.75rem",
-    color: "black",
+    color: "text.primary",
   },
   "& .react-calendar__month-view__weekdays__weekday": {
     padding: "4px",
   },
   "& .react-calendar__month-view__weekdays__weekday abbr": {
     textDecoration: "none",
+    color: "text.primary",
   },
   "& .react-calendar__tile": {
     padding: "4px",
     fontSize: "0.75rem",
-    color: "black",
+    color: "text.primary",
     "&:enabled:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: "action.hover",
     },
     "&:enabled:focus": {
-      backgroundColor: "rgba(0, 0, 0, 0.08)",
+      backgroundColor: "action.selected",
     },
   },
   "& .react-calendar__tile--now": {
-    backgroundColor: "transparent",
-    color: "black",
+    backgroundColor: "action.selected",
+    color: "text.primary",
     "&:enabled:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: "action.hover",
     },
     "&:enabled:focus": {
-      backgroundColor: "rgba(0, 0, 0, 0.08)",
+      backgroundColor: "action.selected",
     },
   },
   "& .react-calendar__tile--active": {
     backgroundColor: "primary.main",
-    color: "white",
+    color: "primary.contrastText",
     "&:enabled:hover": {
       backgroundColor: "primary.dark",
     },
@@ -106,9 +109,12 @@ const calendarStyles = {
   },
   "& .react-calendar__tile--now .highlight": {
     backgroundColor: "primary.main",
-    color: "white",
+    color: "primary.contrastText",
     borderRadius: "50%",
     padding: "2px",
+  },
+  "& .react-calendar__month-view__days__day--neighboringMonth": {
+    color: "text.disabled",
   },
   "& .react-calendar__month-view": {
     padding: "4px",
@@ -124,6 +130,7 @@ const drawerWidth = 240;
 const menuItems = [
   { text: "Home", icon: <HomeIcon />, path: "/" },
   { text: "Profile", icon: <PersonIcon />, path: "/profile" },
+  { text: "Calendar", icon: <CalendarMonthIcon />, path: "/calendar" },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 
@@ -132,7 +139,66 @@ const Layout = ({ children }: LayoutProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
-  const [date, setDate] = useState<Date | null>(new Date()); // State for calendar
+
+  const [date, setDate] = useState(new Date());
+
+  // Apply calendar theme variables
+  useEffect(() => {
+    const root = document.documentElement;
+    const isDark = theme.palette.mode === "dark";
+
+    root.style.setProperty(
+      "--calendar-text-color",
+      isDark ? "#ffffff" : "#000000"
+    );
+    root.style.setProperty(
+      "--calendar-text-secondary",
+      isDark ? "#b0bec5" : "#757575"
+    );
+    root.style.setProperty(
+      "--calendar-hover-bg",
+      isDark ? "#2c2c2c" : "#f8f8f8"
+    );
+    root.style.setProperty(
+      "--calendar-today-bg",
+      isDark ? "#1976d2" : "#ff9800"
+    );
+    root.style.setProperty(
+      "--calendar-today-text",
+      isDark ? "#ffffff" : "#000000"
+    );
+    root.style.setProperty(
+      "--calendar-today-hover-bg",
+      isDark ? "#1565c0" : "#1087ff"
+    );
+    root.style.setProperty("--calendar-today-hover-text", "#ffffff");
+    root.style.setProperty(
+      "--calendar-active-bg",
+      isDark ? "#1976d2" : "#006edc"
+    );
+    root.style.setProperty("--calendar-active-text", "#ffffff");
+    root.style.setProperty(
+      "--calendar-active-hover-bg",
+      isDark ? "#1565c0" : "#006edc"
+    );
+    root.style.setProperty("--calendar-active-hover-text", "#ffffff");
+    root.style.setProperty(
+      "--calendar-has-active-bg",
+      isDark ? "#1976d2" : "#ff9800"
+    );
+    root.style.setProperty(
+      "--calendar-has-active-text",
+      isDark ? "#ffffff" : "#000000"
+    );
+    root.style.setProperty(
+      "--calendar-has-active-hover-bg",
+      isDark ? "#1565c0" : "#ffb74d"
+    );
+    root.style.setProperty(
+      "--calendar-has-active-hover-text",
+      isDark ? "#ffffff" : "#000000"
+    );
+  }, [theme.palette.mode]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -263,10 +329,19 @@ const Layout = ({ children }: LayoutProps) => {
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           mt: "64px", // Height of AppBar
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "calc(100vh - 64px)", // Subtract AppBar height
         }}
       >
-        {children}
-        <Box component="footer" sx={{ mt: "auto", py: 3 }}>
+        <Box sx={{ flex: 1 }}>{children}</Box>
+        <Box
+          component="footer"
+          sx={{
+            py: 3,
+            mt: "auto",
+          }}
+        >
           <Container maxWidth="lg">
             <Typography variant="body2" color="text.secondary" align="center">
               © {new Date().getFullYear()} V-Assistant. All rights reserved.

@@ -21,10 +21,14 @@ from app.services.scheduler_service import init_scheduler
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
+origins = [
+    "http://localhost:5173",
+]
+
 # CORS...
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
