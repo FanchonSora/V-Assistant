@@ -91,7 +91,7 @@ const Chat = () => {
       );
 
       const botMsg: ChatMessage = {
-        text: data.reply,
+        text: data.reply.replace(/\n/g, "<br>"),
         isUser: false,
         timestamp: new Date(),
       };
@@ -191,12 +191,10 @@ const Chat = () => {
                   borderRadius: 2,
                 }}
               >
-                <Typography
-                  variant="body1"
-                  sx={{ color: msg.isUser ? "white" : "black" }}
-                >
-                  {msg.text}
-                </Typography>
+                <div
+                  dangerouslySetInnerHTML={{ __html: msg.text }}
+                  style={{ color: msg.isUser ? "white" : "black", whiteSpace: "pre-line" }}
+                />
               </Paper>
               {msg.isUser && (
                 <Avatar sx={{ bgcolor: "grey.500" }}>

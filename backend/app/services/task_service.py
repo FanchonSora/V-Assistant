@@ -33,7 +33,7 @@ class TaskService:
         if task.start_date:  # schedule email
             await schedule_task_reminder(task)
 
-        return TaskRead.model_validate({k: v for k, v in vars(task).items() if not k.startswith('_')})
+        return TaskRead.model_validate(task)
 
     @staticmethod
     async def list(date: str | None,
@@ -59,7 +59,7 @@ class TaskService:
         await session.commit()
         await session.refresh(task)
 
-        return TaskRead.model_validate({k: v for k, v in vars(task).items() if not k.startswith('_')})
+        return TaskRead.model_validate(task)
 
     @staticmethod
     async def delete(task_id: str,

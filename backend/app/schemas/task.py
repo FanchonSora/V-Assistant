@@ -19,6 +19,10 @@ class TaskRead(TaskBase):
     id: str
     status: Status
 
+    model_config = {
+        "from_attributes": True
+    }
+
 class TaskUpdate(BaseModel):
     title: str | None = None
     start_date: datetime | None = None
