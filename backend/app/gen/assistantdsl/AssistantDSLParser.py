@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,39,143,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,41,146,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,
         1,0,1,0,1,1,1,1,1,1,1,1,3,1,48,8,1,1,2,1,2,3,2,52,8,2,1,3,1,3,1,
@@ -18,44 +18,45 @@ def serializedATN():
         1,6,1,6,3,6,74,8,6,1,7,1,7,1,7,1,7,1,7,3,7,81,8,7,1,7,3,7,84,8,7,
         1,7,3,7,87,8,7,1,8,1,8,1,8,1,9,1,9,1,9,1,9,1,10,1,10,1,10,1,10,1,
         10,1,10,1,10,5,10,103,8,10,10,10,12,10,106,9,10,1,11,1,11,3,11,110,
-        8,11,1,12,1,12,1,13,1,13,1,14,1,14,1,14,1,14,1,15,1,15,1,16,1,16,
-        1,16,1,16,1,17,1,17,1,17,1,18,1,18,3,18,131,8,18,1,18,1,18,1,19,
-        1,19,1,19,5,19,138,8,19,10,19,12,19,141,9,19,1,19,0,0,20,0,2,4,6,
-        8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,0,6,1,0,5,7,2,0,9,
-        9,15,16,1,0,18,19,1,0,21,22,1,0,34,36,1,0,29,30,137,0,40,1,0,0,0,
-        2,47,1,0,0,0,4,51,1,0,0,0,6,53,1,0,0,0,8,58,1,0,0,0,10,65,1,0,0,
-        0,12,73,1,0,0,0,14,75,1,0,0,0,16,88,1,0,0,0,18,91,1,0,0,0,20,95,
-        1,0,0,0,22,109,1,0,0,0,24,111,1,0,0,0,26,113,1,0,0,0,28,115,1,0,
-        0,0,30,119,1,0,0,0,32,121,1,0,0,0,34,125,1,0,0,0,36,128,1,0,0,0,
-        38,134,1,0,0,0,40,41,3,2,1,0,41,42,5,0,0,1,42,1,1,0,0,0,43,48,3,
-        4,2,0,44,48,3,12,6,0,45,48,3,10,5,0,46,48,3,22,11,0,47,43,1,0,0,
-        0,47,44,1,0,0,0,47,45,1,0,0,0,47,46,1,0,0,0,48,3,1,0,0,0,49,52,3,
-        6,3,0,50,52,3,8,4,0,51,49,1,0,0,0,51,50,1,0,0,0,52,5,1,0,0,0,53,
-        54,5,1,0,0,54,55,5,2,0,0,55,56,5,3,0,0,56,57,5,4,0,0,57,7,1,0,0,
-        0,58,63,7,0,0,0,59,60,5,8,0,0,60,61,5,4,0,0,61,62,5,2,0,0,62,64,
-        5,38,0,0,63,59,1,0,0,0,63,64,1,0,0,0,64,9,1,0,0,0,65,66,5,9,0,0,
-        66,67,5,10,0,0,67,68,5,11,0,0,68,11,1,0,0,0,69,74,3,14,7,0,70,74,
-        3,16,8,0,71,74,3,18,9,0,72,74,3,20,10,0,73,69,1,0,0,0,73,70,1,0,
-        0,0,73,71,1,0,0,0,73,72,1,0,0,0,74,13,1,0,0,0,75,76,5,12,0,0,76,
-        77,5,13,0,0,77,78,5,14,0,0,78,80,3,38,19,0,79,81,3,28,14,0,80,79,
-        1,0,0,0,80,81,1,0,0,0,81,83,1,0,0,0,82,84,3,32,16,0,83,82,1,0,0,
-        0,83,84,1,0,0,0,84,86,1,0,0,0,85,87,3,34,17,0,86,85,1,0,0,0,86,87,
-        1,0,0,0,87,15,1,0,0,0,88,89,7,1,0,0,89,90,5,17,0,0,90,17,1,0,0,0,
-        91,92,7,2,0,0,92,93,5,20,0,0,93,94,3,38,19,0,94,19,1,0,0,0,95,96,
-        7,3,0,0,96,97,5,20,0,0,97,98,3,38,19,0,98,99,5,23,0,0,99,104,3,36,
-        18,0,100,101,5,24,0,0,101,103,3,36,18,0,102,100,1,0,0,0,103,106,
-        1,0,0,0,104,102,1,0,0,0,104,105,1,0,0,0,105,21,1,0,0,0,106,104,1,
-        0,0,0,107,110,3,24,12,0,108,110,3,26,13,0,109,107,1,0,0,0,109,108,
-        1,0,0,0,110,23,1,0,0,0,111,112,5,32,0,0,112,25,1,0,0,0,113,114,5,
-        33,0,0,114,27,1,0,0,0,115,116,5,25,0,0,116,117,5,37,0,0,117,118,
-        3,30,15,0,118,29,1,0,0,0,119,120,7,4,0,0,120,31,1,0,0,0,121,122,
-        5,26,0,0,122,123,5,27,0,0,123,124,5,38,0,0,124,33,1,0,0,0,125,126,
-        5,28,0,0,126,127,7,5,0,0,127,35,1,0,0,0,128,130,5,38,0,0,129,131,
-        5,31,0,0,130,129,1,0,0,0,130,131,1,0,0,0,131,132,1,0,0,0,132,133,
-        5,38,0,0,133,37,1,0,0,0,134,139,5,38,0,0,135,136,4,19,0,0,136,138,
-        5,38,0,0,137,135,1,0,0,0,138,141,1,0,0,0,139,137,1,0,0,0,139,140,
-        1,0,0,0,140,39,1,0,0,0,141,139,1,0,0,0,11,47,51,63,73,80,83,86,104,
-        109,130,139
+        8,11,1,12,1,12,1,13,1,13,1,14,1,14,1,14,1,14,1,14,3,14,121,8,14,
+        1,15,1,15,1,16,1,16,1,16,1,16,1,17,1,17,1,17,1,18,1,18,3,18,134,
+        8,18,1,18,1,18,1,19,1,19,1,19,5,19,141,8,19,10,19,12,19,144,9,19,
+        1,19,0,0,20,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,
+        38,0,6,1,0,5,7,2,0,9,9,15,16,1,0,18,19,1,0,21,22,1,0,35,37,1,0,30,
+        31,141,0,40,1,0,0,0,2,47,1,0,0,0,4,51,1,0,0,0,6,53,1,0,0,0,8,58,
+        1,0,0,0,10,65,1,0,0,0,12,73,1,0,0,0,14,75,1,0,0,0,16,88,1,0,0,0,
+        18,91,1,0,0,0,20,95,1,0,0,0,22,109,1,0,0,0,24,111,1,0,0,0,26,113,
+        1,0,0,0,28,120,1,0,0,0,30,122,1,0,0,0,32,124,1,0,0,0,34,128,1,0,
+        0,0,36,131,1,0,0,0,38,137,1,0,0,0,40,41,3,2,1,0,41,42,5,0,0,1,42,
+        1,1,0,0,0,43,48,3,4,2,0,44,48,3,12,6,0,45,48,3,10,5,0,46,48,3,22,
+        11,0,47,43,1,0,0,0,47,44,1,0,0,0,47,45,1,0,0,0,47,46,1,0,0,0,48,
+        3,1,0,0,0,49,52,3,6,3,0,50,52,3,8,4,0,51,49,1,0,0,0,51,50,1,0,0,
+        0,52,5,1,0,0,0,53,54,5,1,0,0,54,55,5,2,0,0,55,56,5,3,0,0,56,57,5,
+        4,0,0,57,7,1,0,0,0,58,63,7,0,0,0,59,60,5,8,0,0,60,61,5,4,0,0,61,
+        62,5,2,0,0,62,64,5,40,0,0,63,59,1,0,0,0,63,64,1,0,0,0,64,9,1,0,0,
+        0,65,66,5,9,0,0,66,67,5,10,0,0,67,68,5,11,0,0,68,11,1,0,0,0,69,74,
+        3,14,7,0,70,74,3,16,8,0,71,74,3,18,9,0,72,74,3,20,10,0,73,69,1,0,
+        0,0,73,70,1,0,0,0,73,71,1,0,0,0,73,72,1,0,0,0,74,13,1,0,0,0,75,76,
+        5,12,0,0,76,77,5,13,0,0,77,78,5,14,0,0,78,80,3,38,19,0,79,81,3,28,
+        14,0,80,79,1,0,0,0,80,81,1,0,0,0,81,83,1,0,0,0,82,84,3,32,16,0,83,
+        82,1,0,0,0,83,84,1,0,0,0,84,86,1,0,0,0,85,87,3,34,17,0,86,85,1,0,
+        0,0,86,87,1,0,0,0,87,15,1,0,0,0,88,89,7,1,0,0,89,90,5,17,0,0,90,
+        17,1,0,0,0,91,92,7,2,0,0,92,93,5,20,0,0,93,94,3,38,19,0,94,19,1,
+        0,0,0,95,96,7,3,0,0,96,97,5,20,0,0,97,98,3,38,19,0,98,99,5,23,0,
+        0,99,104,3,36,18,0,100,101,5,24,0,0,101,103,3,36,18,0,102,100,1,
+        0,0,0,103,106,1,0,0,0,104,102,1,0,0,0,104,105,1,0,0,0,105,21,1,0,
+        0,0,106,104,1,0,0,0,107,110,3,24,12,0,108,110,3,26,13,0,109,107,
+        1,0,0,0,109,108,1,0,0,0,110,23,1,0,0,0,111,112,5,33,0,0,112,25,1,
+        0,0,0,113,114,5,34,0,0,114,27,1,0,0,0,115,116,5,25,0,0,116,117,5,
+        38,0,0,117,121,3,30,15,0,118,119,5,26,0,0,119,121,5,39,0,0,120,115,
+        1,0,0,0,120,118,1,0,0,0,121,29,1,0,0,0,122,123,7,4,0,0,123,31,1,
+        0,0,0,124,125,5,27,0,0,125,126,5,28,0,0,126,127,5,40,0,0,127,33,
+        1,0,0,0,128,129,5,29,0,0,129,130,7,5,0,0,130,35,1,0,0,0,131,133,
+        5,40,0,0,132,134,5,32,0,0,133,132,1,0,0,0,133,134,1,0,0,0,134,135,
+        1,0,0,0,135,136,5,40,0,0,136,37,1,0,0,0,137,142,5,40,0,0,138,139,
+        4,19,0,0,139,141,5,40,0,0,140,138,1,0,0,0,141,144,1,0,0,0,142,140,
+        1,0,0,0,142,143,1,0,0,0,143,39,1,0,0,0,144,142,1,0,0,0,12,47,51,
+        63,73,80,83,86,104,109,120,133,142
     ]
 
 class AssistantDSLParser ( Parser ):
@@ -72,8 +73,9 @@ class AssistantDSLParser ( Parser ):
                      "'Hi'", "'Hello'", "'Hey'", "'my'", "'Show'", "'some'", 
                      "'instructions'", "'Remind'", "'me'", "'to'", "'List'", 
                      "'View'", "'tasks'", "'Delete'", "'Remove'", "'task'", 
-                     "'Update'", "'Modify'", "'set'", "','", "'in'", "'repeat'", 
-                     "'every'", "'as'", "'pending'", "'done'", "'='" ]
+                     "'Update'", "'Modify'", "'set'", "','", "'in'", "'at'", 
+                     "'repeat'", "'every'", "'as'", "'pending'", "'done'", 
+                     "'='" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -83,8 +85,8 @@ class AssistantDSLParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "YES", "NO", "MINUTE", "HOUR", "DAY", "INT", "IDENTIFIER", 
-                      "WS" ]
+                      "<INVALID>", "YES", "NO", "MINUTE", "HOUR", "DAY", 
+                      "INT", "DATETIME", "IDENTIFIER", "WS" ]
 
     RULE_program = 0
     RULE_command = 1
@@ -145,14 +147,16 @@ class AssistantDSLParser ( Parser ):
     T__28=29
     T__29=30
     T__30=31
-    YES=32
-    NO=33
-    MINUTE=34
-    HOUR=35
-    DAY=36
-    INT=37
-    IDENTIFIER=38
-    WS=39
+    T__31=32
+    YES=33
+    NO=34
+    MINUTE=35
+    HOUR=36
+    DAY=37
+    INT=38
+    DATETIME=39
+    IDENTIFIER=40
+    WS=41
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -677,7 +681,7 @@ class AssistantDSLParser ( Parser ):
             self.state = 80
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==25:
+            if _la==25 or _la==26:
                 self.state = 79
                 self.dueSpec()
 
@@ -685,7 +689,7 @@ class AssistantDSLParser ( Parser ):
             self.state = 83
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==26:
+            if _la==27:
                 self.state = 82
                 self.rruleClause()
 
@@ -693,7 +697,7 @@ class AssistantDSLParser ( Parser ):
             self.state = 86
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==28:
+            if _la==29:
                 self.state = 85
                 self.statusClause()
 
@@ -942,12 +946,12 @@ class AssistantDSLParser ( Parser ):
             self.state = 109
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [32]:
+            if token in [33]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 107
                 self.affirmative()
                 pass
-            elif token in [33]:
+            elif token in [34]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 108
                 self.negative()
@@ -1072,6 +1076,9 @@ class AssistantDSLParser ( Parser ):
             return self.getTypedRuleContext(AssistantDSLParser.TimeUnitContext,0)
 
 
+        def DATETIME(self):
+            return self.getToken(AssistantDSLParser.DATETIME, 0)
+
         def getRuleIndex(self):
             return AssistantDSLParser.RULE_dueSpec
 
@@ -1097,13 +1104,28 @@ class AssistantDSLParser ( Parser ):
         localctx = AssistantDSLParser.DueSpecContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_dueSpec)
         try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 115
-            self.match(AssistantDSLParser.T__24)
-            self.state = 116
-            self.match(AssistantDSLParser.INT)
-            self.state = 117
-            self.timeUnit()
+            self.state = 120
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [25]:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 115
+                self.match(AssistantDSLParser.T__24)
+                self.state = 116
+                self.match(AssistantDSLParser.INT)
+                self.state = 117
+                self.timeUnit()
+                pass
+            elif token in [26]:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 118
+                self.match(AssistantDSLParser.T__25)
+                self.state = 119
+                self.match(AssistantDSLParser.DATETIME)
+                pass
+            else:
+                raise NoViableAltException(self)
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1156,9 +1178,9 @@ class AssistantDSLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 119
+            self.state = 122
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 120259084288) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 240518168576) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1208,11 +1230,11 @@ class AssistantDSLParser ( Parser ):
         self.enterRule(localctx, 32, self.RULE_rruleClause)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 121
-            self.match(AssistantDSLParser.T__25)
-            self.state = 122
+            self.state = 124
             self.match(AssistantDSLParser.T__26)
-            self.state = 123
+            self.state = 125
+            self.match(AssistantDSLParser.T__27)
+            self.state = 126
             self.match(AssistantDSLParser.IDENTIFIER)
         except RecognitionException as re:
             localctx.exception = re
@@ -1258,11 +1280,11 @@ class AssistantDSLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 125
-            self.match(AssistantDSLParser.T__27)
-            self.state = 126
+            self.state = 128
+            self.match(AssistantDSLParser.T__28)
+            self.state = 129
             _la = self._input.LA(1)
-            if not(_la==29 or _la==30):
+            if not(_la==30 or _la==31):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1316,17 +1338,17 @@ class AssistantDSLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 128
+            self.state = 131
             self.match(AssistantDSLParser.IDENTIFIER)
-            self.state = 130
+            self.state = 133
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==31:
-                self.state = 129
-                self.match(AssistantDSLParser.T__30)
+            if _la==32:
+                self.state = 132
+                self.match(AssistantDSLParser.T__31)
 
 
-            self.state = 132
+            self.state = 135
             self.match(AssistantDSLParser.IDENTIFIER)
         except RecognitionException as re:
             localctx.exception = re
@@ -1376,22 +1398,22 @@ class AssistantDSLParser ( Parser ):
         self.enterRule(localctx, 38, self.RULE_taskTitle)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 134
+            self.state = 137
             self.match(AssistantDSLParser.IDENTIFIER)
-            self.state = 139
+            self.state = 142
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,10,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 135
+                    self.state = 138
                     if not  self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" :
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, " self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != \"in\" ")
-                    self.state = 136
+                    self.state = 139
                     self.match(AssistantDSLParser.IDENTIFIER) 
-                self.state = 141
+                self.state = 144
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,10,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
