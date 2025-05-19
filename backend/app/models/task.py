@@ -11,6 +11,5 @@ class Task(Base):
     owner_id = Column(String(36), ForeignKey('users.id'))
     title = Column(String(255), nullable=False)
     start_date = Column(DateTime)
-    duration = Column(Float)
     rrule = Column(String(255))
     status = Column(Enum(Status), default=Status.pending)
