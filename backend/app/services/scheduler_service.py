@@ -19,17 +19,18 @@ async def schedule_task_reminder(task):
     Create a one‑shot APScheduler job that sends an email 10 minutes before due.
     (Very naïve; ignores RRULE etc. – extend as needed.)
     """
-    if not task.due:
+    if not task.start_date:
         return
-    run_at = task.due - timedelta(minutes=10)
-    if run_at < task.due:
+    print(f"Scheduling reminder for task {task.id} at {task.start_date}")
+    run_at = task.start_date - timedelta(minutes=10)
+    if run_at < task.start_date:
         scheduler.add_job(
             send_email,
             trigger=DateTrigger(run_date=run_at),
             kwargs=dict(
                 recipient=task.owner_id,  # replace by real email if available
                 subject=f"[Reminder] {task.title}",
-                body=f"Remember to finish “{task.title}” before {task.due}"
+                body=f"Remember to finish “{task.title}” before {task.start_date}"
             ),
             id=f"reminder-{task.id}",
             replace_existing=True

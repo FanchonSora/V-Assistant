@@ -13,3 +13,13 @@ export async function post<T>(url: string, body: unknown, token?: string): Promi
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function get<T>(url: string, token?: string): Promise<T> {
+  const res = await fetch(`${API_BASE}${url}`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

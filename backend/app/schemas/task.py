@@ -9,7 +9,7 @@ class Status(str, Enum):
 
 class TaskBase(BaseModel):
     title: str
-    due: datetime | None = None
+    start_date: datetime | None = None
     rrule: str | None = None
 
 class TaskCreate(TaskBase):
@@ -19,7 +19,11 @@ class TaskRead(TaskBase):
     id: str
     status: Status
 
+    model_config = {
+        "from_attributes": True
+    }
+
 class TaskUpdate(BaseModel):
     title: str | None = None
-    due: datetime | None = None
+    start_date: datetime | None = None
     status: Status | None = None

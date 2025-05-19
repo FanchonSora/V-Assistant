@@ -43,20 +43,20 @@ class ChatService:
         # -------------------------- create ---------------------------
         if action == "create":
             title   = parsed.get("title")
-            due     = parsed.get("due")
+            start_date     = parsed.get("start_date")
             rrule   = parsed.get("repeat")
             status  = parsed.get("status")
 
-            if not (due and rrule and status):
+            if not (start_date and rrule and status):
                 # ghi vào store để chờ xác nhận
                 _PENDING_CREATE[uid] = {
                     "title":  title,
-                    "due":    due,
+                    "start_date":    start_date,
                     "rrule":  rrule,
                     "status": status,
                 }
                 missing = [
-                    label for cond, label in ((due, "thời hạn"), (rrule, "lịch lặp lại"), (status, "trạng thái")) if not cond
+                    label for cond, label in ((start_date, "thời hạn"), (rrule, "lịch lặp lại"), (status, "trạng thái")) if not cond
                 ]
                 msg_missing = ", ".join(missing)
                 return ChatResponse(
@@ -65,10 +65,10 @@ class ChatService:
 
             # đủ dữ liệu → tạo luôn
             task = await TaskService.create(
-                TaskCreate(title=title, due=due, rrule=rrule), user=user, session=session
+                TaskCreate(title=title, start_date=start_date, rrule=rrule), user=user, session=session
             )
-            due_str = f"{task.due:%H:%M %d/%m}" if task.due else "không có hạn"
-            return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
+            start_date_str = f"{task.start_date:%H:%M %d/%m}" if task.start_date else "không có hạn"
+            return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {start_date_str}.")
 
         # ------------------------ confirm ---------------------------
         if action == "confirm":
@@ -107,10 +107,12 @@ class ChatService:
             if not tasks:
                 return ChatResponse(reply="📭 Bạn chưa có task nào.")
             lines = [
-                f"• {t.title} – {t.status} – {t.due:%d/%m %H:%M}" if t.due else f"• {t.title} – {t.status}"
+
+                f"• {t.title} – {t.status} – {t.start_date:%d/%m %H:%M}" if t.start_date else f"• {t.title} – {t.status}"
                 for t in tasks
             ]
             return ChatResponse(reply="\n".join(lines))
 
         # ------------------------- fallback -------------------------
+
         return ChatResponse(reply="❓ Sorry, I don't have this response yet.")

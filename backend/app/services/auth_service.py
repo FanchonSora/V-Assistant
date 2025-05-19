@@ -21,6 +21,7 @@ class AuthService:
             raise HTTPException(status_code=409, detail="Username taken")
 
         user = User(username=data.username,
+                    email=data.email,
                     hashed_password=hash_password(data.password))
         session.add(user)
         await session.commit()
