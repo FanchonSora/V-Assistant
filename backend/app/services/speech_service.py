@@ -1,5 +1,6 @@
-# app/services/speech_service.py
-
+import os
+import tempfile
+from pydub import AudioSegment
 import speech_recognition as sr
 
 class SpeechService:
@@ -27,11 +28,27 @@ class SpeechService:
 
     def transcribe_file(self, file_path: str) -> str:
         """
-        Chuyển file âm thanh (wav, flac, etc.) thành text.
+        Chuyển file âm thanh (có thể không phải wav) thành text.
+        Nếu file không phải wav, sẽ chuyển đổi sang wav sử dụng pydub.
         """
+        # Nếu file không ở định dạng wav, chuyển nó sang wav trong thư mục tạm.
+        ext = os.path.splitext(file_path)[1].lower()
+        if ext != ".wav":
+            try:
+                sound = AudioSegment.from_file(file_path)
+                with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+                    tmp_path = tmp.name
+                sound.export(tmp_path, format="wav")
+                file_path = tmp_path
+            except Exception as e:
+                return f"[Lỗi chuyển đổi file: {e}]"
+
+        # Sau đó, sử dụng file wav để nhận dạng
         with sr.AudioFile(file_path) as src:
             audio = self.recognizer.record(src)
         try:
             return self.recognizer.recognize_google(audio, language=self.lang)
-        except Exception as e:
-            return f"[Error: {e}]"
+        except sr.UnknownValueError:
+            return "[Không nghe rõ]"
+        except sr.RequestError as e:
+            return f"[Lỗi API: {e}]"
