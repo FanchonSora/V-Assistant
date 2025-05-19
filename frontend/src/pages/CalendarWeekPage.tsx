@@ -1,8 +1,9 @@
 import { Box, Typography, Fab, Paper } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useMemo } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CalendarViewSelector from "../components/CalendarViewSelector";
+import EventModal from "./EventModal";
 
 const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 8pm
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -22,14 +23,14 @@ export default function CalendarWeekView() {
   const navigate = useNavigate();
 
   const inputDate = useMemo(() => {
-  const parsed = date ? new Date(date) : new Date();
-  return isNaN(parsed.getTime()) ? new Date() : parsed;
+    const parsed = date ? new Date(date) : new Date();
+    return isNaN(parsed.getTime()) ? new Date() : parsed;
   }, [date]);
 
   const getMonday = (d: Date) => {
     const copy = new Date(d);
-    const day = copy.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    const diff = copy.getDate() - day + (day === 0 ? -6 : 1); // adjust to Monday
+    const day = copy.getDay();
+    const diff = copy.getDate() - day + (day === 0 ? -6 : 1);
     return new Date(copy.setDate(diff));
   };
 
@@ -41,6 +42,23 @@ export default function CalendarWeekView() {
     dummyEvents.forEach((e) => map[e.day].push(e));
     return map;
   }, []);
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{ title: string; date: string } | null>(null);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const handleModalOpen = useCallback(
+  (title: string, date: string, el: HTMLElement) => {
+    setModalData({ title, date });
+    setAnchorEl(el);
+    setModalOpen(true);
+  },
+  []
+);
+
+  // Close modal when clicking outside
+  const handleModalClose = useCallback(() => setModalOpen(false), []);
 
   return (
     <Box sx={{ position: "relative", padding: 2 }}>
@@ -111,7 +129,15 @@ export default function CalendarWeekView() {
                         p: 1,
                         fontSize: 12,
                         overflow: "hidden",
+                        cursor: "pointer",
                       }}
+                      onClick={(event) =>
+                        handleModalOpen(
+                          e.title,
+                          `${day} ${e.time}`,
+                          event.currentTarget as HTMLElement
+                        )
+                      }
                     >
                       {e.title}
                     </Paper>
@@ -135,6 +161,21 @@ export default function CalendarWeekView() {
       >
         <AddIcon />
       </Fab>
+
+      {/* Event Modal */}
+      <EventModal
+        open={modalOpen}
+        title={modalData?.title || ""}
+        date={modalData?.date || ""}
+        onClose={handleModalClose}
+        onDelete={() => {
+          setModalOpen(false);
+        }}
+        onEdit={() => {
+          setModalOpen(false);
+        }}
+        anchorEl={anchorEl}
+      />
     </Box>
   );
 }
