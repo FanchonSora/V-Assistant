@@ -2,29 +2,50 @@ grammar AssistantDSL;
 
 options { caseInsensitive = true; }
 
-program   : command EOF ;
-command   : greetingCommand | actionCommand ;
+/* ────────────── parser rules ────────────── */
+program  : command EOF ;
+command  : greetingCommand
+        | actionCommand
+        | supportCommand
+        | confirmCommand ;
 
-/* greeting ---------------------------------------------------------*/
 greetingCommand : introduce | greeting ;
 introduce       : 'What' 'is' 'your' 'name' ;
-greeting        : ('Hi' | 'Hello' | 'Hey') ('my' 'name' 'is' Name)? ;
+greeting        : ('Hi' | 'Hello' | 'Hey')
+                  ('my' 'name' 'is' IDENTIFIER)? ;
 
-/* actions  ---------------------------------------------------------*/
-actionCommand : createAction | viewAction | deleteAction | modifyAction ;
+supportCommand  : 'Show' 'some' 'instructions' ;
 
-createAction : 'Remind' 'me' 'to' taskTitle dueSpec? ;
-viewAction   : ('Show' | 'List' | 'View') 'tasks' ;
-deleteAction : ('Delete' | 'Remove') 'task' taskTitle ;
-modifyAction : ('Update' | 'Modify') 'task' taskTitle 'set' fieldAssign (',' fieldAssign)* ;
+actionCommand   : createAction | viewAction | deleteAction | modifyAction ;
+createAction    : 'Remind' 'me' 'to' taskTitle
+                  dueSpec? rruleClause? statusClause? ;
+viewAction      : ('Show' | 'List' | 'View') 'tasks' ;
+deleteAction    : ('Delete' | 'Remove') 'task' taskTitle ;
+modifyAction    : ('Update' | 'Modify') 'task' taskTitle
+                  'set' fieldAssign (',' fieldAssign)* ;
 
-/* helpers  ---------------------------------------------------------*/
-dueSpec     : 'in' INT timeUnit ;
-timeUnit    : 'minute' 's'? | 'hour' 's'? | 'day' 's'? ;
-fieldAssign : IDENTIFIER '='? IDENTIFIER ;
-taskTitle   : IDENTIFIER (IDENTIFIER)* ;
-Name        : IDENTIFIER ;
+confirmCommand  : affirmative | negative ;
+affirmative     : YES ;
+negative        : NO ;
 
-INT        : [0-9]+ ;
-IDENTIFIER : [a-zA-Z0-9]+ ;
-WS         : [ \t\r\n]+ -> skip ;
+dueSpec         : 'in' INT timeUnit ;
+timeUnit        : MINUTE | HOUR | DAY ;
+
+rruleClause     : 'repeat' 'every' IDENTIFIER ;
+statusClause    : 'as' ('pending' | 'done') ;
+fieldAssign     : IDENTIFIER '='? IDENTIFIER ;
+
+/* task title dừng khi gặp “in” hay con số */
+taskTitle: IDENTIFIER ( { self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" }? IDENTIFIER )*;
+
+/* ────────────── lexer rules (đặt TRƯỚC IDENTIFIER) ────────────── */
+YES     : 'yes' | 'yep' | 'sure' | 'ok' ;
+NO      : 'no' | 'nope' ;
+
+MINUTE  : 'minute' | 'minutes' ;
+HOUR    : 'hour'   | 'hours' ;
+DAY     : 'day'    | 'days'  ;
+
+INT         : [0-9]+ ;
+IDENTIFIER : [0-9A-Za-z]+ ;
+WS : [ \t\r\n]+ -> skip ;

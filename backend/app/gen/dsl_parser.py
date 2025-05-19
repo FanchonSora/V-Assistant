@@ -12,27 +12,63 @@ class _Visitor(AssistantDSLVisitor):
 
     # greeting -------------------------------------------------------
     def visitGreeting(self, ctx):
-        # ctx.Name() tồn tại khi user ghi "my name is ..."
-        name = ctx.Name().getText() if ctx.Name() else None
+        # Sử dụng ctx.IDENTIFIER() thay vì ctx.Name()
+        name = ctx.IDENTIFIER().getText() if ctx.IDENTIFIER() else None
         return {"action": "greet", "name": name}
+
+    # introduce ------------------------------------------------------
+    def visitIntroduce(self, ctx):
+        # Khi người dùng nhập "What is your name"
+        return {"action": "introduce", "name": "Fanchon"}
+    
+    # instruction ------------------------------------------------------
+    # support --------------------------------------------------------
+    def visitSupport(self, ctx):
+        instructions = (
+            "Các lệnh khả dụng:\n"
+            " Remind me to <task> in <minutes/hours/days> repeat every <period> as <pending|done>\n"
+            " Show tasks\n"
+            " Delete task <task_reference>\n"
+            " Update task <task_reference> set <field>=<value>\n"
+            " What is your name\n"
+            " Hi (or Hello, Hey) [my name is <your name>]"
+        )
+        return {"action": "instruction", "instructions": instructions}
+
 
     # create / remind -----------------------------------------------
     def visitCreateAction(self, ctx):
         title = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
 
+        # ---------- due ----------
         due = None
         if ctx.dueSpec():
             amount = int(ctx.dueSpec().INT().getText())
-            unit_text = ctx.dueSpec().timeUnit().getText().lower()  # 👈 quét chuỗi
-
-            if unit_text.startswith("minute"):
+            unit   = ctx.dueSpec().timeUnit().getText().lower()
+            if unit.startswith("minute"):
                 due = datetime.utcnow() + timedelta(minutes=amount)
-            elif unit_text.startswith("hour"):
+            elif unit.startswith("hour"):
                 due = datetime.utcnow() + timedelta(hours=amount)
-            elif unit_text.startswith("day"):
+            elif unit.startswith("day"):
                 due = datetime.utcnow() + timedelta(days=amount)
 
-        return {"action": "create", "title": title, "due": due}
+        # ---------- repeat ----------
+        repeat = None
+        if ctx.rruleClause():
+            repeat = ctx.rruleClause().IDENTIFIER().getText().lower()
+
+        # ---------- status ----------
+        status = None
+        if ctx.statusClause():
+            status = ctx.statusClause().getChild(1).getText().lower()   # 'pending' | 'done'
+
+        return {
+            "action": "create",
+            "title":  title,
+            "due":    due,
+            "repeat": repeat,
+            "status": status,
+        }
     
     # ───────────────────────────── view ────────────────────────────────
     def visitViewAction(self, ctx):
@@ -58,6 +94,12 @@ class _Visitor(AssistantDSLVisitor):
             updates[key] = val
 
         return {"action": "update", "task_ref": ref, "updates": updates}
+    
+    def visitAffirmative(self, ctx):
+        return {"action": "confirm", "value": True}
+
+    def visitNegative(self, ctx):
+        return {"action": "confirm", "value": False}
 
 
 def parse(text: str) -> dict:

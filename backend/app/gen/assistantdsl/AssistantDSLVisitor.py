@@ -1,4 +1,4 @@
-# Generated from C:/Source/v-assistant/backend/app/utils/../gen/AssistantDSL.g4 by ANTLR 4.13.2
+# Generated from AssistantDSL.g4 by ANTLR 4.13.2
 from antlr4 import *
 if "." in __name__:
     from .AssistantDSLParser import AssistantDSLParser
@@ -34,6 +34,11 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by AssistantDSLParser#supportCommand.
+    def visitSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by AssistantDSLParser#actionCommand.
     def visitActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
         return self.visitChildren(ctx)
@@ -59,6 +64,21 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by AssistantDSLParser#confirmCommand.
+    def visitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#affirmative.
+    def visitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#negative.
+    def visitNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by AssistantDSLParser#dueSpec.
     def visitDueSpec(self, ctx:AssistantDSLParser.DueSpecContext):
         return self.visitChildren(ctx)
@@ -66,6 +86,16 @@ class AssistantDSLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by AssistantDSLParser#timeUnit.
     def visitTimeUnit(self, ctx:AssistantDSLParser.TimeUnitContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#rruleClause.
+    def visitRruleClause(self, ctx:AssistantDSLParser.RruleClauseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#statusClause.
+    def visitStatusClause(self, ctx:AssistantDSLParser.StatusClauseContext):
         return self.visitChildren(ctx)
 
 

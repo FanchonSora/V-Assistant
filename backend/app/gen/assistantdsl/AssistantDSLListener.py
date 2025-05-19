@@ -1,4 +1,4 @@
-# Generated from C:/Source/v-assistant/backend/app/utils/../gen/AssistantDSL.g4 by ANTLR 4.13.2
+# Generated from AssistantDSL.g4 by ANTLR 4.13.2
 from antlr4 import *
 if "." in __name__:
     from .AssistantDSLParser import AssistantDSLParser
@@ -53,6 +53,15 @@ class AssistantDSLListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by AssistantDSLParser#supportCommand.
+    def enterSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#supportCommand.
+    def exitSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
+        pass
+
+
     # Enter a parse tree produced by AssistantDSLParser#actionCommand.
     def enterActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
         pass
@@ -98,6 +107,33 @@ class AssistantDSLListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by AssistantDSLParser#confirmCommand.
+    def enterConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#confirmCommand.
+    def exitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#affirmative.
+    def enterAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#affirmative.
+    def exitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#negative.
+    def enterNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#negative.
+    def exitNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        pass
+
+
     # Enter a parse tree produced by AssistantDSLParser#dueSpec.
     def enterDueSpec(self, ctx:AssistantDSLParser.DueSpecContext):
         pass
@@ -113,6 +149,24 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#timeUnit.
     def exitTimeUnit(self, ctx:AssistantDSLParser.TimeUnitContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#rruleClause.
+    def enterRruleClause(self, ctx:AssistantDSLParser.RruleClauseContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#rruleClause.
+    def exitRruleClause(self, ctx:AssistantDSLParser.RruleClauseContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#statusClause.
+    def enterStatusClause(self, ctx:AssistantDSLParser.StatusClauseContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#statusClause.
+    def exitStatusClause(self, ctx:AssistantDSLParser.StatusClauseContext):
         pass
 
 
