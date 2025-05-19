@@ -10,8 +10,8 @@ class _Visitor(AssistantDSLVisitor):
     def visitSentence(self, ctx):
         title = ctx.TITLE().getText().strip()
         mins  = int(ctx.INT().getText())
-        due   = datetime.utcnow() + timedelta(minutes=mins)
-        return {"title": title, "due": due}
+        start_date   = datetime.utcnow() + timedelta(minutes=mins)
+        return {"title": title, "start_date": start_date}
 
     def visitProgram(self, ctx):
         return self.visit(ctx.sentence())

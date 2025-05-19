@@ -12,7 +12,7 @@ class ChatService:
         if "error" not in parsed:
             task = await TaskService.create(TaskCreate(**parsed), user=user, session=session)
             reply = (f"✅ Đã tạo nhắc việc “{task.title}” – "
-                     f"hạn {task.due:%H:%M %d/%m}.")
+                     f"hạn {task.start_date:%H:%M %d/%m}.")
         else:
             reply = "❓ Xin lỗi, mình chưa hiểu yêu cầu đó."
         return ChatResponse(reply=reply)
