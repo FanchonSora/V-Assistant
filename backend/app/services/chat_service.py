@@ -43,20 +43,22 @@ class ChatService:
         # -------------------------- create ---------------------------
         if action == "create":
             title   = parsed.get("title")
-            start_date     = parsed.get("start_date")
+            task_date = parsed.get("task_date")
+            task_time = parsed.get("task_time")
             rrule   = parsed.get("repeat")
             status  = parsed.get("status")
 
-            if not (start_date and rrule and status):
+            if not (task_date and task_time and rrule and status):
                 # ghi vào store để chờ xác nhận
                 _PENDING_CREATE[uid] = {
                     "title":  title,
-                    "start_date":    start_date,
+                    "task_date": task_date,
+                    "task_time": task_time,
                     "rrule":  rrule,
                     "status": status,
                 }
                 missing = [
-                    label for cond, label in ((start_date, "thời hạn"), (rrule, "lịch lặp lại"), (status, "trạng thái")) if not cond
+                    label for cond, label in ((task_date, "ngày"), (task_time, "giờ"), (rrule, "lịch lặp lại"), (status, "trạng thái")) if not cond
                 ]
                 msg_missing = ", ".join(missing)
                 return ChatResponse(
@@ -65,10 +67,11 @@ class ChatService:
 
             # đủ dữ liệu → tạo luôn
             task = await TaskService.create(
-                TaskCreate(title=title, start_date=start_date, rrule=rrule), user=user, session=session
+                TaskCreate(title=title, task_date=task_date, task_time=task_time, rrule=rrule),
+                user=user, session=session
             )
-            start_date_str = f"{task.start_date:%H:%M %d/%m}" if task.start_date else "không có hạn"
-            return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {start_date_str}.")
+            due_str = f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m')}" if task.task_date and task.task_time else "không có hạn"
+            return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
 
         # ------------------------ confirm ---------------------------
         if action == "confirm":
@@ -78,7 +81,8 @@ class ChatService:
             if parsed["value"]:  # Yes
                 data = _PENDING_CREATE.pop(uid)
                 task = await TaskService.create(TaskCreate(**data), user=user, session=session)
-                return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}”.")
+                due_str = f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m')}" if task.task_date and task.task_time else "không có hạn"
+                return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
 
             # No
             _PENDING_CREATE.pop(uid, None)
@@ -108,7 +112,7 @@ class ChatService:
                 return ChatResponse(reply="📭 Bạn chưa có task nào.")
             lines = [
 
-                f"• {t.title} – {t.status} – {t.start_date:%d/%m %H:%M}" if t.start_date else f"• {t.title} – {t.status}"
+                f"• {t.title} – {t.status} – {t.task_date:%d/%m} {t.task_time:%H:%M}" if t.task_date and t.task_time else f"• {t.title} – {t.status}"
                 for t in tasks
             ]
             return ChatResponse(reply="\n".join(lines))

@@ -9,7 +9,7 @@ LOG = logging.getLogger("antlr_gen")
 # Path tới file JAR (có thể override bằng env var)
 ANTLR_JAR = os.getenv(
     "ANTLR_JAR_PATH",
-    r"C:\Program Files\antlr\antlr4-4.13.2-complete.jar"
+    r"D:\antlr\antlr-4.13.2-complete.jar"
 )
 BASE_DIR     = os.path.abspath(os.path.dirname(__file__))
 GRAMMAR_FILE = os.path.join(BASE_DIR, "..", "gen", "AssistantDSL.g4")

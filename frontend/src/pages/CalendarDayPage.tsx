@@ -4,66 +4,66 @@ import { Box, Typography, Paper } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 
-const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 19pm
+const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-interface Event {
+interface CalendarEvent {
   id: string;
   title: string;
-  date: string;
-  time: string;
+  task_date: string;
+  task_time: string;
   day: string;
 }
 
-const dummyEvents: Event[] = [
+const dummyEvents: CalendarEvent[] = [
   {
     id: "1",
     day: "Mon",
-    time: "09:00",
+    task_time: "09:00",
     title: "Morning Meeting",
-    date: "2024-03-18",
+    task_date: "2024-03-18",
   },
   {
     id: "2",
     day: "Tue",
-    time: "14:00",
+    task_time: "14:00",
     title: "Hangouts",
-    date: "2024-03-19",
+    task_date: "2024-03-19",
   },
   {
     id: "3",
     day: "Wed",
-    time: "10:00",
+    task_time: "10:00",
     title: "Insurance & Risk",
-    date: "2024-03-20",
+    task_date: "2024-03-20",
   },
   {
     id: "4",
     day: "Thu",
-    time: "09:00",
+    task_time: "09:00",
     title: "Boxing",
-    date: "2024-03-21",
+    task_date: "2024-03-21",
   },
   {
     id: "5",
     day: "Fri",
-    time: "13:00",
+    task_time: "13:00",
     title: "Marketing",
-    date: "2024-03-22",
+    task_date: "2024-03-22",
   },
   {
     id: "6",
     day: "Sat",
-    time: "10:00",
+    task_time: "10:00",
     title: "Logo Sketch",
-    date: "2024-03-23",
+    task_date: "2024-03-23",
   },
   {
     id: "7",
     day: "Sun",
-    time: "09:00",
+    task_time: "09:00",
     title: "Morning Ritual",
-    date: "2024-03-24",
+    task_date: "2024-03-24",
   },
 ];
 
@@ -75,8 +75,8 @@ function getDayAbbreviation(date: Date): string {
 export default function CalendarDayPage() {
   const { date } = useParams<{ date: string }>();
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [events, setEvents] = useState<Event[]>(dummyEvents);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [events, setEvents] = useState<CalendarEvent[]>(dummyEvents);
 
   const inputDate = useMemo(() => {
     const d = date ? new Date(date) : new Date();
@@ -101,12 +101,12 @@ export default function CalendarDayPage() {
       .padStart(2, "0")}/${y}`;
   }, [inputDate]);
 
-  const handleEventClick = useCallback((event: Event) => {
+  const handleEventClick = useCallback((event: CalendarEvent) => {
     setSelectedEvent(event);
     setModalOpen(true);
   }, []);
 
-  const handleEventEdit = useCallback((editedEvent: Event) => {
+  const handleEventEdit = useCallback((editedEvent: CalendarEvent) => {
     setEvents((prevEvents) =>
       prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
     );
@@ -170,7 +170,7 @@ export default function CalendarDayPage() {
 
           {/* Render event */}
           {eventsInDay.map((event) => {
-            const [hourStr, minuteStr] = event.time.split(":");
+            const [hourStr, minuteStr] = event.task_time.split(":");
             const eventStartHour = parseInt(hourStr, 10);
             const eventStartMinute = parseInt(minuteStr, 10);
             const top =
@@ -208,7 +208,7 @@ export default function CalendarDayPage() {
                 <Typography fontWeight="bold" noWrap>
                   {event.title}
                 </Typography>
-                <Typography fontSize={12}>{event.time}</Typography>
+                <Typography fontSize={12}>{event.task_time}</Typography>
               </Paper>
             );
           })}

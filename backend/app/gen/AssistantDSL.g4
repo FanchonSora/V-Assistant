@@ -22,7 +22,7 @@ confirmCommand: affirmative | negative ;
 affirmative: YES ;
 negative: NO ;
 
-dueSpec: ( 'in' INT timeUnit ) | ( 'at' DATETIME ) ;
+dueSpec: ( 'in' INT timeUnit ) | ( 'at' DATE TIME ) ;
 timeUnit: MINUTE | HOUR | DAY ;
 
 rruleClause: 'repeat' 'every' IDENTIFIER ;
@@ -32,7 +32,8 @@ fieldAssign: IDENTIFIER '='? IDENTIFIER ;
 /* task title dừng khi gặp “in” hay con số */
 taskTitle: IDENTIFIER ( { self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" }? IDENTIFIER )* ;
 
-/* ────────────── lexer rules (đặt TRƯỚC IDENTIFIER) ────────────── */
+/* ────────────── lexer rules (lưu ý thứ tự ưu tiên) ────────────── */
+
 YES: 'yes' | 'yep' | 'sure' | 'ok' ;
 NO: 'no' | 'nope' ;
 
@@ -40,9 +41,10 @@ MINUTE: 'minute' | 'minutes' ;
 HOUR: 'hour'   | 'hours' ;
 DAY: 'day'    | 'days'  ;
 
+DATE: [0-9][0-9][0-9][0-9] '-' [0-9][0-9] '-' [0-9][0-9] ;
+TIME: [0-9][0-9] ':' [0-9][0-9] ;
+
 INT: [0-9]+ ;
-DATETIME: DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT ' ' DIGIT DIGIT ':' DIGIT DIGIT ;
-fragment DIGIT: [0-9];
-fragment LETTER: [A-Za-z];
-IDENTIFIER: (DIGIT | LETTER)+ ;
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]* ;
+
 WS: [ \t\r\n]+ -> skip ;

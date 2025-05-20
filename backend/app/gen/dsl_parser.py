@@ -40,14 +40,18 @@ class _Visitor(AssistantDSLVisitor):
 
         # ---------- dueSpec ----------
         due = None
+        task_date = None
+        task_time = None
         if ctx.dueSpec():
             # Check first token of dueSpec: either 'in' or 'at'
             first = ctx.dueSpec().getChild(0).getText().lower()
             if first == "at":
-                # absolute datetime, expected DATETIME token as second child
-                datetime_text = ctx.dueSpec().DATETIME().getText()
+                # Get DATE and TIME separately
+                date_text = ctx.dueSpec().DATE().getText()       
+                time_text = ctx.dueSpec().TIME().getText()
                 # Parse datetime in given format
-                due = datetime.strptime(datetime_text, "%Y-%m-%d %H:%M")
+                task_date = datetime.strptime(date_text, "%Y-%m-%d").date()
+                task_time = datetime.strptime(time_text, "%H:%M").time()
             else:
                 # Relative: "in" INT timeUnit
                 amount = int(ctx.dueSpec().INT().getText())
@@ -58,6 +62,11 @@ class _Visitor(AssistantDSLVisitor):
                     due = datetime.utcnow() + timedelta(hours=amount)
                 elif unit.startswith("day"):
                     due = datetime.utcnow() + timedelta(days=amount)
+                
+                if due:
+                    task_date = due.date()
+                    task_time = due.time()
+
         # ---------- repeat ----------
         repeat = None
         if ctx.rruleClause():
@@ -70,7 +79,8 @@ class _Visitor(AssistantDSLVisitor):
         return {
             "action": "create",
             "title":  title,
-            "start_date": due,  # Using start_date to map with DB's field, format is datetime
+            "task_date": task_date,
+            "task_time": task_time,
             "repeat": repeat,
             "status": status,
         }

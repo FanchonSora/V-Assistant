@@ -22,7 +22,8 @@ class TaskService:
         task = Task(
             owner_id=user.id,
             title=data.title,
-            start_date=data.start_date,
+            task_date=data.task_date,
+            task_time=data.task_time,
             rrule=data.rrule,
             status=Status.pending
         )
@@ -30,7 +31,7 @@ class TaskService:
         await session.commit()
         await session.refresh(task)
 
-        if task.start_date:  # schedule email
+        if task.task_date and task.task_time:
             await schedule_task_reminder(task)
 
         return TaskRead.model_validate(task)
@@ -42,7 +43,7 @@ class TaskService:
         stmt = select(Task).where(Task.owner_id == user.id)
         if date:
             target = datetime.fromisoformat(date)
-            stmt = stmt.where(func.date(Task.start_date) == target.date())
+            stmt = stmt.where(Task.task_date == target.date())
         rows = await session.scalars(stmt)
         return [TaskRead.model_validate(t) for t in rows]
 

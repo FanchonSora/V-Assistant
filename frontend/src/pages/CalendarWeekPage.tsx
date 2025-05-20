@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 
-const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 8pm
+const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
@@ -94,9 +94,24 @@ export default function CalendarWeekView() {
   const eventsByDay = useMemo(() => {
     const map: { [key: string]: Event[] } = {};
     days.forEach((d) => (map[d] = []));
-    events.forEach((e) => map[e.day].push(e));
+
+    events.forEach((event) => {
+      const eventDate = new Date(event.task_date);
+
+      const eventTime = eventDate.getTime();
+      const startTime = startDate.getTime();
+      const endTime = new Date(startDate);
+      endTime.setDate(startDate.getDate() + 7);
+
+      if (eventTime >= startTime && eventTime < endTime.getTime()) {
+        const eventDayIndex = eventDate.getDay();
+        const dayLabel = days[(eventDayIndex + 6) % 7];
+
+        map[dayLabel].push(event);
+      }
+    });
     return map;
-  }, [events]);
+  }, [events, startDate]);
 
   const handleEventClick = useCallback((event: Event) => {
     setSelectedEvent(event);
