@@ -8,19 +8,74 @@ import EventModal from "./EventModal";
 const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 8pm
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const dummyEvents = [
-  { day: "Mon", time: "09:00", duration: 1, title: "Morning Meeting" },
-  { day: "Tue", time: "14:00", duration: 1, title: "Hangouts" },
-  { day: "Wed", time: "10:00", duration: 2, title: "Insurance & Risk" },
-  { day: "Thu", time: "09:00", duration: 1.5, title: "Boxing" },
-  { day: "Fri", time: "13:00", duration: 2, title: "Marketing" },
-  { day: "Sat", time: "10:00", duration: 1, title: "Logo Sketch" },
-  { day: "Sun", time: "09:00", duration: 1, title: "Morning Ritual" },
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  day: string;
+}
+
+const dummyEvents: Event[] = [
+  {
+    id: "1",
+    day: "Mon",
+    time: "09:00",
+    title: "Morning Meeting",
+    date: "2024-03-18",
+  },
+  {
+    id: "2",
+    day: "Tue",
+    time: "14:00",
+    title: "Hangouts",
+    date: "2024-03-19",
+  },
+  {
+    id: "3",
+    day: "Wed",
+    time: "10:00",
+    title: "Insurance & Risk",
+    date: "2024-03-20",
+  },
+  {
+    id: "4",
+    day: "Thu",
+    time: "09:00",
+    title: "Boxing",
+    date: "2024-03-21",
+  },
+  {
+    id: "5",
+    day: "Fri",
+    time: "13:00",
+    title: "Marketing",
+    date: "2024-03-22",
+  },
+  {
+    id: "6",
+    day: "Sat",
+    time: "10:00",
+    title: "Logo Sketch",
+    date: "2024-03-23",
+  },
+  {
+    id: "7",
+    day: "Sun",
+    time: "09:00",
+    title: "Morning Ritual",
+    date: "2024-03-24",
+  },
 ];
 
 export default function CalendarWeekView() {
   const { date } = useParams();
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>(dummyEvents);
 
   const inputDate = useMemo(() => {
     const parsed = date ? new Date(date) : new Date();
@@ -37,28 +92,34 @@ export default function CalendarWeekView() {
   const startDate = useMemo(() => getMonday(inputDate), [inputDate]);
 
   const eventsByDay = useMemo(() => {
-    const map: { [key: string]: typeof dummyEvents } = {};
+    const map: { [key: string]: Event[] } = {};
     days.forEach((d) => (map[d] = []));
-    dummyEvents.forEach((e) => map[e.day].push(e));
+    events.forEach((e) => map[e.day].push(e));
     return map;
+  }, [events]);
+
+  const handleEventClick = useCallback((event: Event) => {
+    setSelectedEvent(event);
+    setModalOpen(true);
   }, []);
 
-  // Modal state
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<{ title: string; date: string } | null>(null);
+  const handleEventEdit = useCallback((editedEvent: Event) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
+    );
+  }, []);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleModalOpen = useCallback(
-  (title: string, date: string, el: HTMLElement) => {
-    setModalData({ title, date });
-    setAnchorEl(el);
-    setModalOpen(true);
-  },
-  []
-);
+  const handleEventDelete = useCallback((eventId: string) => {
+    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+  }, []);
 
-  // Close modal when clicking outside
-  const handleModalClose = useCallback(() => setModalOpen(false), []);
+  const handleDayClick = useCallback(
+    (day: Date) => {
+      const formattedDate = formatDate(day);
+      navigate(`/calendar/day/${formattedDate}`);
+    },
+    [navigate]
+  );
 
   return (
     <Box sx={{ position: "relative", padding: 2 }}>
@@ -69,7 +130,11 @@ export default function CalendarWeekView() {
       <CalendarViewSelector />
 
       {/* Calendar grid */}
-      <Box display="grid" gridTemplateColumns="80px repeat(7, 1fr)" border="1px solid #ccc">
+      <Box
+        display="grid"
+        gridTemplateColumns="80px repeat(7, 1fr)"
+        border="1px solid #ccc"
+      >
         {/* Header row */}
         <Box />
         {days.map((day, index) => {
@@ -81,12 +146,17 @@ export default function CalendarWeekView() {
           return (
             <Box
               key={day}
+              onClick={() => handleDayClick(date)}
               sx={{
                 textAlign: "center",
                 fontWeight: "bold",
                 py: 1,
                 borderLeft: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
+                cursor: "pointer",
+                "&:hover": {
+                  bgcolor: "#e3f2fd",
+                },
               }}
             >
               <Typography variant="subtitle1">{day}</Typography>
@@ -101,7 +171,9 @@ export default function CalendarWeekView() {
         {hours.map((hour) => (
           <Box key={`row-${hour}`} display="contents">
             {/* Time label */}
-            <Box sx={{ borderTop: "1px solid #ccc", p: 1, fontSize: 12 }}>{hour}:00</Box>
+            <Box sx={{ borderTop: "1px solid #ccc", p: 1, fontSize: 12 }}>
+              {hour}:00
+            </Box>
             {/* Day columns */}
             {days.map((day) => (
               <Box
@@ -115,15 +187,15 @@ export default function CalendarWeekView() {
               >
                 {eventsByDay[day]
                   .filter((e) => parseInt(e.time.split(":")[0]) === hour)
-                  .map((e, i) => (
+                  .map((e) => (
                     <Paper
-                      key={i}
+                      key={e.id}
                       sx={{
                         position: "absolute",
                         top: 0,
                         left: 4,
                         right: 4,
-                        height: e.duration * 60,
+                        height: 60,
                         bgcolor: "#1976d2",
                         color: "#fff",
                         p: 1,
@@ -131,13 +203,7 @@ export default function CalendarWeekView() {
                         overflow: "hidden",
                         cursor: "pointer",
                       }}
-                      onClick={(event) =>
-                        handleModalOpen(
-                          e.title,
-                          `${day} ${e.time}`,
-                          event.currentTarget as HTMLElement
-                        )
-                      }
+                      onClick={() => handleEventClick(e)}
                     >
                       {e.title}
                     </Paper>
@@ -165,16 +231,10 @@ export default function CalendarWeekView() {
       {/* Event Modal */}
       <EventModal
         open={modalOpen}
-        title={modalData?.title || ""}
-        date={modalData?.date || ""}
-        onClose={handleModalClose}
-        onDelete={() => {
-          setModalOpen(false);
-        }}
-        onEdit={() => {
-          setModalOpen(false);
-        }}
-        anchorEl={anchorEl}
+        event={selectedEvent}
+        onClose={() => setModalOpen(false)}
+        onDelete={handleEventDelete}
+        onEdit={handleEventEdit}
       />
     </Box>
   );

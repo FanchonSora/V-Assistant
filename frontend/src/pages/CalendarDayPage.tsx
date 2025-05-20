@@ -1,19 +1,70 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Paper } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
+import EventModal from "./EventModal";
 
 const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 19pm
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const dummyEvents = [
-  { day: "Mon", time: "09:00", duration: 1, title: "Morning Meeting" },
-  { day: "Tue", time: "14:00", duration: 1, title: "Hangouts" },
-  { day: "Wed", time: "10:00", duration: 2, title: "Insurance & Risk" },
-  { day: "Thu", time: "09:00", duration: 1.5, title: "Boxing" },
-  { day: "Fri", time: "13:00", duration: 2, title: "Marketing" },
-  { day: "Sat", time: "10:00", duration: 1, title: "Logo Sketch" },
-  { day: "Sun", time: "09:00", duration: 1, title: "Morning Ritual" },
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  day: string;
+}
+
+const dummyEvents: Event[] = [
+  {
+    id: "1",
+    day: "Mon",
+    time: "09:00",
+    title: "Morning Meeting",
+    date: "2024-03-18",
+  },
+  {
+    id: "2",
+    day: "Tue",
+    time: "14:00",
+    title: "Hangouts",
+    date: "2024-03-19",
+  },
+  {
+    id: "3",
+    day: "Wed",
+    time: "10:00",
+    title: "Insurance & Risk",
+    date: "2024-03-20",
+  },
+  {
+    id: "4",
+    day: "Thu",
+    time: "09:00",
+    title: "Boxing",
+    date: "2024-03-21",
+  },
+  {
+    id: "5",
+    day: "Fri",
+    time: "13:00",
+    title: "Marketing",
+    date: "2024-03-22",
+  },
+  {
+    id: "6",
+    day: "Sat",
+    time: "10:00",
+    title: "Logo Sketch",
+    date: "2024-03-23",
+  },
+  {
+    id: "7",
+    day: "Sun",
+    time: "09:00",
+    title: "Morning Ritual",
+    date: "2024-03-24",
+  },
 ];
 
 // Hàm lấy tên ngày dạng 3 ký tự (Sun, Mon...)
@@ -23,6 +74,9 @@ function getDayAbbreviation(date: Date): string {
 
 export default function CalendarDayPage() {
   const { date } = useParams<{ date: string }>();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>(dummyEvents);
 
   const inputDate = useMemo(() => {
     const d = date ? new Date(date) : new Date();
@@ -33,8 +87,8 @@ export default function CalendarDayPage() {
 
   // Lọc event của ngày đó
   const eventsInDay = useMemo(
-    () => dummyEvents.filter((e) => e.day === dayAbbr),
-    [dayAbbr]
+    () => events.filter((e) => e.day === dayAbbr),
+    [dayAbbr, events]
   );
 
   // Hiển thị ngày dd/mm/yyyy
@@ -42,8 +96,25 @@ export default function CalendarDayPage() {
     const d = inputDate.getDate();
     const m = inputDate.getMonth() + 1;
     const y = inputDate.getFullYear();
-    return `${d.toString().padStart(2, "0")}/${m.toString().padStart(2, "0")}/${y}`;
+    return `${d.toString().padStart(2, "0")}/${m
+      .toString()
+      .padStart(2, "0")}/${y}`;
   }, [inputDate]);
+
+  const handleEventClick = useCallback((event: Event) => {
+    setSelectedEvent(event);
+    setModalOpen(true);
+  }, []);
+
+  const handleEventEdit = useCallback((editedEvent: Event) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
+    );
+  }, []);
+
+  const handleEventDelete = useCallback((eventId: string) => {
+    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+  }, []);
 
   return (
     <Box sx={{ p: 2, position: "relative" }}>
@@ -98,22 +169,26 @@ export default function CalendarDayPage() {
           ))}
 
           {/* Render event */}
-          {eventsInDay.map((event, i) => {
+          {eventsInDay.map((event) => {
             const [hourStr, minuteStr] = event.time.split(":");
             const eventStartHour = parseInt(hourStr, 10);
             const eventStartMinute = parseInt(minuteStr, 10);
             const top =
               (eventStartHour - hours[0]) * 60 + (eventStartMinute / 60) * 60;
-            const height = event.duration * 60;
+            const height = 60; // Fixed height for events
 
             // Nếu sự kiện ngoài khung giờ thì bỏ qua hiển thị
-            if (eventStartHour < hours[0] || eventStartHour >= hours[hours.length - 1] + 1)
+            if (
+              eventStartHour < hours[0] ||
+              eventStartHour >= hours[hours.length - 1] + 1
+            )
               return null;
 
             return (
               <Paper
-                key={i}
+                key={event.id}
                 elevation={3}
+                onClick={() => handleEventClick(event)}
                 sx={{
                   position: "absolute",
                   top,
@@ -133,14 +208,21 @@ export default function CalendarDayPage() {
                 <Typography fontWeight="bold" noWrap>
                   {event.title}
                 </Typography>
-                <Typography fontSize={12}>
-                  {event.time} - {event.duration} giờ
-                </Typography>
+                <Typography fontSize={12}>{event.time}</Typography>
               </Paper>
             );
           })}
         </Box>
       </Box>
+
+      {/* Event Modal */}
+      <EventModal
+        open={modalOpen}
+        event={selectedEvent}
+        onClose={() => setModalOpen(false)}
+        onDelete={handleEventDelete}
+        onEdit={handleEventEdit}
+      />
     </Box>
   );
 }

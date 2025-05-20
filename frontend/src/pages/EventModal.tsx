@@ -1,105 +1,260 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
   IconButton,
-  Paper,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  Stack,
+  Divider,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EventIcon from "@mui/icons-material/Event";
+import SaveIcon from "@mui/icons-material/Save";
+
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  day: string;
+}
 
 interface EventModalProps {
   open: boolean;
-  title: string;
-  date: string;
+  event: Event | null;
   onClose: () => void;
-  onDelete: () => void;
-  onEdit: () => void;
-  anchorEl?: HTMLElement | null;
+  onDelete: (eventId: string) => void;
+  onEdit: (event: Event) => void;
 }
 
 const EventModal: React.FC<EventModalProps> = ({
   open,
-  title,
-  date,
+  event,
   onClose,
   onDelete,
   onEdit,
-  anchorEl,
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedEvent, setEditedEvent] = useState<Event | null>(null);
 
-  // Positioning logic: place modal to the left of anchorEl
-  const [position, setPosition] = React.useState<{ top: number; left: number }>({ top: 100, left: 100 });
-
-  useEffect(() => {
-    if (anchorEl && open) {
-      const rect = anchorEl.getBoundingClientRect();
-      setPosition({
-        top: rect.top - 35 + window.scrollY,
-        left: rect.left - 600 + window.scrollX,
-      });
+  // Initialize editedEvent when event changes
+  React.useEffect(() => {
+    if (event) {
+      setEditedEvent(event);
     }
-  }, [anchorEl, open]);
+  }, [event]);
 
-  // Close modal when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node) &&
-        anchorEl &&
-        !anchorEl.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    }
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [open, onClose, anchorEl]);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
 
-  if (!open) return null;
+  const handleSave = () => {
+    if (editedEvent) {
+      onEdit(editedEvent);
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditedEvent(event);
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    if (event) {
+      onDelete(event.id);
+      onClose();
+    }
+  };
+
+  if (!event) return null;
 
   return (
-    <Box
-      ref={modalRef}
-      component={Paper}
-      elevation={6}
-      sx={{
-        position: "absolute",
-        top: position.top,
-        left: position.left,
-        width: 350,
-        bgcolor: "background.paper",
-        borderRadius: 2,
-        boxShadow: 24,
-        p: 3,
-        zIndex: 1500,
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+          overflow: "hidden",
+        },
       }}
     >
-      <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
-        <IconButton onClick={onEdit}>
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={onDelete}>
-          <DeleteIcon />
-        </IconButton>
-        <IconButton onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-        {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-        {date}
-        </Typography>
-    </Box>
+      <DialogContent sx={{ p: 0 }}>
+        {/* Header with gradient background */}
+        <Box
+          sx={{
+            background: "linear-gradient(45deg, #1976d2 30%, #2196f3 90%)",
+            color: "white",
+            p: 3,
+            position: "relative",
+          }}
+        >
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "white",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          {isEditing ? (
+            <TextField
+              fullWidth
+              value={editedEvent?.title || ""}
+              onChange={(e) =>
+                setEditedEvent((prev) =>
+                  prev ? { ...prev, title: e.target.value } : null
+                )
+              }
+              variant="standard"
+              sx={{
+                "& .MuiInputBase-input": {
+                  color: "white",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                },
+                "& .MuiInput-underline:before": {
+                  borderBottomColor: "rgba(255, 255, 255, 0.7)",
+                },
+                "& .MuiInput-underline:hover:before": {
+                  borderBottomColor: "white",
+                },
+              }}
+            />
+          ) : (
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              {event.title}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Content */}
+        <Box sx={{ p: 3 }}>
+          <Stack spacing={2}>
+            {isEditing ? (
+              <>
+                <TextField
+                  label="Time"
+                  type="time"
+                  value={editedEvent?.time || ""}
+                  onChange={(e) =>
+                    setEditedEvent((prev) =>
+                      prev ? { ...prev, time: e.target.value } : null
+                    )
+                  }
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  select
+                  label="Day"
+                  value={editedEvent?.day || ""}
+                  onChange={(e) =>
+                    setEditedEvent((prev) =>
+                      prev ? { ...prev, day: e.target.value } : null
+                    )
+                  }
+                  fullWidth
+                >
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                    (day) => (
+                      <MenuItem key={day} value={day}>
+                        {day}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              </>
+            ) : (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <EventIcon color="primary" />
+                <Typography variant="body1" color="text.secondary">
+                  {event.date} at {event.time}
+                </Typography>
+              </Box>
+            )}
+          </Stack>
+        </Box>
+
+        <Divider />
+
+        {/* Actions */}
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          {isEditing ? (
+            <>
+              <Button
+                variant="outlined"
+                onClick={handleCancel}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  px: 3,
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={handleSave}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  px: 3,
+                }}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={() => handleDelete()}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  px: 3,
+                }}
+              >
+                Delete
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<EditIcon />}
+                onClick={() => handleEdit()}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  px: 3,
+                }}
+              >
+                Edit
+              </Button>
+            </>
+          )}
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
   );
 };
 

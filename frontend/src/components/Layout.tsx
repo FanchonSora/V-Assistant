@@ -130,7 +130,7 @@ const drawerWidth = 240;
 const menuItems = [
   { text: "Home", icon: <HomeIcon />, path: "/" },
   { text: "Profile", icon: <PersonIcon />, path: "/profile" },
-  { text: "Calendar", icon: <CalendarMonthIcon />, path: "/calendar" },
+  { text: "Appointment", icon: <CalendarMonthIcon />, path: "/appointment" },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 
