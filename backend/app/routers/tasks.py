@@ -18,7 +18,7 @@ async def list_tasks(date: str = Query(None)):
 async def update_task(task_id: str, data: TaskUpdate):
     return await TaskService.update(task_id, data)
 
-@router.delete('/{task_id}')
+@router.delete('/{task_id}', status_code=204)
 async def delete_task(task_id: str):
     await TaskService.delete(task_id)
     return {'detail': 'Deleted'}

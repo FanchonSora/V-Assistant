@@ -107,10 +107,12 @@ class ChatService:
             if not tasks:
                 return ChatResponse(reply="📭 Bạn chưa có task nào.")
             lines = [
+
                 f"• {t.title} – {t.status} – {t.start_date:%d/%m %H:%M}" if t.start_date else f"• {t.title} – {t.status}"
                 for t in tasks
             ]
             return ChatResponse(reply="\n".join(lines))
 
         # ------------------------- fallback -------------------------
+
         return ChatResponse(reply="❓ Sorry, I don't have this response yet.")

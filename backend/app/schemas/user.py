@@ -13,6 +13,9 @@ class UserCreate(BaseModel):
 class UserRead(BaseModel):
     id: str
     username: str
+    model_config = {
+        "from_attributes": True
+    }
 
 class Token(BaseModel):
     access_token: str

@@ -1,10 +1,11 @@
 from antlr4 import InputStream, CommonTokenStream
 from datetime import datetime, timedelta
+from datetime import datetime
+import time
 
 from .assistantdsl.AssistantDSLLexer import AssistantDSLLexer
 from .assistantdsl.AssistantDSLParser import AssistantDSLParser
 from .assistantdsl.AssistantDSLVisitor import AssistantDSLVisitor
-
 
 class _Visitor(AssistantDSLVisitor):
     def visitProgram(self, ctx):
@@ -12,21 +13,19 @@ class _Visitor(AssistantDSLVisitor):
 
     # greeting -------------------------------------------------------
     def visitGreeting(self, ctx):
-        # Sử dụng ctx.IDENTIFIER() thay vì ctx.Name()
+        # Dùng ctx.IDENTIFIER() vì rule greeting dùng IDENTIFIER
         name = ctx.IDENTIFIER().getText() if ctx.IDENTIFIER() else None
         return {"action": "greet", "name": name}
 
     # introduce ------------------------------------------------------
     def visitIntroduce(self, ctx):
-        # Khi người dùng nhập "What is your name"
         return {"action": "introduce", "name": "Fanchon"}
-    
-    # instruction ------------------------------------------------------
+
     # support --------------------------------------------------------
     def visitSupport(self, ctx):
         instructions = (
             "Các lệnh khả dụng:\n"
-            " Remind me to <task> in <minutes/hours/days> repeat every <period> as <pending|done>\n"
+            " Remind me to <task> in <minutes/hours/days> OR at <YYYY-MM-DD HH:MM> repeat every <period> as <pending|done>\n"
             " Show tasks\n"
             " Delete task <task_reference>\n"
             " Update task <task_reference> set <field>=<value>\n"
@@ -35,28 +34,34 @@ class _Visitor(AssistantDSLVisitor):
         )
         return {"action": "instruction", "instructions": instructions}
 
-
     # create / remind -----------------------------------------------
     def visitCreateAction(self, ctx):
         title = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
 
-        # ---------- due ----------
+        # ---------- dueSpec ----------
         due = None
         if ctx.dueSpec():
-            amount = int(ctx.dueSpec().INT().getText())
-            unit   = ctx.dueSpec().timeUnit().getText().lower()
-            if unit.startswith("minute"):
-                due = datetime.utcnow() + timedelta(minutes=amount)
-            elif unit.startswith("hour"):
-                due = datetime.utcnow() + timedelta(hours=amount)
-            elif unit.startswith("day"):
-                due = datetime.utcnow() + timedelta(days=amount)
-
+            # Check first token of dueSpec: either 'in' or 'at'
+            first = ctx.dueSpec().getChild(0).getText().lower()
+            if first == "at":
+                # absolute datetime, expected DATETIME token as second child
+                datetime_text = ctx.dueSpec().DATETIME().getText()
+                # Parse datetime in given format
+                due = datetime.strptime(datetime_text, "%Y-%m-%d %H:%M")
+            else:
+                # Relative: "in" INT timeUnit
+                amount = int(ctx.dueSpec().INT().getText())
+                unit = ctx.dueSpec().timeUnit().getText().lower()
+                if unit.startswith("minute"):
+                    due = datetime.utcnow() + timedelta(minutes=amount)
+                elif unit.startswith("hour"):
+                    due = datetime.utcnow() + timedelta(hours=amount)
+                elif unit.startswith("day"):
+                    due = datetime.utcnow() + timedelta(days=amount)
         # ---------- repeat ----------
         repeat = None
         if ctx.rruleClause():
             repeat = ctx.rruleClause().IDENTIFIER().getText().lower()
-
         # ---------- status ----------
         status = None
         if ctx.statusClause():
@@ -65,34 +70,28 @@ class _Visitor(AssistantDSLVisitor):
         return {
             "action": "create",
             "title":  title,
-            "due":    due,
+            "start_date": due,  # Using start_date to map with DB's field, format is datetime
             "repeat": repeat,
             "status": status,
         }
     
-    # ───────────────────────────── view ────────────────────────────────
+    # view -----------------------------------------------------------
     def visitViewAction(self, ctx):
-        # rule: (SHOW|LIST|VIEW) TASKS
         return {"action": "view"}
 
-    # ───────────────────────────── delete ──────────────────────────────
+    # delete ---------------------------------------------------------
     def visitDeleteAction(self, ctx):
-        # rule: (DELETE|REMOVE) TASK taskTitle
         ref = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
         return {"action": "delete", "task_ref": ref}
 
-    # ───────────────────────────── modify / update ─────────────────────
+    # modify / update ------------------------------------------------
     def visitModifyAction(self, ctx):
-        # rule: (UPDATE|MODIFY) TASK taskTitle SET fieldAssign (',' fieldAssign)*
         ref = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
-
         updates = {}
         for fa in ctx.fieldAssign():
-            # fieldAssign : IDENTIFIER '='? IDENTIFIER ;
             key = fa.IDENTIFIER(0).getText().lower()
             val = fa.IDENTIFIER(1).getText()
             updates[key] = val
-
         return {"action": "update", "task_ref": ref, "updates": updates}
     
     def visitAffirmative(self, ctx):
@@ -103,9 +102,6 @@ class _Visitor(AssistantDSLVisitor):
 
 
 def parse(text: str) -> dict:
-    """
-    Parse user input with the case-insensitive grammar that đã generate sẵn.
-    """
     stream = InputStream(text)
     lexer = AssistantDSLLexer(stream)
     tokens = CommonTokenStream(lexer)

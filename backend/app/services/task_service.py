@@ -70,3 +70,16 @@ class TaskService:
             raise HTTPException(status_code=404, detail="Task not found")
         await session.delete(task)
         await session.commit()
+    @staticmethod
+    async def get_by_ref(ref: str,
+                    session: AsyncSession = Depends(get_session),
+                    user=Depends(get_current_user)) -> Task | None:
+        # Thử theo id trước
+        task = await session.get(Task, ref)
+        if task and task.owner_id == user.id:
+            return task
+        # Nếu không phải id hợp lệ, tìm theo tiêu đề
+        stmt = select(Task).where(Task.owner_id == user.id,
+                                func.lower(Task.title) == ref.lower())
+        row = await session.scalars(stmt)
+        return row.first()

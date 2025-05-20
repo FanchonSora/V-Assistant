@@ -1,25 +1,82 @@
 import { Box, Typography, Fab, Paper } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMemo, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 
-const hours = Array.from({ length: 24 }, (_, i) => i);
+const hours = Array.from({ length: 12 }, (_, i) => 8 + i); // 8am - 8pm
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const dummyEvents = [
-  { date: "2025-06-16", time: "09:00", duration: 1, title: "Morning Meeting" },
-  { date: "2025-06-17", time: "14:00", duration: 1, title: "Hangouts" },
-  { date: "2025-06-18", time: "10:00", duration: 2, title: "Insurance & Risk" },
-  { date: "2025-06-19", time: "09:00", duration: 1.5, title: "Boxing" },
-  { date: "2025-06-20", time: "13:00", duration: 2, title: "Marketing" },
-  { date: "2025-06-21", time: "10:00", duration: 1, title: "Logo Sketch" },
-  { date: "2025-06-22", time: "09:00", duration: 1, title: "Morning Ritual" },
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+interface Event {
+  id: string;
+  title: string;
+  task_date: string;
+  task_time: string;
+  day: string;
+}
+
+const dummyEvents: Event[] = [
+  {
+    id: "1",
+    day: "Mon",
+    task_time: "09:00",
+    title: "Morning Meeting",
+    task_date: "2024-03-18",
+  },
+  {
+    id: "2",
+    day: "Tue",
+    task_time: "14:00",
+    title: "Hangouts",
+    task_date: "2024-03-19",
+  },
+  {
+    id: "3",
+    day: "Wed",
+    task_time: "10:00",
+    title: "Insurance & Risk",
+    task_date: "2024-03-20",
+  },
+  {
+    id: "4",
+    day: "Thu",
+    task_time: "09:00",
+    title: "Boxing",
+    task_date: "2024-03-21",
+  },
+  {
+    id: "5",
+    day: "Fri",
+    task_time: "13:00",
+    title: "Marketing",
+    task_date: "2024-03-22",
+  },
+  {
+    id: "6",
+    day: "Sat",
+    task_time: "10:00",
+    title: "Logo Sketch",
+    task_date: "2024-03-23",
+  },
+  {
+    id: "7",
+    day: "Sun",
+    task_time: "09:00",
+    title: "Morning Ritual",
+    task_date: "2024-03-24",
+  },
 ];
 
 export default function CalendarWeekView() {
   const { date } = useParams();
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>(dummyEvents);
+
   const inputDate = useMemo(() => {
     const parsed = date ? new Date(date) : new Date();
     return isNaN(parsed.getTime()) ? new Date() : parsed;
@@ -34,27 +91,35 @@ export default function CalendarWeekView() {
 
   const startDate = useMemo(() => getMonday(inputDate), [inputDate]);
 
-  const eventsByDate = useMemo(() => {
-    const map: { [date: string]: typeof dummyEvents } = {};
-    dummyEvents.forEach((e) => {
-      if (!map[e.date]) map[e.date] = [];
-      map[e.date].push(e);
-    });
+  const eventsByDay = useMemo(() => {
+    const map: { [key: string]: Event[] } = {};
+    days.forEach((d) => (map[d] = []));
+    events.forEach((e) => map[e.day].push(e));
     return map;
-  }, []);
+  }, [events]);
 
-  // Modal state
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<{ title: string; date: string } | null>(null);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const handleModalOpen = useCallback((title: string, date: string, el: HTMLElement) => {
-    setModalData({ title, date });
-    setAnchorEl(el);
+  const handleEventClick = useCallback((event: Event) => {
+    setSelectedEvent(event);
     setModalOpen(true);
   }, []);
 
-  const handleModalClose = useCallback(() => setModalOpen(false), []);
+  const handleEventEdit = useCallback((editedEvent: Event) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
+    );
+  }, []);
+
+  const handleEventDelete = useCallback((eventId: string) => {
+    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+  }, []);
+
+  const handleDayClick = useCallback(
+    (day: Date) => {
+      const formattedDate = formatDate(day);
+      navigate(`/calendar/day/${formattedDate}`);
+    },
+    [navigate]
+  );
 
   return (
     <Box sx={{ position: "relative", padding: 2 }}>
@@ -65,24 +130,33 @@ export default function CalendarWeekView() {
       <CalendarViewSelector />
 
       {/* Calendar grid */}
-      <Box display="grid" gridTemplateColumns="80px repeat(7, 1fr)" border="1px solid #ccc">
+      <Box
+        display="grid"
+        gridTemplateColumns="80px repeat(7, 1fr)"
+        border="1px solid #ccc"
+      >
         {/* Header row */}
         <Box />
         {days.map((day, index) => {
-          const currentDate = new Date(startDate);
-          currentDate.setDate(startDate.getDate() + index);
-          const dayNumber = currentDate.getDate();
-          const monthNumber = currentDate.getMonth() + 1;
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + index);
+          const dayNumber = date.getDate();
+          const monthNumber = date.getMonth() + 1;
 
           return (
             <Box
               key={day}
+              onClick={() => handleDayClick(date)}
               sx={{
                 textAlign: "center",
                 fontWeight: "bold",
                 py: 1,
                 borderLeft: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
+                cursor: "pointer",
+                "&:hover": {
+                  bgcolor: "#e3f2fd",
+                },
               }}
             >
               <Typography variant="subtitle1">{day}</Typography>
@@ -97,51 +171,45 @@ export default function CalendarWeekView() {
         {hours.map((hour) => (
           <Box key={`row-${hour}`} display="contents">
             {/* Time label */}
-            <Box sx={{ borderTop: "1px solid #ccc", p: 1, fontSize: 12 }}>{hour}:00</Box>
+            <Box sx={{ borderTop: "1px solid #ccc", p: 1, fontSize: 12 }}>
+              {hour}:00
+            </Box>
             {/* Day columns */}
-            {days.map((_, index) => {
-              const currentDate = new Date(startDate);
-              currentDate.setDate(startDate.getDate() + index);
-              const currentDateStr = currentDate.toISOString().split("T")[0]; // yyyy-mm-dd
-
-              return (
-                <Box
-                  key={`${currentDateStr}-${hour}`}
-                  sx={{
-                    borderTop: "1px solid #eee",
-                    borderLeft: "1px solid #ccc",
-                    height: 60,
-                    position: "relative",
-                  }}
-                >
-                  {eventsByDate[currentDateStr]
-                    ?.filter((e) => parseInt(e.time.split(":")[0]) === hour)
-                    .map((e, i) => (
-                      <Paper
-                        key={i}
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 4,
-                          right: 4,
-                          height: e.duration * 60,
-                          bgcolor: "#1976d2",
-                          color: "#fff",
-                          p: 1,
-                          fontSize: 12,
-                          overflow: "hidden",
-                          cursor: "pointer",
-                        }}
-                        onClick={(event) =>
-                          handleModalOpen(e.title, `${currentDateStr} ${e.time}`, event.currentTarget)
-                        }
-                      >
-                        {e.title}
-                      </Paper>
-                    ))}
-                </Box>
-              );
-            })}
+            {days.map((day) => (
+              <Box
+                key={`${day}-${hour}`}
+                sx={{
+                  borderTop: "1px solid #eee",
+                  borderLeft: "1px solid #ccc",
+                  height: 60,
+                  position: "relative",
+                }}
+              >
+                {eventsByDay[day]
+                  .filter((e) => parseInt(e.task_time.split(":")[0]) === hour)
+                  .map((e) => (
+                    <Paper
+                      key={e.id}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 4,
+                        right: 4,
+                        height: 60,
+                        bgcolor: "#1976d2",
+                        color: "#fff",
+                        p: 1,
+                        fontSize: 12,
+                        overflow: "hidden",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleEventClick(e)}
+                    >
+                      {e.title}
+                    </Paper>
+                  ))}
+              </Box>
+            ))}
           </Box>
         ))}
       </Box>
@@ -163,16 +231,10 @@ export default function CalendarWeekView() {
       {/* Event Modal */}
       <EventModal
         open={modalOpen}
-        title={modalData?.title || ""}
-        date={modalData?.date || ""}
-        onClose={handleModalClose}
-        onDelete={() => {
-          setModalOpen(false);
-        }}
-        onEdit={() => {
-          setModalOpen(false);
-        }}
-        anchorEl={anchorEl}
+        event={selectedEvent}
+        onClose={() => setModalOpen(false)}
+        onDelete={handleEventDelete}
+        onEdit={handleEventEdit}
       />
     </Box>
   );

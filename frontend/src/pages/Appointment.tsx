@@ -26,6 +26,14 @@ interface Appointment {
   endTime: string;
 }
 
+const formatTimeTo12Hour = (time: string) => {
+  const [hours, minutes] = time.split(":");
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minutes} ${ampm}`;
+};
+
 const calendarStyles = {
   width: "100%",
   border: "none",
@@ -189,7 +197,7 @@ const CalendarPage = () => {
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          {t("calendar.title", "Calendar")}
+          {t("appointment.title", "Appointment")}
         </Typography>
         <Box
           sx={{
@@ -198,7 +206,7 @@ const CalendarPage = () => {
             flexDirection: { xs: "column", md: "row" },
           }}
         >
-          <Box sx={{ flex: 2 }}>
+          <Box sx={{ flex: 3 }}>
             <Paper sx={{ p: 2 }}>
               <Box sx={calendarStyles}>
                 <Calendar
@@ -212,10 +220,10 @@ const CalendarPage = () => {
             </Paper>
           </Box>
 
-          <Box sx={{ flex: 1 }}>
-            <Paper sx={{ p: 2, height: "100%" }}>
+          <Box sx={{ flex: 7 }}>
+            <Paper sx={{ p: 2, height: "200%" }}>
               <Typography variant="h6" gutterBottom>
-                {t("calendar.appointments", "Appointments")}
+                {t("appointment.appointments", "Appointments")}
               </Typography>
               {getAppointmentsForDate(selectedDate).map((appointment) => (
                 <Box
@@ -231,7 +239,8 @@ const CalendarPage = () => {
                     {appointment.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {appointment.startTime} - {appointment.endTime}
+                    {formatTimeTo12Hour(appointment.startTime)} -{" "}
+                    {formatTimeTo12Hour(appointment.endTime)}
                   </Typography>
                   {appointment.description && (
                     <Typography variant="body2" color="text.secondary">
@@ -296,6 +305,10 @@ const CalendarPage = () => {
                 }
                 fullWidth
                 InputLabelProps={{ shrink: true }}
+                inputProps={{
+                  step: 300, // 5 min
+                  format: "12h",
+                }}
               />
               <TextField
                 label={t("calendar.endTime", "End Time")}
@@ -309,6 +322,10 @@ const CalendarPage = () => {
                 }
                 fullWidth
                 InputLabelProps={{ shrink: true }}
+                inputProps={{
+                  step: 300, // 5 min
+                  format: "12h",
+                }}
               />
             </Box>
           </DialogContent>
