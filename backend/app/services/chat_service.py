@@ -80,7 +80,7 @@ class ChatService:
 
             if parsed["value"]:  # Yes
                 data = _PENDING_CREATE.pop(uid)
-                task = await TaskService.create(TaskCreate(**data), user=user, session=session)
+                task = await TaskService.create(TaskCreate(**data), users=user, session=session)
                 due_str = f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m')}" if task.task_date and task.task_time else "không có hạn"
                 return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
 

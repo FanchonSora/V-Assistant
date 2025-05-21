@@ -4,7 +4,6 @@ from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from fastapi import HTTPException, Depends
 
 from app.models.task import Task
 from app.schemas.task import (TaskCreate, TaskRead, TaskUpdate, Status)
@@ -16,11 +15,11 @@ from app.services.scheduler_service import schedule_task_reminder
 class TaskService:
     @staticmethod
     async def create(data: TaskCreate,
-                     user,
-                     session: AsyncSession = Depends(get_session),
+                     users,
+                     session: AsyncSession
                      ) -> TaskRead:
         task = Task(
-            owner_id=user.id,
+            owner_id=users.id,
             title=data.title,
             task_date=data.task_date,
             task_time=data.task_time,
@@ -38,9 +37,10 @@ class TaskService:
 
     @staticmethod
     async def list(date: str | None,
-                   session: AsyncSession = Depends(get_session),
-                   user=Depends(get_current_user)) -> list[TaskRead]:
-        stmt = select(Task).where(Task.owner_id == user.id)
+                   users,
+                   session: AsyncSession
+                   ) -> list[TaskRead]:
+        stmt = select(Task).where(Task.owner_id == users.id)
         if date:
             target = datetime.fromisoformat(date)
             stmt = stmt.where(Task.task_date == target.date())
@@ -49,10 +49,11 @@ class TaskService:
 
     @staticmethod
     async def update(task_id: str, data: TaskUpdate,
-                     session: AsyncSession = Depends(get_session),
-                     user=Depends(get_current_user)) -> TaskRead:
+                     users,
+                     session: AsyncSession
+                     ) -> TaskRead:
         task = await session.get(Task, task_id)
-        if not task or task.owner_id != user.id:
+        if not task or task.owner_id != users.id:
             raise HTTPException(status_code=404, detail="Task not found")
 
         for k, v in data.model_dump(exclude_unset=True).items():
@@ -64,23 +65,25 @@ class TaskService:
 
     @staticmethod
     async def delete(task_id: str,
-                     session: AsyncSession = Depends(get_session),
-                     user=Depends(get_current_user)) -> None:
+                     users,
+                     session: AsyncSession
+                     ) -> None:
         task = await session.get(Task, task_id)
-        if not task or task.owner_id != user.id:
+        if not task or task.owner_id != users.id:
             raise HTTPException(status_code=404, detail="Task not found")
         await session.delete(task)
         await session.commit()
     @staticmethod
     async def get_by_ref(ref: str,
-                    session: AsyncSession = Depends(get_session),
-                    user=Depends(get_current_user)) -> Task | None:
+                        users,
+                        session: AsyncSession
+                        ) -> Task | None:
         # Thử theo id trước
         task = await session.get(Task, ref)
-        if task and task.owner_id == user.id:
+        if task and task.owner_id == users.id:
             return task
         # Nếu không phải id hợp lệ, tìm theo tiêu đề
-        stmt = select(Task).where(Task.owner_id == user.id,
+        stmt = select(Task).where(Task.owner_id == users.id,
                                 func.lower(Task.title) == ref.lower())
         row = await session.scalars(stmt)
         return row.first()

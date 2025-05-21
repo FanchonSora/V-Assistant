@@ -23,3 +23,9 @@ export async function get<T>(url: string, token?: string): Promise<T> {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function getTasks(token?: string, date?: string){
+  let url = "/tasks/";
+  if (date) url += `?date=${date}`;
+  return await get<Event[]>(url, token);
+}

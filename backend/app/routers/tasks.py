@@ -1,8 +1,11 @@
 # app/routers/tasks.py
 from fastapi import APIRouter, Depends, Query
 from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 from app.services.task_service import TaskService
+from app.core.security import get_current_user
+from app.core.db import get_session
 
 router = APIRouter()
 
@@ -11,8 +14,12 @@ async def create_task(data: TaskCreate, service: TaskService = Depends(TaskServi
     return await service.create(data)
 
 @router.get('/', response_model=List[TaskRead])
-async def list_tasks(date: str = Query(None)):
-    return await TaskService.list(date)
+async def list_tasks(
+    date: str = Query(None),
+    current_user = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session)
+):
+    return await TaskService.list(date, current_user, session)
 
 @router.patch('/{task_id}', response_model=TaskRead)
 async def update_task(task_id: str, data: TaskUpdate):

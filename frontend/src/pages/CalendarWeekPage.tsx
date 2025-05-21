@@ -1,16 +1,18 @@
 import { Box, Typography, Fab, Paper } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
+
+import { getTasks } from "../utils/api";
 
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
-interface Event {
+interface CalendarEvent {
   id: string;
   title: string;
   task_date: string;
@@ -18,64 +20,28 @@ interface Event {
   day: string;
 }
 
-const dummyEvents: Event[] = [
-  {
-    id: "1",
-    day: "Mon",
-    task_time: "09:00",
-    title: "Morning Meeting",
-    task_date: "2024-03-18",
-  },
-  {
-    id: "2",
-    day: "Tue",
-    task_time: "14:00",
-    title: "Hangouts",
-    task_date: "2024-03-19",
-  },
-  {
-    id: "3",
-    day: "Wed",
-    task_time: "10:00",
-    title: "Insurance & Risk",
-    task_date: "2024-03-20",
-  },
-  {
-    id: "4",
-    day: "Thu",
-    task_time: "09:00",
-    title: "Boxing",
-    task_date: "2024-03-21",
-  },
-  {
-    id: "5",
-    day: "Fri",
-    task_time: "13:00",
-    title: "Marketing",
-    task_date: "2024-03-22",
-  },
-  {
-    id: "6",
-    day: "Sat",
-    task_time: "10:00",
-    title: "Logo Sketch",
-    task_date: "2024-03-23",
-  },
-  {
-    id: "7",
-    day: "Sun",
-    task_time: "09:00",
-    title: "Morning Ritual",
-    task_date: "2024-03-24",
-  },
-];
-
 export default function CalendarWeekView() {
   const { date } = useParams();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [events, setEvents] = useState<Event[]>(dummyEvents);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    getTasks(token ?? undefined)
+      .then((data) => {
+        const cleanedData: CalendarEvent[] = data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        task_date: item.task_date,
+        task_time: item.task_time,
+        day: item.day,
+      }));
+      setEvents(cleanedData);
+      })
+      .catch((error) => console.error("Error fetching tasks:", error));
+  }, []);
 
   const inputDate = useMemo(() => {
     const parsed = date ? new Date(date) : new Date();
@@ -92,7 +58,7 @@ export default function CalendarWeekView() {
   const startDate = useMemo(() => getMonday(inputDate), [inputDate]);
 
   const eventsByDay = useMemo(() => {
-    const map: { [key: string]: Event[] } = {};
+    const map: { [key: string]: CalendarEvent[] } = {};
     days.forEach((d) => (map[d] = []));
 
     events.forEach((event) => {
@@ -113,12 +79,12 @@ export default function CalendarWeekView() {
     return map;
   }, [events, startDate]);
 
-  const handleEventClick = useCallback((event: Event) => {
+  const handleEventClick = useCallback((event: CalendarEvent) => {
     setSelectedEvent(event);
     setModalOpen(true);
   }, []);
 
-  const handleEventEdit = useCallback((editedEvent: Event) => {
+  const handleEventEdit = useCallback((editedEvent: CalendarEvent) => {
     setEvents((prevEvents) =>
       prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
     );
