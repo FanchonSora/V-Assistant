@@ -34,8 +34,8 @@ const days = [
 interface Event {
   id: string;
   title: string;
-  date: string;
-  time: string;
+  task_date: string;
+  task_time: string;
   day: string;
 }
 
@@ -43,51 +43,51 @@ const dummyEvents: Event[] = [
   {
     id: "1",
     day: "Mon",
-    time: "09:00",
+    task_time: "09:00",
     title: "Morning Meeting",
-    date: "2024-03-18",
+    task_date: "2024-03-18",
   },
   {
     id: "2",
     day: "Tue",
-    time: "14:00",
+    task_time: "14:00",
     title: "Hangouts",
-    date: "2024-03-19",
+    task_date: "2024-03-19",
   },
   {
     id: "3",
     day: "Wed",
-    time: "10:00",
+    task_time: "10:00",
     title: "Insurance & Risk",
-    date: "2024-03-20",
+    task_date: "2024-03-20",
   },
   {
     id: "4",
     day: "Thu",
-    time: "09:00",
+    task_time: "09:00",
     title: "Boxing",
-    date: "2024-03-21",
+    task_date: "2024-03-21",
   },
   {
     id: "5",
     day: "Fri",
-    time: "13:00",
+    task_time: "13:00",
     title: "Marketing",
-    date: "2024-03-22",
+    task_date: "2024-03-22",
   },
   {
     id: "6",
     day: "Sat",
-    time: "10:00",
+    task_time: "10:00",
     title: "Logo Sketch",
-    date: "2024-03-23",
+    task_date: "2024-03-23",
   },
   {
     id: "7",
     day: "Sun",
-    time: "09:00",
+    task_time: "09:00",
     title: "Morning Ritual",
-    date: "2024-03-24",
+    task_date: "2024-03-24",
   },
 ];
 
@@ -193,7 +193,7 @@ export default function CalendarMonthPage() {
       <Grid container spacing={0} sx={{ flexWrap: "wrap" }}>
         {calendarDays.map((day) => {
           const dayStr = formatDate(day);
-          const dayEvents = events.filter((e) => e.date === dayStr);
+          const dayEvents = events.filter((e) => e.task_date === dayStr);
           const isCurrentMonth = day.getMonth() === inputDate.getMonth();
           const isToday = day.toDateString() === currentDate.toDateString();
 
