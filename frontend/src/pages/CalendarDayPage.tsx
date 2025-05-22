@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography, Paper, useTheme } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 
@@ -75,8 +75,12 @@ function getDayAbbreviation(date: Date): string {
 export default function CalendarDayPage() {
   const { date } = useParams<{ date: string }>();
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [events, setEvents] = useState<CalendarEvent[]>(dummyEvents);
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
 
   const inputDate = useMemo(() => {
     const d = date ? new Date(date) : new Date();
@@ -120,7 +124,11 @@ export default function CalendarDayPage() {
     <Box sx={{ p: 2, position: "relative" }}>
       <CalendarViewSelector />
 
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ color: isDarkMode ? "#fff" : "inherit" }}
+      >
         {displayDate} ({dayAbbr})
       </Typography>
 
@@ -128,7 +136,7 @@ export default function CalendarDayPage() {
       <Box
         display="grid"
         gridTemplateColumns="80px 1fr"
-        border="1px solid #ccc"
+        border={`1px solid ${isDarkMode ? "#fff" : theme.palette.divider}`}
         maxWidth={"100%"}
         minHeight={hours.length * 60}
       >
@@ -139,10 +147,12 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: "1px solid #ccc",
+                borderBottom: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
                 px: 1,
                 fontSize: 12,
-                color: "#555",
+                color: isDarkMode ? "#fff" : "text.secondary",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-end",
@@ -162,8 +172,12 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: "1px solid #eee",
-                borderLeft: "1px solid #ccc",
+                borderBottom: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
+                borderLeft: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
               }}
             />
           ))}
@@ -195,14 +209,17 @@ export default function CalendarDayPage() {
                   left: 4,
                   right: 4,
                   height,
-                  bgcolor: "#1976d2",
-                  color: "#fff",
+                  bgcolor: isDarkMode ? "#90caf9" : "primary.main",
+                  color: isDarkMode ? "#000" : "primary.contrastText",
                   p: 1,
                   fontSize: 14,
                   overflow: "hidden",
                   borderRadius: 1,
                   cursor: "pointer",
                   userSelect: "none",
+                  "&:hover": {
+                    bgcolor: isDarkMode ? "#1976d2" : "primary.dark",
+                  },
                 }}
               >
                 <Typography fontWeight="bold" noWrap>

@@ -6,6 +6,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  useTheme,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import type { GridProps } from "@mui/material";
@@ -99,6 +100,7 @@ export default function CalendarMonthPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [events, setEvents] = useState<Event[]>(dummyEvents);
+  const theme = useTheme();
 
   const inputDate = useMemo(() => (date ? new Date(date) : new Date()), [date]);
 
@@ -177,8 +179,8 @@ export default function CalendarMonthPage() {
               textAlign: "center",
               py: 1,
               fontWeight: "bold",
-              color: "#333",
-              border: "1px solid #f1f1f1",
+              color: "text.primary",
+              border: `1px solid ${theme.palette.divider}`,
               flexBasis: "14.285%",
               maxWidth: "14.285%",
               flexGrow: 0,
@@ -202,14 +204,18 @@ export default function CalendarMonthPage() {
               key={dayStr}
               sx={{
                 width: "14.285%",
-                border: "1px solid #f1f1f1",
+                border: `1px solid ${theme.palette.divider}`,
                 height: 120,
                 p: 1,
-                bgcolor: isToday ? "#e3f2fd" : "#fff",
-                color: isCurrentMonth ? "#000" : "#bbb",
+                bgcolor: isToday ? "primary.main" : "background.paper",
+                color: isToday
+                  ? "primary.contrastText"
+                  : isCurrentMonth
+                  ? "text.primary"
+                  : "text.disabled",
                 cursor: "pointer",
                 "&:hover": {
-                  bgcolor: isToday ? "#bbdefb" : "#f5f5f5",
+                  bgcolor: isToday ? "primary.dark" : "action.hover",
                 },
               }}
               onClick={() => handleDateClick(day)}
@@ -234,7 +240,9 @@ export default function CalendarMonthPage() {
                         sx={{
                           fontSize: 8,
                           mr: 0.5,
-                          color: "#1976d2",
+                          color: isToday
+                            ? "primary.contrastText"
+                            : "primary.main",
                         }}
                       />
                       <ListItemText
@@ -245,7 +253,9 @@ export default function CalendarMonthPage() {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
-                            color: isToday ? "#fff" : "inherit",
+                            color: isToday
+                              ? "primary.contrastText"
+                              : "text.primary",
                           },
                         }}
                       />

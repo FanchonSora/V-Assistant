@@ -1,4 +1,4 @@
-import { Box, Typography, Fab, Paper } from "@mui/material";
+import { Box, Typography, Fab, Paper, useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -23,8 +23,12 @@ interface CalendarEvent {
 export default function CalendarWeekView() {
   const { date } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
   useEffect(() => {
@@ -32,13 +36,13 @@ export default function CalendarWeekView() {
     getTasks(token ?? undefined)
       .then((data) => {
         const cleanedData: CalendarEvent[] = data.map((item: any) => ({
-        id: item.id,
-        title: item.title,
-        task_date: item.task_date,
-        task_time: item.task_time,
-        day: item.day,
-      }));
-      setEvents(cleanedData);
+          id: item.id,
+          title: item.title,
+          task_date: item.task_date,
+          task_time: item.task_time,
+          day: item.day,
+        }));
+        setEvents(cleanedData);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
@@ -136,7 +140,7 @@ export default function CalendarWeekView() {
                 borderBottom: "1px solid #ccc",
                 cursor: "pointer",
                 "&:hover": {
-                  bgcolor: "#e3f2fd",
+                  bgcolor: isDarkMode ? "#1e1e1e" : "#e3f2fd",
                 },
               }}
             >
