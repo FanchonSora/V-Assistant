@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import AppointmentPage from "./pages/Appointment";
 import Chat from "./pages/Chat";
+import Profile from "./pages/Profile";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./styles/calendar.css";
 
@@ -30,6 +31,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

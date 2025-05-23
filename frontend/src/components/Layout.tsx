@@ -245,7 +245,7 @@ const Layout = ({ children }: LayoutProps) => {
           <Calendar
             onChange={handleDateClick}
             value={date}
-            calendarType="gregory"
+            calendarType="iso8601"
             tileClassName={({ date, view }) =>
               view === "month" &&
               date.toDateString() === new Date().toDateString()

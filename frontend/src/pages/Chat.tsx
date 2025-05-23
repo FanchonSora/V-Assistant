@@ -147,10 +147,21 @@ const Chat = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      sx={{
+        height: "calc(100vh - 64px - 48px)", // Subtract AppBar height and Layout padding
+        display: "flex",
+        flexDirection: "column",
+        py: 0, // Remove vertical padding since Layout already provides it
+      }}
     >
-      <Box sx={{ my: 4, flex: 1, display: "flex", flexDirection: "column" }}>
-        <Typography variant="h4" component="h1" gutterBottom align="center">
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Typography
+          variant="h5"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ mb: 0.5 }}
+        >
           {t("chat.title", "Chat with V-Assistant")}
         </Typography>
 
@@ -158,13 +169,13 @@ const Chat = () => {
         <Box
           ref={chatContainerRef}
           sx={{
-            height: "calc(100vh - 280px)",
+            height: "calc(100vh - 64px - 48px - 80px)", // Subtract AppBar, Layout padding, and input area height
             overflowY: "auto",
-            mb: 2,
-            px: 2,
+            mb: 0.5,
+            px: 1,
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 0.5,
           }}
         >
           {chatMessages.map((msg, index) => (
@@ -193,7 +204,10 @@ const Chat = () => {
               >
                 <div
                   dangerouslySetInnerHTML={{ __html: msg.text }}
-                  style={{ color: msg.isUser ? "white" : "black", whiteSpace: "pre-line" }}
+                  style={{
+                    color: msg.isUser ? "white" : "black",
+                    whiteSpace: "pre-line",
+                  }}
                 />
               </Paper>
               {msg.isUser && (
@@ -209,15 +223,15 @@ const Chat = () => {
         <Box
           sx={{
             display: "flex",
-            gap: 2,
+            gap: 1,
             maxWidth: "600px",
             margin: "0 auto",
             mt: "auto",
-            mb: 2,
-            px: 2,
+            mb: 0.5,
+            px: 1,
             position: "sticky",
             bottom: 0,
-            py: 2,
+            py: 0.5,
           }}
         >
           <TextField
@@ -227,22 +241,24 @@ const Chat = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
+            size="small"
             sx={{
               "& .MuiOutlinedInput-root": {
-                borderRadius: "24px",
+                borderRadius: "20px",
               },
             }}
           />
           <IconButton
             onClick={startListening}
+            size="small"
             sx={{
               bgcolor: isListening ? "error.main" : "primary.main",
               color: "white",
               "&:hover": {
                 bgcolor: isListening ? "error.dark" : "primary.dark",
               },
-              width: "48px",
-              height: "48px",
+              width: "40px",
+              height: "40px",
             }}
           >
             {isListening ? <MicOffIcon /> : <MicIcon />}
@@ -250,10 +266,11 @@ const Chat = () => {
           <Button
             variant="contained"
             onClick={handleSendMessage}
+            size="small"
             sx={{
-              borderRadius: "24px",
-              px: 4,
-              minWidth: "100px",
+              borderRadius: "20px",
+              px: 2,
+              minWidth: "80px",
             }}
           >
             Send
