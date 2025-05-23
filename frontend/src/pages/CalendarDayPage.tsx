@@ -7,6 +7,14 @@ import EventModal from "./EventModal";
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Function to format hour in 12-hour format
+const formatHour = (hour: number): string => {
+  if (hour === 0) return "12 AM";
+  if (hour === 12) return "Noon";
+  if (hour > 12) return `${hour - 12} PM`;
+  return `${hour} AM`;
+};
+
 interface CalendarEvent {
   id: string;
   title: string;
@@ -159,7 +167,7 @@ export default function CalendarDayPage() {
                 userSelect: "none",
               }}
             >
-              {hour}:00
+              {formatHour(hour)}
             </Box>
           ))}
         </Box>

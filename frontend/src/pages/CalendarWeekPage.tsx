@@ -10,6 +10,14 @@ import { getTasks } from "../utils/api";
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+// Function to format hour in 12-hour format
+const formatHour = (hour: number): string => {
+  if (hour === 0) return "12 AM";
+  if (hour === 12) return "Noon";
+  if (hour > 12) return `${hour - 12} PM`;
+  return `${hour} AM`;
+};
+
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
 interface CalendarEvent {
@@ -157,7 +165,7 @@ export default function CalendarWeekView() {
           <Box key={`row-${hour}`} display="contents">
             {/* Time label */}
             <Box sx={{ borderTop: "1px solid #ccc", p: 1, fontSize: 12 }}>
-              {hour}:00
+              {formatHour(hour)}
             </Box>
             {/* Day columns */}
             {days.map((day) => (
