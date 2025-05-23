@@ -1,6 +1,7 @@
 # app/services/task_service.py
 from datetime import datetime
 
+from fastapi import HTTPException
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select

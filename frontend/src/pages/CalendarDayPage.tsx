@@ -1,8 +1,9 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Paper, useTheme } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
+import { getTasks } from "../utils/api";
 
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -23,58 +24,6 @@ interface CalendarEvent {
   day: string;
 }
 
-const dummyEvents: CalendarEvent[] = [
-  {
-    id: "1",
-    day: "Mon",
-    task_time: "09:00",
-    title: "Morning Meeting",
-    task_date: "2024-03-18",
-  },
-  {
-    id: "2",
-    day: "Tue",
-    task_time: "14:00",
-    title: "Hangouts",
-    task_date: "2024-03-19",
-  },
-  {
-    id: "3",
-    day: "Wed",
-    task_time: "10:00",
-    title: "Insurance & Risk",
-    task_date: "2024-03-20",
-  },
-  {
-    id: "4",
-    day: "Thu",
-    task_time: "09:00",
-    title: "Boxing",
-    task_date: "2024-03-21",
-  },
-  {
-    id: "5",
-    day: "Fri",
-    task_time: "13:00",
-    title: "Marketing",
-    task_date: "2024-03-22",
-  },
-  {
-    id: "6",
-    day: "Sat",
-    task_time: "10:00",
-    title: "Logo Sketch",
-    task_date: "2024-03-23",
-  },
-  {
-    id: "7",
-    day: "Sun",
-    task_time: "09:00",
-    title: "Morning Ritual",
-    task_date: "2024-03-24",
-  },
-];
-
 // Hàm lấy tên ngày dạng 3 ký tự (Sun, Mon...)
 function getDayAbbreviation(date: Date): string {
   return days[date.getDay()];
@@ -86,14 +35,44 @@ export default function CalendarDayPage() {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
   );
-  const [events, setEvents] = useState<CalendarEvent[]>(dummyEvents);
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
+
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
 
   const inputDate = useMemo(() => {
     const d = date ? new Date(date) : new Date();
     return isNaN(d.getTime()) ? new Date() : d;
   }, [date]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const dateStr = inputDate.toISOString().slice(0, 10);
+        const token = localStorage.getItem("token");
+        
+        const tasks = await getTasks(token ?? undefined, dateStr);
+
+        const formattedTasks: CalendarEvent[] = tasks.map((task: any) => {
+          const dateObj = new Date(task.task_date);
+          return {
+            id: task.id,
+            title: task.title,
+            task_date: task.task_date,
+            task_time: task.task_time,
+            day: days[dateObj.getDay()],
+          };
+        });
+
+        setEvents(formattedTasks);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, [inputDate]);
+
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
 
   const dayAbbr = useMemo(() => getDayAbbreviation(inputDate), [inputDate]);
 
