@@ -21,6 +21,13 @@ async def list_tasks(
 ):
     return await TaskService.list(date, current_user, session)
 
+@router.get("/range", response_model=list[TaskRead])
+async def get_tasks_by_range(start_date: str, end_date: str, 
+                             current_user=Depends(get_current_user), 
+                             session: AsyncSession = Depends(get_session)
+):
+    return await TaskService.list_by_range(start_date, end_date, current_user, session)
+
 @router.patch('/{task_id}', response_model=TaskRead)
 async def update_task(task_id: str, data: TaskUpdate):
     return await TaskService.update(task_id, data)

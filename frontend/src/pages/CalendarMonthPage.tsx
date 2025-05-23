@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,8 @@ import type { GridProps } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+
+import { getTasksByRange } from "../utils/api";
 
 const Grid = MuiGrid as React.ComponentType<
   GridProps & {
@@ -40,58 +42,6 @@ interface Event {
   day: string;
 }
 
-const dummyEvents: Event[] = [
-  {
-    id: "1",
-    day: "Mon",
-    task_time: "09:00",
-    title: "Morning Meeting",
-    task_date: "2024-03-18",
-  },
-  {
-    id: "2",
-    day: "Tue",
-    task_time: "14:00",
-    title: "Hangouts",
-    task_date: "2024-03-19",
-  },
-  {
-    id: "3",
-    day: "Wed",
-    task_time: "10:00",
-    title: "Insurance & Risk",
-    task_date: "2024-03-20",
-  },
-  {
-    id: "4",
-    day: "Thu",
-    task_time: "09:00",
-    title: "Boxing",
-    task_date: "2024-03-21",
-  },
-  {
-    id: "5",
-    day: "Fri",
-    task_time: "13:00",
-    title: "Marketing",
-    task_date: "2024-03-22",
-  },
-  {
-    id: "6",
-    day: "Sat",
-    task_time: "10:00",
-    title: "Logo Sketch",
-    task_date: "2024-03-23",
-  },
-  {
-    id: "7",
-    day: "Sun",
-    task_time: "09:00",
-    title: "Morning Ritual",
-    task_date: "2024-03-24",
-  },
-];
-
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
 export default function CalendarMonthPage() {
@@ -99,7 +49,7 @@ export default function CalendarMonthPage() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [events, setEvents] = useState<Event[]>(dummyEvents);
+  const [events, setEvents] = useState<Event[]>([]);
   const theme = useTheme();
 
   const inputDate = useMemo(() => (date ? new Date(date) : new Date()), [date]);
@@ -127,7 +77,27 @@ export default function CalendarMonthPage() {
     return daysArr;
   }, [startDate]);
 
-  const currentDate = new Date("2025-05-16T22:35:00+07:00");
+  useEffect(() => {
+    const startStr = formatDate(calendarDays[0]);
+    const endStr = formatDate(calendarDays[calendarDays.length - 1]);
+
+    const token = localStorage.getItem("token");
+
+    getTasksByRange(token ?? undefined, startStr, endStr)
+      .then((data) => {
+        const cleanedData: Event[] = data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          task_date: item.task_date,
+          task_time: item.task_time,
+          day: item.day,
+        }));
+        setEvents(cleanedData);
+      })
+      .catch(console.error);
+  }, [calendarDays]);
+
+  const currentDate = new Date();
 
   const handleDateClick = useCallback(
     (day: Date) => {
@@ -229,38 +199,34 @@ export default function CalendarMonthPage() {
               </Typography>
               {dayEvents.length > 0 && (
                 <List dense disablePadding>
-                  {dayEvents.map((event) => (
-                    <ListItem
-                      key={event.id}
-                      disablePadding
-                      sx={{ minHeight: 24 }}
-                      onClick={(e) => handleEventClick(event, e)}
-                    >
-                      <FiberManualRecordIcon
-                        sx={{
-                          fontSize: 8,
-                          mr: 0.5,
-                          color: isToday
-                            ? "primary.contrastText"
-                            : "primary.main",
-                        }}
-                      />
-                      <ListItemText
-                        primary={event.title}
-                        primaryTypographyProps={{
-                          variant: "caption",
-                          sx: {
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            color: isToday
-                              ? "primary.contrastText"
-                              : "text.primary",
-                          },
-                        }}
-                      />
-                    </ListItem>
-                  ))}
+                {dayEvents.map((event) => (
+                  <ListItem
+                    key={event.id}
+                    disablePadding
+                    sx={{ minHeight: 24 }}
+                    onClick={(e) => handleEventClick(event, e)}
+                  >
+                    <ListItemText
+                      primary={event.title}
+                      primaryTypographyProps={{
+                        variant: "caption",
+                        sx: {
+                          px: 1,
+                          py: 0.25,
+                          borderRadius: 1,
+                          backgroundColor: isToday ? "background.paper" : "primary.main",
+                          color: isToday ? "primary.main" : "white",
+                          fontWeight: 500,
+                          display: "block",
+                          maxWidth: "100%",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                    />
+                  </ListItem>
+                ))}
                 </List>
               )}
             </Box>

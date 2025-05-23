@@ -29,3 +29,10 @@ export async function getTasks(token?: string, date?: string){
   if (date) url += `?date=${date}`;
   return await get<Event[]>(url, token);
 }
+
+export async function getTasksByRange(token?: string, startDate?: string, endDate?: string) {
+  let url = "/tasks/range?";
+  if (startDate) url += `start_date=${encodeURIComponent(startDate)}&`;
+  if (endDate) url += `end_date=${encodeURIComponent(endDate)}`;
+  return await get<Event[]>(url, token);
+}

@@ -12,6 +12,8 @@ from app.core.db import get_session
 from app.core.security import get_current_user
 from app.services.scheduler_service import schedule_task_reminder
 
+from datetime import date
+from typing import List
 
 class TaskService:
     @staticmethod
@@ -40,7 +42,7 @@ class TaskService:
     async def list(date: str | None,
                    users,
                    session: AsyncSession
-                   ) -> list[TaskRead]:
+                   ) -> List[TaskRead]:
         stmt = select(Task).where(Task.owner_id == users.id)
         if date:
             target = datetime.fromisoformat(date)
@@ -88,3 +90,22 @@ class TaskService:
                                 func.lower(Task.title) == ref.lower())
         row = await session.scalars(stmt)
         return row.first()
+    @staticmethod
+    async def list_by_range(start_date: str,
+                            end_date: str,
+                            users,
+                            session: AsyncSession
+                            ) -> List[TaskRead]:
+        try:
+            start = date.fromisoformat(start_date)
+            end = date.fromisoformat(end_date)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format, expected YYYY-MM-DD")
+
+        stmt = select(Task).where(
+            Task.owner_id == users.id,
+            Task.task_date >= start,
+            Task.task_date <= end
+        )
+        rows = await session.scalars(stmt)
+        return [TaskRead.model_validate(t) for t in rows]
