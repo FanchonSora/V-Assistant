@@ -22,13 +22,13 @@ class _Visitor(AssistantDSLVisitor):
         return {"action": "introduce", "name": "Fanchon"}
 
     # support --------------------------------------------------------
-    def visitSupport(self, ctx):
+    def visitSupportCommand(self, ctx):
         instructions = (
             "Các lệnh khả dụng:\n"
             " Remind me to <task> in <minutes/hours/days> OR at <YYYY-MM-DD HH:MM> repeat every <period> as <pending|done>\n"
             " Show tasks\n"
-            " Delete task <task_reference>\n"
-            " Update task <task_reference> set <field>=<value>\n"
+            " Delete task <task_reference> at <Date> <Time>\n"
+            " Update task <task_reference> at <Date> <Time> set <field>=<value>\n"
             " What is your name\n"
             " Hi (or Hello, Hey) [my name is <your name>]"
         )
