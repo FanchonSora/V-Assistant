@@ -79,7 +79,9 @@ class TaskService:
     @staticmethod
     async def get_by_ref(ref: str,
                         users,
-                        session: AsyncSession
+                        session: AsyncSession,
+                        task_date=None,
+                        task_time=None
                         ) -> Task | None:
         # Thử theo id trước
         task = await session.get(Task, ref)
@@ -88,6 +90,10 @@ class TaskService:
         # Nếu không phải id hợp lệ, tìm theo tiêu đề
         stmt = select(Task).where(Task.owner_id == users.id,
                                 func.lower(Task.title) == ref.lower())
+        if task_date:
+            stmt = stmt.where(Task.task_date == task_date)
+        if task_time:
+            stmt = stmt.where(Task.task_time == task_time)
         row = await session.scalars(stmt)
         return row.first()
     @staticmethod
@@ -109,3 +115,16 @@ class TaskService:
         )
         rows = await session.scalars(stmt)
         return [TaskRead.model_validate(t) for t in rows]
+    
+    @staticmethod
+    async def list_by_title(title, user, session, task_date=None, task_time=None):
+        stmt = select(Task).where(
+            Task.owner_id == user.id,
+            func.lower(Task.title) == func.lower(title)
+        )
+        if task_date:
+            stmt = stmt.where(Task.task_date == task_date)
+        if task_time:
+            stmt = stmt.where(Task.task_time == task_time)
+        rows = await session.scalars(stmt)
+        return list(rows)

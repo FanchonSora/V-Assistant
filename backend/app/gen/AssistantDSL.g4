@@ -15,8 +15,8 @@ supportCommand: 'Show' 'some' 'instructions' ;
 actionCommand: createAction | viewAction | deleteAction | modifyAction ;
 createAction: 'Remind' 'me' 'to' taskTitle dueSpec? rruleClause? statusClause? ;
 viewAction: ('Show' | 'List' | 'View') 'tasks' ;
-deleteAction: ('Delete' | 'Remove') 'task' taskTitle ;
-modifyAction: ('Update' | 'Modify') 'task' taskTitle 'set' fieldAssign (',' fieldAssign)* ;
+deleteAction: ('Delete' | 'Remove') 'task' taskTitle dueSpec?;
+modifyAction: ('Update' | 'Modify') 'task' taskTitle dueSpec? 'set' fieldAssign (',' fieldAssign)* ;
 
 confirmCommand: affirmative | negative ;
 affirmative: YES ;
@@ -25,9 +25,9 @@ negative: NO ;
 dueSpec: ( 'in' INT timeUnit ) | ( 'at' DATE TIME ) ;
 timeUnit: MINUTE | HOUR | DAY ;
 
-rruleClause: 'repeat' 'every' IDENTIFIER ;
-statusClause: 'as' ('pending' | 'done') ;
-fieldAssign: IDENTIFIER '='? IDENTIFIER ;
+rruleClause: 'repeat' 'every' (IDENTIFIER | DAY | HOUR | MINUTE) ;
+statusClause: 'as' STATUS ;
+fieldAssign: IDENTIFIER '=' (IDENTIFIER | STATUS) ;
 
 /* task title dừng khi gặp “in” hay con số */
 taskTitle: IDENTIFIER ( { self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" }? IDENTIFIER )* ;
@@ -36,6 +36,8 @@ taskTitle: IDENTIFIER ( { self._input.LT(1).type not in { self.INT, self.MINUTE,
 
 YES: 'yes' | 'yep' | 'sure' | 'ok' ;
 NO: 'no' | 'nope' ;
+
+STATUS: 'pending' | 'done' ;
 
 MINUTE: 'minute' | 'minutes' ;
 HOUR: 'hour'   | 'hours' ;

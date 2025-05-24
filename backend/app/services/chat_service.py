@@ -35,6 +35,7 @@ class ChatService:
 
         # ---------------------- instructions -------------------------
         if action == "instruction":
+            print("Received instruction request")
             instructions = parsed.get("instructions") or (
                 "I can help you manage your tasks: you can create, update, delete, and view tasks."
             )
@@ -68,7 +69,7 @@ class ChatService:
             # đủ dữ liệu → tạo luôn
             task = await TaskService.create(
                 TaskCreate(title=title, task_date=task_date, task_time=task_time, rrule=rrule),
-                user=user, session=session
+                users=user, session=session
             )
             due_str = f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m')}" if task.task_date and task.task_time else "không có hạn"
             return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
@@ -77,32 +78,97 @@ class ChatService:
         if action == "confirm":
             if uid not in _PENDING_CREATE:
                 return ChatResponse(reply="⚠️ Không có tác vụ nào đang chờ xác nhận.")
+            data = _PENDING_CREATE.pop(uid)
+            if data["action"] == "delete":
 
-            if parsed["value"]:  # Yes
-                data = _PENDING_CREATE.pop(uid)
-                task = await TaskService.create(TaskCreate(**data), users=user, session=session)
-                due_str = f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m')}" if task.task_date and task.task_time else "không có hạn"
-                return ChatResponse(reply=f"✅ Đã tạo nhắc việc “{task.title}” – hạn {due_str}.")
+                # Delete all tasks with the same title
+                tasks = await TaskService.list_by_title(data["title"], user, session)
+                for task in tasks:
+                    await TaskService.delete(task.id, session=session, user=user)
+                return ChatResponse(reply="🗑️ Đã xóa tất cả các task cùng tên.")
+            elif data["action"] == "update":
 
-            # No
-            _PENDING_CREATE.pop(uid, None)
-            return ChatResponse(reply="👌 Không tạo task nữa.")
+                # Update all tasks with the same title
+                tasks = await TaskService.list_by_title(data["title"], user, session)
+                updated_infos = []
+                for task in tasks:
+                    await TaskService.update(task.id, TaskUpdate(**data["updates"]), session=session, user=user)
+                    updated_infos.append((task.id, tuple(sorted(data["updates"].items()))))
+
+                # Remove duplicates
+                if len(set(updated_infos)) == 1:
+                    for task in tasks[1:]:
+                        await TaskService.delete(task.id, session=session, user=user)
+                    return ChatResponse(reply="✏️ Đã cập nhật và loại bỏ các task trùng lặp.")
+                return ChatResponse(reply="✏️ Đã cập nhật tất cả các task cùng tên.")
+            else:
+                return ChatResponse(reply="⚠️ Không xác định được hành động.")
 
         # -------------------------- delete ---------------------------
         if action == "delete":
-            task = await TaskService.get_by_ref(parsed["task_ref"], session=session, user=user)
+            title = parsed.get("title")
+            task_date = parsed.get("task_date")
+            task_time = parsed.get("task_time")
+            missing = []
+            if not (task_date or task_time):
+                _PENDING_CREATE[uid] = {
+                    "action": "delete",
+                    "title": title,
+                    "task_date": task_date,
+                    "task_time": task_time,
+                }
+                missing = [
+                    label for cond, label in ((task_date, "ngày"), (task_time, "giờ")) if not cond
+                ]
+                msg_missing = ", ".join(missing)
+                return ChatResponse(
+                    reply=f"Bạn chưa cung cấp: {msg_missing}. Bạn có chắc muốn tạo task “{title}” không? (Yes/No)"
+                )
+            
+            task = await TaskService.get_by_ref(
+                title,
+                session=session, 
+                users=user,
+                task_date=task_date,
+                task_time=task_time
+            )
             if not task:
                 return ChatResponse(reply="⚠️ Không tìm thấy task đó.")
-            await TaskService.delete(task.id, session=session, user=user)
+            await TaskService.delete(task.id, session=session, users=user)
             return ChatResponse(reply="🗑️ Đã xóa task.")
 
         # -------------------------- update ---------------------------
         if action == "update":
-            task = await TaskService.get_by_ref(parsed["task_ref"], session=session, user=user)
+            title = parsed.get("title")
+            task_date = parsed.get("task_date")
+            task_time = parsed.get("task_time")
+            missing = []
+            if not (task_date or task_time):
+                _PENDING_CREATE[uid] = {
+                    "action": "delete",
+                    "title": title,
+                    "task_date": task_date,
+                    "task_time": task_time,
+                }
+                missing = [
+                    label for cond, label in ((task_date, "ngày"), (task_time, "giờ")) if not cond
+                ]
+                msg_missing = ", ".join(missing)
+                return ChatResponse(
+                    reply=f"Bạn chưa cung cấp: {msg_missing}. Bạn có chắc muốn tạo task “{title}” không? (Yes/No)"
+                )
+
+            task = await TaskService.get_by_ref(
+                title,
+                session=session, 
+                users=user,
+                task_date=task_date,
+                task_time=task_time
+            )
             if not task:
                 return ChatResponse(reply="⚠️ Không tìm thấy task đó.")
             data = TaskUpdate(**parsed["updates"])
-            await TaskService.update(task.id, data, session=session, user=user)
+            await TaskService.update(task.id, data, session=session, users=user)
             return ChatResponse(reply="✏️ Đã cập‑nhật task.")
 
         # --------------------------- view ---------------------------

@@ -69,8 +69,8 @@ class _Visitor(AssistantDSLVisitor):
 
         # ---------- repeat ----------
         repeat = None
-        if ctx.rruleClause():
-            repeat = ctx.rruleClause().IDENTIFIER().getText().lower()
+        if ctx.rruleClause() and ctx.rruleClause().getChildCount() >= 3:
+            repeat = ctx.rruleClause().getChild(2).getText().lower()
         # ---------- status ----------
         status = None
         if ctx.statusClause():
@@ -92,17 +92,55 @@ class _Visitor(AssistantDSLVisitor):
     # delete ---------------------------------------------------------
     def visitDeleteAction(self, ctx):
         ref = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
-        return {"action": "delete", "task_ref": ref}
+        task_date = None
+        task_time = None
+        if ctx.dueSpec():
+            first = ctx.dueSpec().getChild(0).getText().lower()
+            if first == "at":
+                date_text = ctx.dueSpec().DATE().getText()
+                time_text = ctx.dueSpec().TIME().getText()
+                task_date = datetime.strptime(date_text, "%Y-%m-%d").date()
+                task_time = datetime.strptime(time_text, "%H:%M").time()
+        return {
+            "action": "delete",
+            "title": ref,
+            "task_date": task_date,
+            "task_time": task_time,
+        }
 
     # modify / update ------------------------------------------------
     def visitModifyAction(self, ctx):
         ref = " ".join(tok.getText() for tok in ctx.taskTitle().IDENTIFIER())
+        task_date = None
+        task_time = None
+        if ctx.dueSpec():
+            first = ctx.dueSpec().getChild(0).getText().lower()
+            if first == "at":
+                date_text = ctx.dueSpec().DATE().getText()
+                time_text = ctx.dueSpec().TIME().getText()
+                task_date = datetime.strptime(date_text, "%Y-%m-%d").date()
+                task_time = datetime.strptime(time_text, "%H:%M").time()
+
         updates = {}
         for fa in ctx.fieldAssign():
-            key = fa.IDENTIFIER(0).getText().lower()
-            val = fa.IDENTIFIER(1).getText()
-            updates[key] = val
-        return {"action": "update", "task_ref": ref, "updates": updates}
+            idents = fa.IDENTIFIER()
+            if len(idents) == 2:
+                key = idents[0].getText().lower()
+                val = idents[1].getText()
+            elif len(idents) == 1:
+                key = idents[0].getText().lower()
+                val = fa.STATUS().getText() if fa.STATUS() else None
+            else:
+                continue
+            if key and val:
+                updates[key] = val
+        return {
+            "action": "update",
+            "title": ref,
+            "task_date": task_date,
+            "task_time": task_time,
+            "updates": updates,
+        }
     
     def visitAffirmative(self, ctx):
         return {"action": "confirm", "value": True}
