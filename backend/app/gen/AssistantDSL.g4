@@ -1,52 +1,77 @@
 grammar AssistantDSL;
-
 options { caseInsensitive = true; }
 
-/* ────────────── parser rules ────────────── */
-program: command EOF ;
-command: greetingCommand | actionCommand | supportCommand | confirmCommand ;
+// ────────────── parser rules ──────────────
+program: command EOF;
 
-greetingCommand: introduce | greeting ;
-introduce: 'What' 'is' 'your' 'name' ;
-greeting: ('Hi' | 'Hello' | 'Hey') ('my' 'name' 'is' IDENTIFIER)? ;
+command: greetingCommand | actionCommand | supportCommand | confirmCommand;
+greetingCommand: introduce | greeting;
+actionCommand: createAction | viewAction | deleteAction | modifyAction;
+supportCommand: ksupport;
+confirmCommand: affirmative | negative;
 
-supportCommand: 'Show' 'some' 'instructions' ;
+// greetings
+introduce: 'what' 'is' 'your' 'name' QUESTION?;
+greeting: kgreeting ('my' 'name' 'is' IDENTIFIER)?;
 
-actionCommand: createAction | viewAction | deleteAction | modifyAction ;
-createAction: 'Remind' 'me' 'to' taskTitle dueSpec? rruleClause? statusClause? ;
-viewAction: ('Show' | 'List' | 'View') 'tasks' ;
-deleteAction: ('Delete' | 'Remove') 'task' taskTitle dueSpec?;
-modifyAction: ('Update' | 'Modify') 'task' taskTitle dueSpec? 'set' fieldAssign (',' fieldAssign)* ;
+// actions
+createAction: kcreate taskTitle dueSpec? rruleClause? statusClause?;
+viewAction: kview;
+deleteAction: kdelete taskTitle dueSpec?;
+modifyAction: kmodify taskTitle dueSpec? SET fieldAssign (',' fieldAssign)*;
 
-confirmCommand: affirmative | negative ;
-affirmative: YES ;
-negative: NO ;
+// helper clauses (actions command)
+dueSpec: IN INT timeUnit | AT DATE TIME;
+timeUnit: MINUTE | HOUR | DAY;
+rruleClause: REPEAT EVERY INT timeUnit;
+statusClause: AS STATUS;
+fieldAssign: IDENTIFIER '=' (IDENTIFIER | STATUS);
+taskTitle: IDENTIFIER ( ~(IN | INT | MINUTE | HOUR | DAY) IDENTIFIER )*;
 
-dueSpec: ( 'in' INT timeUnit ) | ( 'at' DATE TIME ) ;
-timeUnit: MINUTE | HOUR | DAY ;
+// confirmations
+affirmative: YES;
+negative: NO;
 
-rruleClause: 'repeat' 'every' (IDENTIFIER | DAY | HOUR | MINUTE) ;
-statusClause: 'as' STATUS ;
-fieldAssign: IDENTIFIER '=' (IDENTIFIER | STATUS) ;
+// keyword groups
+kintroduce : ; // placeholder for compatibility
+kgreeting: KGREETING;
+ksupport: ('show' | 'view' | 'list' | 'Show' | 'View' | 'List' | 'SHOW' | 'VIEW' | 'LIST') 'some' 'instructions';
+kcreate: ('remind' | 'create' | 'Remind' | 'Create' | 'REMIND' | 'CREATE') 'me' 'to';
+kview: ('show' | 'list' | 'view' | 'Show' | 'List' | 'View' | 'SHOW' | 'LIST' | 'VIEW') 'tasks';
+kdelete: ('delete' | 'remove' | 'Delete' | 'Remove' | 'DELETE' | 'REMOVE') 'task';
+kmodify: ('update' | 'modify' | 'Update' | 'Modify' | 'UPDATE' | 'MODIFY') 'task';
 
-/* task title dừng khi gặp “in” hay con số */
-taskTitle: IDENTIFIER ( { self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" }? IDENTIFIER )* ;
+// ────────────── lexer rules ──────────────
+QUESTION: '?';
+KGREETING: 'hi' | 'hello' | 'hey' | 'Hi' | 'HI' | 'Hello' | 'HELLO' | 'Hey' | 'HEY';
 
-/* ────────────── lexer rules (lưu ý thứ tự ưu tiên) ────────────── */
+// reserved single-word tokens (appear before IDENTIFIER) if not it will define the INDENTIFIER before reserved the word
+IN: 'in';
+AT: 'at';
+REPEAT: 'repeat';
+EVERY: 'every';
+AS: 'as';
+SET: 'set';
 
-YES: 'yes' | 'yep' | 'sure' | 'ok' ;
-NO: 'no' | 'nope' ;
+// yes / no
+YES: 'yes' | 'yep' | 'ok' | 'Yes' | 'Yep' | 'Ok' | 'YES' | 'YEP' | 'OK';
+NO: 'no' | 'nope' | 'NO' | 'NOPE' | 'No' | 'Nope';
 
-STATUS: 'pending' | 'done' ;
+// status
+STATUS: 'pending' | 'done';
 
-MINUTE: 'minute' | 'minutes' ;
-HOUR: 'hour'   | 'hours' ;
-DAY: 'day'    | 'days'  ;
+// time units
+MINUTE: 'minute' | 'minutes';
+HOUR: 'hour' | 'hours';
+DAY: 'day' | 'days';
 
-DATE: [0-9][0-9][0-9][0-9] '-' [0-9][0-9] '-' [0-9][0-9] ;
-TIME: [0-9][0-9] ':' [0-9][0-9] ;
+// literals
+DATE: [0-9][0-9][0-9][0-9] '-' [0-9][0-9] '-' [0-9][0-9];
+TIME: [0-9][0-9] ':' [0-9][0-9];
+INT: [0-9]+;
 
-INT: [0-9]+ ;
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]* ;
+// identifier
+IDENTIFIER: [a-zA-Z][a-zA-Z0-9]*;
 
-WS: [ \t\r\n]+ -> skip ;
+// whitespace
+WS: [ \t\r\n]+ -> skip;

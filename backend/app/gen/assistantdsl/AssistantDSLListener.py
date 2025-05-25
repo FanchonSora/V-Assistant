@@ -1,4 +1,4 @@
-# Generated from E:/Homework/PPl/Project/V-Assistant/backend/app/utils/../gen/AssistantDSL.g4 by ANTLR 4.13.2
+# Generated from AssistantDSL.g4 by ANTLR 4.13.2
 from antlr4 import *
 if "." in __name__:
     from .AssistantDSLParser import AssistantDSLParser
@@ -35,6 +35,33 @@ class AssistantDSLListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by AssistantDSLParser#actionCommand.
+    def enterActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#actionCommand.
+    def exitActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#supportCommand.
+    def enterSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#supportCommand.
+    def exitSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#confirmCommand.
+    def enterConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#confirmCommand.
+    def exitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        pass
+
+
     # Enter a parse tree produced by AssistantDSLParser#introduce.
     def enterIntroduce(self, ctx:AssistantDSLParser.IntroduceContext):
         pass
@@ -50,24 +77,6 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#greeting.
     def exitGreeting(self, ctx:AssistantDSLParser.GreetingContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#supportCommand.
-    def enterSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#supportCommand.
-    def exitSupportCommand(self, ctx:AssistantDSLParser.SupportCommandContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#actionCommand.
-    def enterActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#actionCommand.
-    def exitActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
         pass
 
 
@@ -104,33 +113,6 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#modifyAction.
     def exitModifyAction(self, ctx:AssistantDSLParser.ModifyActionContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#confirmCommand.
-    def enterConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#confirmCommand.
-    def exitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#affirmative.
-    def enterAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#affirmative.
-    def exitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#negative.
-    def enterNegative(self, ctx:AssistantDSLParser.NegativeContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#negative.
-    def exitNegative(self, ctx:AssistantDSLParser.NegativeContext):
         pass
 
 
@@ -185,6 +167,87 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#taskTitle.
     def exitTaskTitle(self, ctx:AssistantDSLParser.TaskTitleContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#affirmative.
+    def enterAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#affirmative.
+    def exitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#negative.
+    def enterNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#negative.
+    def exitNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kintroduce.
+    def enterKintroduce(self, ctx:AssistantDSLParser.KintroduceContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kintroduce.
+    def exitKintroduce(self, ctx:AssistantDSLParser.KintroduceContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kgreeting.
+    def enterKgreeting(self, ctx:AssistantDSLParser.KgreetingContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kgreeting.
+    def exitKgreeting(self, ctx:AssistantDSLParser.KgreetingContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#ksupport.
+    def enterKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#ksupport.
+    def exitKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kcreate.
+    def enterKcreate(self, ctx:AssistantDSLParser.KcreateContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kcreate.
+    def exitKcreate(self, ctx:AssistantDSLParser.KcreateContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kview.
+    def enterKview(self, ctx:AssistantDSLParser.KviewContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kview.
+    def exitKview(self, ctx:AssistantDSLParser.KviewContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kdelete.
+    def enterKdelete(self, ctx:AssistantDSLParser.KdeleteContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kdelete.
+    def exitKdelete(self, ctx:AssistantDSLParser.KdeleteContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#kmodify.
+    def enterKmodify(self, ctx:AssistantDSLParser.KmodifyContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#kmodify.
+    def exitKmodify(self, ctx:AssistantDSLParser.KmodifyContext):
         pass
 
 
