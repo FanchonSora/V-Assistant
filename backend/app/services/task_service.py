@@ -2,14 +2,12 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from sqlalchemy import func
+from sqlalchemy import select, func, extract
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.task import Task
 from app.schemas.task import (TaskCreate, TaskRead, TaskUpdate, Status)
-from app.core.db import get_session
-from app.core.security import get_current_user
 from app.services.scheduler_service import schedule_task_reminder
 
 from datetime import date
@@ -93,7 +91,11 @@ class TaskService:
         if task_date:
             stmt = stmt.where(Task.task_date == task_date)
         if task_time:
-            stmt = stmt.where(Task.task_time == task_time)
+            truncated_time = task_time.replace(second=0, microsecond=0)
+            stmt = stmt.where(
+                extract('hour', Task.task_time) == truncated_time.hour,
+                extract('minute', Task.task_time) == truncated_time.minute
+            )
         row = await session.scalars(stmt)
         return row.first()
     @staticmethod

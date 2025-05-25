@@ -24,13 +24,8 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by AssistantDSLParser#introduce.
-    def visitIntroduce(self, ctx:AssistantDSLParser.IntroduceContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by AssistantDSLParser#greeting.
-    def visitGreeting(self, ctx:AssistantDSLParser.GreetingContext):
+    # Visit a parse tree produced by AssistantDSLParser#actionCommand.
+    def visitActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
         return self.visitChildren(ctx)
 
 
@@ -39,8 +34,18 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by AssistantDSLParser#actionCommand.
-    def visitActionCommand(self, ctx:AssistantDSLParser.ActionCommandContext):
+    # Visit a parse tree produced by AssistantDSLParser#confirmCommand.
+    def visitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#introduce.
+    def visitIntroduce(self, ctx:AssistantDSLParser.IntroduceContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#greeting.
+    def visitGreeting(self, ctx:AssistantDSLParser.GreetingContext):
         return self.visitChildren(ctx)
 
 
@@ -61,21 +66,6 @@ class AssistantDSLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by AssistantDSLParser#modifyAction.
     def visitModifyAction(self, ctx:AssistantDSLParser.ModifyActionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by AssistantDSLParser#confirmCommand.
-    def visitConfirmCommand(self, ctx:AssistantDSLParser.ConfirmCommandContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by AssistantDSLParser#affirmative.
-    def visitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by AssistantDSLParser#negative.
-    def visitNegative(self, ctx:AssistantDSLParser.NegativeContext):
         return self.visitChildren(ctx)
 
 
@@ -106,6 +96,51 @@ class AssistantDSLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by AssistantDSLParser#taskTitle.
     def visitTaskTitle(self, ctx:AssistantDSLParser.TaskTitleContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#affirmative.
+    def visitAffirmative(self, ctx:AssistantDSLParser.AffirmativeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#negative.
+    def visitNegative(self, ctx:AssistantDSLParser.NegativeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kintroduce.
+    def visitKintroduce(self, ctx:AssistantDSLParser.KintroduceContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kgreeting.
+    def visitKgreeting(self, ctx:AssistantDSLParser.KgreetingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#ksupport.
+    def visitKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kcreate.
+    def visitKcreate(self, ctx:AssistantDSLParser.KcreateContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kview.
+    def visitKview(self, ctx:AssistantDSLParser.KviewContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kdelete.
+    def visitKdelete(self, ctx:AssistantDSLParser.KdeleteContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#kmodify.
+    def visitKmodify(self, ctx:AssistantDSLParser.KmodifyContext):
         return self.visitChildren(ctx)
 
 

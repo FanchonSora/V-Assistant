@@ -10,55 +10,64 @@ else:
 
 def serializedATN():
     return [
-        4,1,41,150,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,59,181,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
-        2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,
-        1,0,1,0,1,1,1,1,1,1,1,1,3,1,48,8,1,1,2,1,2,3,2,52,8,2,1,3,1,3,1,
-        3,1,3,1,3,1,4,1,4,1,4,1,4,1,4,3,4,64,8,4,1,5,1,5,1,5,1,5,1,6,1,6,
-        1,6,1,6,3,6,74,8,6,1,7,1,7,1,7,1,7,1,7,3,7,81,8,7,1,7,3,7,84,8,7,
-        1,7,3,7,87,8,7,1,8,1,8,1,8,1,9,1,9,1,9,1,9,3,9,96,8,9,1,10,1,10,
-        1,10,1,10,3,10,102,8,10,1,10,1,10,1,10,1,10,5,10,108,8,10,10,10,
-        12,10,111,9,10,1,11,1,11,3,11,115,8,11,1,12,1,12,1,13,1,13,1,14,
-        1,14,1,14,1,14,1,14,1,14,3,14,127,8,14,1,15,1,15,1,16,1,16,1,16,
-        1,16,1,17,1,17,1,17,1,18,1,18,1,18,1,18,1,19,1,19,1,19,5,19,145,
-        8,19,10,19,12,19,148,9,19,1,19,0,0,20,0,2,4,6,8,10,12,14,16,18,20,
-        22,24,26,28,30,32,34,36,38,0,7,1,0,5,7,2,0,9,9,15,16,1,0,18,19,1,
-        0,21,22,1,0,34,36,2,0,34,36,40,40,2,0,33,33,40,40,146,0,40,1,0,0,
-        0,2,47,1,0,0,0,4,51,1,0,0,0,6,53,1,0,0,0,8,58,1,0,0,0,10,65,1,0,
-        0,0,12,73,1,0,0,0,14,75,1,0,0,0,16,88,1,0,0,0,18,91,1,0,0,0,20,97,
-        1,0,0,0,22,114,1,0,0,0,24,116,1,0,0,0,26,118,1,0,0,0,28,126,1,0,
-        0,0,30,128,1,0,0,0,32,130,1,0,0,0,34,134,1,0,0,0,36,137,1,0,0,0,
-        38,141,1,0,0,0,40,41,3,2,1,0,41,42,5,0,0,1,42,1,1,0,0,0,43,48,3,
-        4,2,0,44,48,3,12,6,0,45,48,3,10,5,0,46,48,3,22,11,0,47,43,1,0,0,
-        0,47,44,1,0,0,0,47,45,1,0,0,0,47,46,1,0,0,0,48,3,1,0,0,0,49,52,3,
-        6,3,0,50,52,3,8,4,0,51,49,1,0,0,0,51,50,1,0,0,0,52,5,1,0,0,0,53,
-        54,5,1,0,0,54,55,5,2,0,0,55,56,5,3,0,0,56,57,5,4,0,0,57,7,1,0,0,
-        0,58,63,7,0,0,0,59,60,5,8,0,0,60,61,5,4,0,0,61,62,5,2,0,0,62,64,
-        5,40,0,0,63,59,1,0,0,0,63,64,1,0,0,0,64,9,1,0,0,0,65,66,5,9,0,0,
-        66,67,5,10,0,0,67,68,5,11,0,0,68,11,1,0,0,0,69,74,3,14,7,0,70,74,
-        3,16,8,0,71,74,3,18,9,0,72,74,3,20,10,0,73,69,1,0,0,0,73,70,1,0,
-        0,0,73,71,1,0,0,0,73,72,1,0,0,0,74,13,1,0,0,0,75,76,5,12,0,0,76,
-        77,5,13,0,0,77,78,5,14,0,0,78,80,3,38,19,0,79,81,3,28,14,0,80,79,
-        1,0,0,0,80,81,1,0,0,0,81,83,1,0,0,0,82,84,3,32,16,0,83,82,1,0,0,
-        0,83,84,1,0,0,0,84,86,1,0,0,0,85,87,3,34,17,0,86,85,1,0,0,0,86,87,
-        1,0,0,0,87,15,1,0,0,0,88,89,7,1,0,0,89,90,5,17,0,0,90,17,1,0,0,0,
-        91,92,7,2,0,0,92,93,5,20,0,0,93,95,3,38,19,0,94,96,3,28,14,0,95,
-        94,1,0,0,0,95,96,1,0,0,0,96,19,1,0,0,0,97,98,7,3,0,0,98,99,5,20,
-        0,0,99,101,3,38,19,0,100,102,3,28,14,0,101,100,1,0,0,0,101,102,1,
-        0,0,0,102,103,1,0,0,0,103,104,5,23,0,0,104,109,3,36,18,0,105,106,
-        5,24,0,0,106,108,3,36,18,0,107,105,1,0,0,0,108,111,1,0,0,0,109,107,
-        1,0,0,0,109,110,1,0,0,0,110,21,1,0,0,0,111,109,1,0,0,0,112,115,3,
-        24,12,0,113,115,3,26,13,0,114,112,1,0,0,0,114,113,1,0,0,0,115,23,
-        1,0,0,0,116,117,5,31,0,0,117,25,1,0,0,0,118,119,5,32,0,0,119,27,
-        1,0,0,0,120,121,5,25,0,0,121,122,5,39,0,0,122,127,3,30,15,0,123,
-        124,5,26,0,0,124,125,5,37,0,0,125,127,5,38,0,0,126,120,1,0,0,0,126,
-        123,1,0,0,0,127,29,1,0,0,0,128,129,7,4,0,0,129,31,1,0,0,0,130,131,
-        5,27,0,0,131,132,5,28,0,0,132,133,7,5,0,0,133,33,1,0,0,0,134,135,
-        5,29,0,0,135,136,5,33,0,0,136,35,1,0,0,0,137,138,5,40,0,0,138,139,
-        5,30,0,0,139,140,7,6,0,0,140,37,1,0,0,0,141,146,5,40,0,0,142,143,
-        4,19,0,0,143,145,5,40,0,0,144,142,1,0,0,0,145,148,1,0,0,0,146,144,
-        1,0,0,0,146,147,1,0,0,0,147,39,1,0,0,0,148,146,1,0,0,0,13,47,51,
-        63,73,80,83,86,95,101,109,114,126,146
+        2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
+        7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,
+        1,0,1,0,1,0,1,1,1,1,1,1,1,1,3,1,62,8,1,1,2,1,2,3,2,66,8,2,1,3,1,
+        3,1,3,1,3,3,3,72,8,3,1,4,1,4,1,5,1,5,3,5,78,8,5,1,6,1,6,1,6,1,6,
+        1,6,3,6,85,8,6,1,7,1,7,1,7,1,7,1,7,3,7,92,8,7,1,8,1,8,1,8,3,8,97,
+        8,8,1,8,3,8,100,8,8,1,8,3,8,103,8,8,1,9,1,9,1,10,1,10,1,10,3,10,
+        110,8,10,1,11,1,11,1,11,3,11,115,8,11,1,11,1,11,1,11,1,11,5,11,121,
+        8,11,10,11,12,11,124,9,11,1,12,1,12,1,12,1,12,1,12,1,12,3,12,132,
+        8,12,1,13,1,13,1,14,1,14,1,14,1,14,1,14,1,15,1,15,1,15,1,16,1,16,
+        1,16,1,16,1,17,1,17,1,17,5,17,151,8,17,10,17,12,17,154,9,17,1,18,
+        1,18,1,19,1,19,1,20,1,20,1,21,1,21,1,22,1,22,1,22,1,22,1,23,1,23,
+        1,23,1,23,1,24,1,24,1,24,1,25,1,25,1,25,1,26,1,26,1,26,1,26,0,0,
+        27,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,
+        44,46,48,50,52,0,7,1,0,52,54,2,0,51,51,58,58,3,0,43,43,52,54,57,
+        57,1,0,8,16,1,0,19,24,1,0,28,33,1,0,35,40,171,0,54,1,0,0,0,2,61,
+        1,0,0,0,4,65,1,0,0,0,6,71,1,0,0,0,8,73,1,0,0,0,10,77,1,0,0,0,12,
+        79,1,0,0,0,14,86,1,0,0,0,16,93,1,0,0,0,18,104,1,0,0,0,20,106,1,0,
+        0,0,22,111,1,0,0,0,24,131,1,0,0,0,26,133,1,0,0,0,28,135,1,0,0,0,
+        30,140,1,0,0,0,32,143,1,0,0,0,34,147,1,0,0,0,36,155,1,0,0,0,38,157,
+        1,0,0,0,40,159,1,0,0,0,42,161,1,0,0,0,44,163,1,0,0,0,46,167,1,0,
+        0,0,48,171,1,0,0,0,50,174,1,0,0,0,52,177,1,0,0,0,54,55,3,2,1,0,55,
+        56,5,0,0,1,56,1,1,0,0,0,57,62,3,4,2,0,58,62,3,6,3,0,59,62,3,8,4,
+        0,60,62,3,10,5,0,61,57,1,0,0,0,61,58,1,0,0,0,61,59,1,0,0,0,61,60,
+        1,0,0,0,62,3,1,0,0,0,63,66,3,12,6,0,64,66,3,14,7,0,65,63,1,0,0,0,
+        65,64,1,0,0,0,66,5,1,0,0,0,67,72,3,16,8,0,68,72,3,18,9,0,69,72,3,
+        20,10,0,70,72,3,22,11,0,71,67,1,0,0,0,71,68,1,0,0,0,71,69,1,0,0,
+        0,71,70,1,0,0,0,72,7,1,0,0,0,73,74,3,44,22,0,74,9,1,0,0,0,75,78,
+        3,36,18,0,76,78,3,38,19,0,77,75,1,0,0,0,77,76,1,0,0,0,78,11,1,0,
+        0,0,79,80,5,1,0,0,80,81,5,2,0,0,81,82,5,3,0,0,82,84,5,4,0,0,83,85,
+        5,41,0,0,84,83,1,0,0,0,84,85,1,0,0,0,85,13,1,0,0,0,86,91,3,42,21,
+        0,87,88,5,5,0,0,88,89,5,4,0,0,89,90,5,2,0,0,90,92,5,58,0,0,91,87,
+        1,0,0,0,91,92,1,0,0,0,92,15,1,0,0,0,93,94,3,46,23,0,94,96,3,34,17,
+        0,95,97,3,24,12,0,96,95,1,0,0,0,96,97,1,0,0,0,97,99,1,0,0,0,98,100,
+        3,28,14,0,99,98,1,0,0,0,99,100,1,0,0,0,100,102,1,0,0,0,101,103,3,
+        30,15,0,102,101,1,0,0,0,102,103,1,0,0,0,103,17,1,0,0,0,104,105,3,
+        48,24,0,105,19,1,0,0,0,106,107,3,50,25,0,107,109,3,34,17,0,108,110,
+        3,24,12,0,109,108,1,0,0,0,109,110,1,0,0,0,110,21,1,0,0,0,111,112,
+        3,52,26,0,112,114,3,34,17,0,113,115,3,24,12,0,114,113,1,0,0,0,114,
+        115,1,0,0,0,115,116,1,0,0,0,116,117,5,48,0,0,117,122,3,32,16,0,118,
+        119,5,6,0,0,119,121,3,32,16,0,120,118,1,0,0,0,121,124,1,0,0,0,122,
+        120,1,0,0,0,122,123,1,0,0,0,123,23,1,0,0,0,124,122,1,0,0,0,125,126,
+        5,43,0,0,126,127,5,57,0,0,127,132,3,26,13,0,128,129,5,44,0,0,129,
+        130,5,55,0,0,130,132,5,56,0,0,131,125,1,0,0,0,131,128,1,0,0,0,132,
+        25,1,0,0,0,133,134,7,0,0,0,134,27,1,0,0,0,135,136,5,45,0,0,136,137,
+        5,46,0,0,137,138,5,57,0,0,138,139,3,26,13,0,139,29,1,0,0,0,140,141,
+        5,47,0,0,141,142,5,51,0,0,142,31,1,0,0,0,143,144,5,58,0,0,144,145,
+        5,7,0,0,145,146,7,1,0,0,146,33,1,0,0,0,147,152,5,58,0,0,148,149,
+        8,2,0,0,149,151,5,58,0,0,150,148,1,0,0,0,151,154,1,0,0,0,152,150,
+        1,0,0,0,152,153,1,0,0,0,153,35,1,0,0,0,154,152,1,0,0,0,155,156,5,
+        49,0,0,156,37,1,0,0,0,157,158,5,50,0,0,158,39,1,0,0,0,159,160,1,
+        0,0,0,160,41,1,0,0,0,161,162,5,42,0,0,162,43,1,0,0,0,163,164,7,3,
+        0,0,164,165,5,17,0,0,165,166,5,18,0,0,166,45,1,0,0,0,167,168,7,4,
+        0,0,168,169,5,25,0,0,169,170,5,26,0,0,170,47,1,0,0,0,171,172,7,3,
+        0,0,172,173,5,27,0,0,173,49,1,0,0,0,174,175,7,5,0,0,175,176,5,34,
+        0,0,176,51,1,0,0,0,177,178,7,6,0,0,178,179,5,34,0,0,179,53,1,0,0,
+        0,14,61,65,71,77,84,91,96,99,102,109,114,122,131,152
     ]
 
 class AssistantDSLParser ( Parser ):
@@ -71,12 +80,16 @@ class AssistantDSLParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'What'", "'is'", "'your'", "'name'", 
-                     "'Hi'", "'Hello'", "'Hey'", "'my'", "'Show'", "'some'", 
-                     "'instructions'", "'Remind'", "'me'", "'to'", "'List'", 
-                     "'View'", "'tasks'", "'Delete'", "'Remove'", "'task'", 
-                     "'Update'", "'Modify'", "'set'", "','", "'in'", "'at'", 
-                     "'repeat'", "'every'", "'as'", "'='" ]
+    literalNames = [ "<INVALID>", "'what'", "'is'", "'your'", "'name'", 
+                     "'my'", "','", "'='", "'show'", "'view'", "'list'", 
+                     "'Show'", "'View'", "'List'", "'SHOW'", "'VIEW'", "'LIST'", 
+                     "'some'", "'instructions'", "'remind'", "'create'", 
+                     "'Remind'", "'Create'", "'REMIND'", "'CREATE'", "'me'", 
+                     "'to'", "'tasks'", "'delete'", "'remove'", "'Delete'", 
+                     "'Remove'", "'DELETE'", "'REMOVE'", "'task'", "'update'", 
+                     "'modify'", "'Update'", "'Modify'", "'UPDATE'", "'MODIFY'", 
+                     "'?'", "<INVALID>", "'in'", "'at'", "'repeat'", "'every'", 
+                     "'as'", "'set'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -85,36 +98,49 @@ class AssistantDSLParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "YES", "NO", 
-                      "STATUS", "MINUTE", "HOUR", "DAY", "DATE", "TIME", 
-                      "INT", "IDENTIFIER", "WS" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "QUESTION", "KGREETING", "IN", "AT", 
+                      "REPEAT", "EVERY", "AS", "SET", "YES", "NO", "STATUS", 
+                      "MINUTE", "HOUR", "DAY", "DATE", "TIME", "INT", "IDENTIFIER", 
+                      "WS" ]
 
     RULE_program = 0
     RULE_command = 1
     RULE_greetingCommand = 2
-    RULE_introduce = 3
-    RULE_greeting = 4
-    RULE_supportCommand = 5
-    RULE_actionCommand = 6
-    RULE_createAction = 7
-    RULE_viewAction = 8
-    RULE_deleteAction = 9
-    RULE_modifyAction = 10
-    RULE_confirmCommand = 11
-    RULE_affirmative = 12
-    RULE_negative = 13
-    RULE_dueSpec = 14
-    RULE_timeUnit = 15
-    RULE_rruleClause = 16
-    RULE_statusClause = 17
-    RULE_fieldAssign = 18
-    RULE_taskTitle = 19
+    RULE_actionCommand = 3
+    RULE_supportCommand = 4
+    RULE_confirmCommand = 5
+    RULE_introduce = 6
+    RULE_greeting = 7
+    RULE_createAction = 8
+    RULE_viewAction = 9
+    RULE_deleteAction = 10
+    RULE_modifyAction = 11
+    RULE_dueSpec = 12
+    RULE_timeUnit = 13
+    RULE_rruleClause = 14
+    RULE_statusClause = 15
+    RULE_fieldAssign = 16
+    RULE_taskTitle = 17
+    RULE_affirmative = 18
+    RULE_negative = 19
+    RULE_kintroduce = 20
+    RULE_kgreeting = 21
+    RULE_ksupport = 22
+    RULE_kcreate = 23
+    RULE_kview = 24
+    RULE_kdelete = 25
+    RULE_kmodify = 26
 
-    ruleNames =  [ "program", "command", "greetingCommand", "introduce", 
-                   "greeting", "supportCommand", "actionCommand", "createAction", 
-                   "viewAction", "deleteAction", "modifyAction", "confirmCommand", 
-                   "affirmative", "negative", "dueSpec", "timeUnit", "rruleClause", 
-                   "statusClause", "fieldAssign", "taskTitle" ]
+    ruleNames =  [ "program", "command", "greetingCommand", "actionCommand", 
+                   "supportCommand", "confirmCommand", "introduce", "greeting", 
+                   "createAction", "viewAction", "deleteAction", "modifyAction", 
+                   "dueSpec", "timeUnit", "rruleClause", "statusClause", 
+                   "fieldAssign", "taskTitle", "affirmative", "negative", 
+                   "kintroduce", "kgreeting", "ksupport", "kcreate", "kview", 
+                   "kdelete", "kmodify" ]
 
     EOF = Token.EOF
     T__0=1
@@ -147,17 +173,35 @@ class AssistantDSLParser ( Parser ):
     T__27=28
     T__28=29
     T__29=30
-    YES=31
-    NO=32
-    STATUS=33
-    MINUTE=34
-    HOUR=35
-    DAY=36
-    DATE=37
-    TIME=38
-    INT=39
-    IDENTIFIER=40
-    WS=41
+    T__30=31
+    T__31=32
+    T__32=33
+    T__33=34
+    T__34=35
+    T__35=36
+    T__36=37
+    T__37=38
+    T__38=39
+    T__39=40
+    QUESTION=41
+    KGREETING=42
+    IN=43
+    AT=44
+    REPEAT=45
+    EVERY=46
+    AS=47
+    SET=48
+    YES=49
+    NO=50
+    STATUS=51
+    MINUTE=52
+    HOUR=53
+    DAY=54
+    DATE=55
+    TIME=56
+    INT=57
+    IDENTIFIER=58
+    WS=59
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -208,9 +252,9 @@ class AssistantDSLParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_program)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 40
+            self.state = 54
             self.command()
-            self.state = 41
+            self.state = 55
             self.match(AssistantDSLParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -269,30 +313,30 @@ class AssistantDSLParser ( Parser ):
         localctx = AssistantDSLParser.CommandContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_command)
         try:
-            self.state = 47
+            self.state = 61
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 43
+                self.state = 57
                 self.greetingCommand()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 44
+                self.state = 58
                 self.actionCommand()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 45
+                self.state = 59
                 self.supportCommand()
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 46
+                self.state = 60
                 self.confirmCommand()
                 pass
 
@@ -346,189 +390,22 @@ class AssistantDSLParser ( Parser ):
         localctx = AssistantDSLParser.GreetingCommandContext(self, self._ctx, self.state)
         self.enterRule(localctx, 4, self.RULE_greetingCommand)
         try:
-            self.state = 51
+            self.state = 65
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [1]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 49
+                self.state = 63
                 self.introduce()
                 pass
-            elif token in [5, 6, 7]:
+            elif token in [42]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 50
+                self.state = 64
                 self.greeting()
                 pass
             else:
                 raise NoViableAltException(self)
 
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class IntroduceContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_introduce
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterIntroduce" ):
-                listener.enterIntroduce(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitIntroduce" ):
-                listener.exitIntroduce(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitIntroduce" ):
-                return visitor.visitIntroduce(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def introduce(self):
-
-        localctx = AssistantDSLParser.IntroduceContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_introduce)
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 53
-            self.match(AssistantDSLParser.T__0)
-            self.state = 54
-            self.match(AssistantDSLParser.T__1)
-            self.state = 55
-            self.match(AssistantDSLParser.T__2)
-            self.state = 56
-            self.match(AssistantDSLParser.T__3)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class GreetingContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def IDENTIFIER(self):
-            return self.getToken(AssistantDSLParser.IDENTIFIER, 0)
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_greeting
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterGreeting" ):
-                listener.enterGreeting(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitGreeting" ):
-                listener.exitGreeting(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitGreeting" ):
-                return visitor.visitGreeting(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def greeting(self):
-
-        localctx = AssistantDSLParser.GreetingContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_greeting)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 58
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 224) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 63
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==8:
-                self.state = 59
-                self.match(AssistantDSLParser.T__7)
-                self.state = 60
-                self.match(AssistantDSLParser.T__3)
-                self.state = 61
-                self.match(AssistantDSLParser.T__1)
-                self.state = 62
-                self.match(AssistantDSLParser.IDENTIFIER)
-
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class SupportCommandContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_supportCommand
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterSupportCommand" ):
-                listener.enterSupportCommand(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitSupportCommand" ):
-                listener.exitSupportCommand(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSupportCommand" ):
-                return visitor.visitSupportCommand(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def supportCommand(self):
-
-        localctx = AssistantDSLParser.SupportCommandContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_supportCommand)
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 65
-            self.match(AssistantDSLParser.T__8)
-            self.state = 66
-            self.match(AssistantDSLParser.T__9)
-            self.state = 67
-            self.match(AssistantDSLParser.T__10)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -584,29 +461,29 @@ class AssistantDSLParser ( Parser ):
     def actionCommand(self):
 
         localctx = AssistantDSLParser.ActionCommandContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_actionCommand)
+        self.enterRule(localctx, 6, self.RULE_actionCommand)
         try:
-            self.state = 73
+            self.state = 71
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [12]:
+            if token in [19, 20, 21, 22, 23, 24]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 69
+                self.state = 67
                 self.createAction()
                 pass
-            elif token in [9, 15, 16]:
+            elif token in [8, 9, 10, 11, 12, 13, 14, 15, 16]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 70
+                self.state = 68
                 self.viewAction()
                 pass
-            elif token in [18, 19]:
+            elif token in [28, 29, 30, 31, 32, 33]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 71
+                self.state = 69
                 self.deleteAction()
                 pass
-            elif token in [21, 22]:
+            elif token in [35, 36, 37, 38, 39, 40]:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 72
+                self.state = 70
                 self.modifyAction()
                 pass
             else:
@@ -621,304 +498,45 @@ class AssistantDSLParser ( Parser ):
         return localctx
 
 
-    class CreateActionContext(ParserRuleContext):
+    class SupportCommandContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def taskTitle(self):
-            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
-
-
-        def dueSpec(self):
-            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
-
-
-        def rruleClause(self):
-            return self.getTypedRuleContext(AssistantDSLParser.RruleClauseContext,0)
-
-
-        def statusClause(self):
-            return self.getTypedRuleContext(AssistantDSLParser.StatusClauseContext,0)
+        def ksupport(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KsupportContext,0)
 
 
         def getRuleIndex(self):
-            return AssistantDSLParser.RULE_createAction
+            return AssistantDSLParser.RULE_supportCommand
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterCreateAction" ):
-                listener.enterCreateAction(self)
+            if hasattr( listener, "enterSupportCommand" ):
+                listener.enterSupportCommand(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitCreateAction" ):
-                listener.exitCreateAction(self)
+            if hasattr( listener, "exitSupportCommand" ):
+                listener.exitSupportCommand(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitCreateAction" ):
-                return visitor.visitCreateAction(self)
+            if hasattr( visitor, "visitSupportCommand" ):
+                return visitor.visitSupportCommand(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def createAction(self):
+    def supportCommand(self):
 
-        localctx = AssistantDSLParser.CreateActionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_createAction)
-        self._la = 0 # Token type
+        localctx = AssistantDSLParser.SupportCommandContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 8, self.RULE_supportCommand)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 75
-            self.match(AssistantDSLParser.T__11)
-            self.state = 76
-            self.match(AssistantDSLParser.T__12)
-            self.state = 77
-            self.match(AssistantDSLParser.T__13)
-            self.state = 78
-            self.taskTitle()
-            self.state = 80
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==25 or _la==26:
-                self.state = 79
-                self.dueSpec()
-
-
-            self.state = 83
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==27:
-                self.state = 82
-                self.rruleClause()
-
-
-            self.state = 86
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==29:
-                self.state = 85
-                self.statusClause()
-
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class ViewActionContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_viewAction
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterViewAction" ):
-                listener.enterViewAction(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitViewAction" ):
-                listener.exitViewAction(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitViewAction" ):
-                return visitor.visitViewAction(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def viewAction(self):
-
-        localctx = AssistantDSLParser.ViewActionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_viewAction)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 88
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 98816) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 89
-            self.match(AssistantDSLParser.T__16)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class DeleteActionContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def taskTitle(self):
-            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
-
-
-        def dueSpec(self):
-            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
-
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_deleteAction
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterDeleteAction" ):
-                listener.enterDeleteAction(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitDeleteAction" ):
-                listener.exitDeleteAction(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDeleteAction" ):
-                return visitor.visitDeleteAction(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def deleteAction(self):
-
-        localctx = AssistantDSLParser.DeleteActionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_deleteAction)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 91
-            _la = self._input.LA(1)
-            if not(_la==18 or _la==19):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 92
-            self.match(AssistantDSLParser.T__19)
-            self.state = 93
-            self.taskTitle()
-            self.state = 95
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==25 or _la==26:
-                self.state = 94
-                self.dueSpec()
-
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class ModifyActionContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def taskTitle(self):
-            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
-
-
-        def fieldAssign(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(AssistantDSLParser.FieldAssignContext)
-            else:
-                return self.getTypedRuleContext(AssistantDSLParser.FieldAssignContext,i)
-
-
-        def dueSpec(self):
-            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
-
-
-        def getRuleIndex(self):
-            return AssistantDSLParser.RULE_modifyAction
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterModifyAction" ):
-                listener.enterModifyAction(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitModifyAction" ):
-                listener.exitModifyAction(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitModifyAction" ):
-                return visitor.visitModifyAction(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def modifyAction(self):
-
-        localctx = AssistantDSLParser.ModifyActionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_modifyAction)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 97
-            _la = self._input.LA(1)
-            if not(_la==21 or _la==22):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 98
-            self.match(AssistantDSLParser.T__19)
-            self.state = 99
-            self.taskTitle()
-            self.state = 101
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==25 or _la==26:
-                self.state = 100
-                self.dueSpec()
-
-
-            self.state = 103
-            self.match(AssistantDSLParser.T__22)
-            self.state = 104
-            self.fieldAssign()
-            self.state = 109
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            while _la==24:
-                self.state = 105
-                self.match(AssistantDSLParser.T__23)
-                self.state = 106
-                self.fieldAssign()
-                self.state = 111
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-
+            self.state = 73
+            self.ksupport()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -966,19 +584,19 @@ class AssistantDSLParser ( Parser ):
     def confirmCommand(self):
 
         localctx = AssistantDSLParser.ConfirmCommandContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_confirmCommand)
+        self.enterRule(localctx, 10, self.RULE_confirmCommand)
         try:
-            self.state = 114
+            self.state = 77
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [31]:
+            if token in [49]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 112
+                self.state = 75
                 self.affirmative()
                 pass
-            elif token in [32]:
+            elif token in [50]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 113
+                self.state = 76
                 self.negative()
                 pass
             else:
@@ -993,44 +611,59 @@ class AssistantDSLParser ( Parser ):
         return localctx
 
 
-    class AffirmativeContext(ParserRuleContext):
+    class IntroduceContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def YES(self):
-            return self.getToken(AssistantDSLParser.YES, 0)
+        def QUESTION(self):
+            return self.getToken(AssistantDSLParser.QUESTION, 0)
 
         def getRuleIndex(self):
-            return AssistantDSLParser.RULE_affirmative
+            return AssistantDSLParser.RULE_introduce
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterAffirmative" ):
-                listener.enterAffirmative(self)
+            if hasattr( listener, "enterIntroduce" ):
+                listener.enterIntroduce(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitAffirmative" ):
-                listener.exitAffirmative(self)
+            if hasattr( listener, "exitIntroduce" ):
+                listener.exitIntroduce(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAffirmative" ):
-                return visitor.visitAffirmative(self)
+            if hasattr( visitor, "visitIntroduce" ):
+                return visitor.visitIntroduce(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def affirmative(self):
+    def introduce(self):
 
-        localctx = AssistantDSLParser.AffirmativeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_affirmative)
+        localctx = AssistantDSLParser.IntroduceContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_introduce)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 116
-            self.match(AssistantDSLParser.YES)
+            self.state = 79
+            self.match(AssistantDSLParser.T__0)
+            self.state = 80
+            self.match(AssistantDSLParser.T__1)
+            self.state = 81
+            self.match(AssistantDSLParser.T__2)
+            self.state = 82
+            self.match(AssistantDSLParser.T__3)
+            self.state = 84
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==41:
+                self.state = 83
+                self.match(AssistantDSLParser.QUESTION)
+
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1040,44 +673,362 @@ class AssistantDSLParser ( Parser ):
         return localctx
 
 
-    class NegativeContext(ParserRuleContext):
+    class GreetingContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def NO(self):
-            return self.getToken(AssistantDSLParser.NO, 0)
+        def kgreeting(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KgreetingContext,0)
+
+
+        def IDENTIFIER(self):
+            return self.getToken(AssistantDSLParser.IDENTIFIER, 0)
 
         def getRuleIndex(self):
-            return AssistantDSLParser.RULE_negative
+            return AssistantDSLParser.RULE_greeting
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterNegative" ):
-                listener.enterNegative(self)
+            if hasattr( listener, "enterGreeting" ):
+                listener.enterGreeting(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitNegative" ):
-                listener.exitNegative(self)
+            if hasattr( listener, "exitGreeting" ):
+                listener.exitGreeting(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNegative" ):
-                return visitor.visitNegative(self)
+            if hasattr( visitor, "visitGreeting" ):
+                return visitor.visitGreeting(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def negative(self):
+    def greeting(self):
 
-        localctx = AssistantDSLParser.NegativeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_negative)
+        localctx = AssistantDSLParser.GreetingContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 14, self.RULE_greeting)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 118
-            self.match(AssistantDSLParser.NO)
+            self.state = 86
+            self.kgreeting()
+            self.state = 91
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==5:
+                self.state = 87
+                self.match(AssistantDSLParser.T__4)
+                self.state = 88
+                self.match(AssistantDSLParser.T__3)
+                self.state = 89
+                self.match(AssistantDSLParser.T__1)
+                self.state = 90
+                self.match(AssistantDSLParser.IDENTIFIER)
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class CreateActionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def kcreate(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KcreateContext,0)
+
+
+        def taskTitle(self):
+            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
+
+
+        def dueSpec(self):
+            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
+
+
+        def rruleClause(self):
+            return self.getTypedRuleContext(AssistantDSLParser.RruleClauseContext,0)
+
+
+        def statusClause(self):
+            return self.getTypedRuleContext(AssistantDSLParser.StatusClauseContext,0)
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_createAction
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterCreateAction" ):
+                listener.enterCreateAction(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitCreateAction" ):
+                listener.exitCreateAction(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCreateAction" ):
+                return visitor.visitCreateAction(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def createAction(self):
+
+        localctx = AssistantDSLParser.CreateActionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 16, self.RULE_createAction)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 93
+            self.kcreate()
+            self.state = 94
+            self.taskTitle()
+            self.state = 96
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==43 or _la==44:
+                self.state = 95
+                self.dueSpec()
+
+
+            self.state = 99
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==45:
+                self.state = 98
+                self.rruleClause()
+
+
+            self.state = 102
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==47:
+                self.state = 101
+                self.statusClause()
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class ViewActionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def kview(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KviewContext,0)
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_viewAction
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterViewAction" ):
+                listener.enterViewAction(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitViewAction" ):
+                listener.exitViewAction(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitViewAction" ):
+                return visitor.visitViewAction(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def viewAction(self):
+
+        localctx = AssistantDSLParser.ViewActionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 18, self.RULE_viewAction)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 104
+            self.kview()
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class DeleteActionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def kdelete(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KdeleteContext,0)
+
+
+        def taskTitle(self):
+            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
+
+
+        def dueSpec(self):
+            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_deleteAction
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterDeleteAction" ):
+                listener.enterDeleteAction(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitDeleteAction" ):
+                listener.exitDeleteAction(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDeleteAction" ):
+                return visitor.visitDeleteAction(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def deleteAction(self):
+
+        localctx = AssistantDSLParser.DeleteActionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 20, self.RULE_deleteAction)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 106
+            self.kdelete()
+            self.state = 107
+            self.taskTitle()
+            self.state = 109
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==43 or _la==44:
+                self.state = 108
+                self.dueSpec()
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class ModifyActionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def kmodify(self):
+            return self.getTypedRuleContext(AssistantDSLParser.KmodifyContext,0)
+
+
+        def taskTitle(self):
+            return self.getTypedRuleContext(AssistantDSLParser.TaskTitleContext,0)
+
+
+        def SET(self):
+            return self.getToken(AssistantDSLParser.SET, 0)
+
+        def fieldAssign(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(AssistantDSLParser.FieldAssignContext)
+            else:
+                return self.getTypedRuleContext(AssistantDSLParser.FieldAssignContext,i)
+
+
+        def dueSpec(self):
+            return self.getTypedRuleContext(AssistantDSLParser.DueSpecContext,0)
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_modifyAction
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterModifyAction" ):
+                listener.enterModifyAction(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitModifyAction" ):
+                listener.exitModifyAction(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitModifyAction" ):
+                return visitor.visitModifyAction(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def modifyAction(self):
+
+        localctx = AssistantDSLParser.ModifyActionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 22, self.RULE_modifyAction)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 111
+            self.kmodify()
+            self.state = 112
+            self.taskTitle()
+            self.state = 114
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==43 or _la==44:
+                self.state = 113
+                self.dueSpec()
+
+
+            self.state = 116
+            self.match(AssistantDSLParser.SET)
+            self.state = 117
+            self.fieldAssign()
+            self.state = 122
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while _la==6:
+                self.state = 118
+                self.match(AssistantDSLParser.T__5)
+                self.state = 119
+                self.fieldAssign()
+                self.state = 124
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1094,12 +1045,18 @@ class AssistantDSLParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
+        def IN(self):
+            return self.getToken(AssistantDSLParser.IN, 0)
+
         def INT(self):
             return self.getToken(AssistantDSLParser.INT, 0)
 
         def timeUnit(self):
             return self.getTypedRuleContext(AssistantDSLParser.TimeUnitContext,0)
 
+
+        def AT(self):
+            return self.getToken(AssistantDSLParser.AT, 0)
 
         def DATE(self):
             return self.getToken(AssistantDSLParser.DATE, 0)
@@ -1130,27 +1087,27 @@ class AssistantDSLParser ( Parser ):
     def dueSpec(self):
 
         localctx = AssistantDSLParser.DueSpecContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_dueSpec)
+        self.enterRule(localctx, 24, self.RULE_dueSpec)
         try:
-            self.state = 126
+            self.state = 131
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [25]:
+            if token in [43]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 120
-                self.match(AssistantDSLParser.T__24)
-                self.state = 121
+                self.state = 125
+                self.match(AssistantDSLParser.IN)
+                self.state = 126
                 self.match(AssistantDSLParser.INT)
-                self.state = 122
+                self.state = 127
                 self.timeUnit()
                 pass
-            elif token in [26]:
+            elif token in [44]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 123
-                self.match(AssistantDSLParser.T__25)
-                self.state = 124
+                self.state = 128
+                self.match(AssistantDSLParser.AT)
+                self.state = 129
                 self.match(AssistantDSLParser.DATE)
-                self.state = 125
+                self.state = 130
                 self.match(AssistantDSLParser.TIME)
                 pass
             else:
@@ -1204,13 +1161,13 @@ class AssistantDSLParser ( Parser ):
     def timeUnit(self):
 
         localctx = AssistantDSLParser.TimeUnitContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 30, self.RULE_timeUnit)
+        self.enterRule(localctx, 26, self.RULE_timeUnit)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 128
+            self.state = 133
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 120259084288) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 31525197391593472) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1231,17 +1188,18 @@ class AssistantDSLParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def IDENTIFIER(self):
-            return self.getToken(AssistantDSLParser.IDENTIFIER, 0)
+        def REPEAT(self):
+            return self.getToken(AssistantDSLParser.REPEAT, 0)
 
-        def DAY(self):
-            return self.getToken(AssistantDSLParser.DAY, 0)
+        def EVERY(self):
+            return self.getToken(AssistantDSLParser.EVERY, 0)
 
-        def HOUR(self):
-            return self.getToken(AssistantDSLParser.HOUR, 0)
+        def INT(self):
+            return self.getToken(AssistantDSLParser.INT, 0)
 
-        def MINUTE(self):
-            return self.getToken(AssistantDSLParser.MINUTE, 0)
+        def timeUnit(self):
+            return self.getTypedRuleContext(AssistantDSLParser.TimeUnitContext,0)
+
 
         def getRuleIndex(self):
             return AssistantDSLParser.RULE_rruleClause
@@ -1266,21 +1224,17 @@ class AssistantDSLParser ( Parser ):
     def rruleClause(self):
 
         localctx = AssistantDSLParser.RruleClauseContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_rruleClause)
-        self._la = 0 # Token type
+        self.enterRule(localctx, 28, self.RULE_rruleClause)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 130
-            self.match(AssistantDSLParser.T__26)
-            self.state = 131
-            self.match(AssistantDSLParser.T__27)
-            self.state = 132
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 1219770712064) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
+            self.state = 135
+            self.match(AssistantDSLParser.REPEAT)
+            self.state = 136
+            self.match(AssistantDSLParser.EVERY)
+            self.state = 137
+            self.match(AssistantDSLParser.INT)
+            self.state = 138
+            self.timeUnit()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1296,6 +1250,9 @@ class AssistantDSLParser ( Parser ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
+
+        def AS(self):
+            return self.getToken(AssistantDSLParser.AS, 0)
 
         def STATUS(self):
             return self.getToken(AssistantDSLParser.STATUS, 0)
@@ -1323,12 +1280,12 @@ class AssistantDSLParser ( Parser ):
     def statusClause(self):
 
         localctx = AssistantDSLParser.StatusClauseContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 34, self.RULE_statusClause)
+        self.enterRule(localctx, 30, self.RULE_statusClause)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 134
-            self.match(AssistantDSLParser.T__28)
-            self.state = 135
+            self.state = 140
+            self.match(AssistantDSLParser.AS)
+            self.state = 141
             self.match(AssistantDSLParser.STATUS)
         except RecognitionException as re:
             localctx.exception = re
@@ -1378,17 +1335,17 @@ class AssistantDSLParser ( Parser ):
     def fieldAssign(self):
 
         localctx = AssistantDSLParser.FieldAssignContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 36, self.RULE_fieldAssign)
+        self.enterRule(localctx, 32, self.RULE_fieldAssign)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 137
+            self.state = 143
             self.match(AssistantDSLParser.IDENTIFIER)
-            self.state = 138
-            self.match(AssistantDSLParser.T__29)
-            self.state = 139
+            self.state = 144
+            self.match(AssistantDSLParser.T__6)
+            self.state = 145
             _la = self._input.LA(1)
-            if not(_la==33 or _la==40):
+            if not(_la==51 or _la==58):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1415,6 +1372,36 @@ class AssistantDSLParser ( Parser ):
             else:
                 return self.getToken(AssistantDSLParser.IDENTIFIER, i)
 
+        def IN(self, i:int=None):
+            if i is None:
+                return self.getTokens(AssistantDSLParser.IN)
+            else:
+                return self.getToken(AssistantDSLParser.IN, i)
+
+        def INT(self, i:int=None):
+            if i is None:
+                return self.getTokens(AssistantDSLParser.INT)
+            else:
+                return self.getToken(AssistantDSLParser.INT, i)
+
+        def MINUTE(self, i:int=None):
+            if i is None:
+                return self.getTokens(AssistantDSLParser.MINUTE)
+            else:
+                return self.getToken(AssistantDSLParser.MINUTE, i)
+
+        def HOUR(self, i:int=None):
+            if i is None:
+                return self.getTokens(AssistantDSLParser.HOUR)
+            else:
+                return self.getToken(AssistantDSLParser.HOUR, i)
+
+        def DAY(self, i:int=None):
+            if i is None:
+                return self.getTokens(AssistantDSLParser.DAY)
+            else:
+                return self.getToken(AssistantDSLParser.DAY, i)
+
         def getRuleIndex(self):
             return AssistantDSLParser.RULE_taskTitle
 
@@ -1438,25 +1425,29 @@ class AssistantDSLParser ( Parser ):
     def taskTitle(self):
 
         localctx = AssistantDSLParser.TaskTitleContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 38, self.RULE_taskTitle)
+        self.enterRule(localctx, 34, self.RULE_taskTitle)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 141
+            self.state = 147
             self.match(AssistantDSLParser.IDENTIFIER)
-            self.state = 146
+            self.state = 152
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 142
-                    if not  self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" :
-                        from antlr4.error.Errors import FailedPredicateException
-                        raise FailedPredicateException(self, " self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != \"in\" ")
-                    self.state = 143
+                    self.state = 148
+                    _la = self._input.LA(1)
+                    if _la <= 0 or (((_la) & ~0x3f) == 0 and ((1 << _la) & 175649181560471552) != 0):
+                        self._errHandler.recoverInline(self)
+                    else:
+                        self._errHandler.reportMatch(self)
+                        self.consume()
+                    self.state = 149
                     self.match(AssistantDSLParser.IDENTIFIER) 
-                self.state = 148
+                self.state = 154
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1467,21 +1458,459 @@ class AssistantDSLParser ( Parser ):
         return localctx
 
 
+    class AffirmativeContext(ParserRuleContext):
+        __slots__ = 'parser'
 
-    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
-        if self._predicates == None:
-            self._predicates = dict()
-        self._predicates[19] = self.taskTitle_sempred
-        pred = self._predicates.get(ruleIndex, None)
-        if pred is None:
-            raise Exception("No predicate with index:" + str(ruleIndex))
-        else:
-            return pred(localctx, predIndex)
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
 
-    def taskTitle_sempred(self, localctx:TaskTitleContext, predIndex:int):
-            if predIndex == 0:
-                return  self._input.LT(1).type not in { self.INT, self.MINUTE, self.HOUR, self.DAY } and self._input.LT(1).text.lower() != "in" 
-         
+        def YES(self):
+            return self.getToken(AssistantDSLParser.YES, 0)
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_affirmative
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterAffirmative" ):
+                listener.enterAffirmative(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitAffirmative" ):
+                listener.exitAffirmative(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAffirmative" ):
+                return visitor.visitAffirmative(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def affirmative(self):
+
+        localctx = AssistantDSLParser.AffirmativeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 36, self.RULE_affirmative)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 155
+            self.match(AssistantDSLParser.YES)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class NegativeContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def NO(self):
+            return self.getToken(AssistantDSLParser.NO, 0)
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_negative
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterNegative" ):
+                listener.enterNegative(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitNegative" ):
+                listener.exitNegative(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNegative" ):
+                return visitor.visitNegative(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def negative(self):
+
+        localctx = AssistantDSLParser.NegativeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 38, self.RULE_negative)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 157
+            self.match(AssistantDSLParser.NO)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KintroduceContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kintroduce
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKintroduce" ):
+                listener.enterKintroduce(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKintroduce" ):
+                listener.exitKintroduce(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKintroduce" ):
+                return visitor.visitKintroduce(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kintroduce(self):
+
+        localctx = AssistantDSLParser.KintroduceContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 40, self.RULE_kintroduce)
+        try:
+            self.enterOuterAlt(localctx, 1)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KgreetingContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def KGREETING(self):
+            return self.getToken(AssistantDSLParser.KGREETING, 0)
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kgreeting
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKgreeting" ):
+                listener.enterKgreeting(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKgreeting" ):
+                listener.exitKgreeting(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKgreeting" ):
+                return visitor.visitKgreeting(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kgreeting(self):
+
+        localctx = AssistantDSLParser.KgreetingContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 42, self.RULE_kgreeting)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 161
+            self.match(AssistantDSLParser.KGREETING)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KsupportContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_ksupport
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKsupport" ):
+                listener.enterKsupport(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKsupport" ):
+                listener.exitKsupport(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKsupport" ):
+                return visitor.visitKsupport(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def ksupport(self):
+
+        localctx = AssistantDSLParser.KsupportContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 44, self.RULE_ksupport)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 163
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 130816) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 164
+            self.match(AssistantDSLParser.T__16)
+            self.state = 165
+            self.match(AssistantDSLParser.T__17)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KcreateContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kcreate
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKcreate" ):
+                listener.enterKcreate(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKcreate" ):
+                listener.exitKcreate(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKcreate" ):
+                return visitor.visitKcreate(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kcreate(self):
+
+        localctx = AssistantDSLParser.KcreateContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 46, self.RULE_kcreate)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 167
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 33030144) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 168
+            self.match(AssistantDSLParser.T__24)
+            self.state = 169
+            self.match(AssistantDSLParser.T__25)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KviewContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kview
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKview" ):
+                listener.enterKview(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKview" ):
+                listener.exitKview(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKview" ):
+                return visitor.visitKview(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kview(self):
+
+        localctx = AssistantDSLParser.KviewContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 48, self.RULE_kview)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 171
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 130816) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 172
+            self.match(AssistantDSLParser.T__26)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KdeleteContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kdelete
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKdelete" ):
+                listener.enterKdelete(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKdelete" ):
+                listener.exitKdelete(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKdelete" ):
+                return visitor.visitKdelete(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kdelete(self):
+
+        localctx = AssistantDSLParser.KdeleteContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 50, self.RULE_kdelete)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 174
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 16911433728) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 175
+            self.match(AssistantDSLParser.T__33)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class KmodifyContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return AssistantDSLParser.RULE_kmodify
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKmodify" ):
+                listener.enterKmodify(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKmodify" ):
+                listener.exitKmodify(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKmodify" ):
+                return visitor.visitKmodify(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def kmodify(self):
+
+        localctx = AssistantDSLParser.KmodifyContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 52, self.RULE_kmodify)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 177
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 2164663517184) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 178
+            self.match(AssistantDSLParser.T__33)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
 
 
 

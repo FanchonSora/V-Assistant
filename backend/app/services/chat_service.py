@@ -173,7 +173,7 @@ class ChatService:
 
         # --------------------------- view ---------------------------
         if action == "view":
-            tasks = await TaskService.list(parsed.get("date"), session=session, user=user)
+            tasks = await TaskService.list(parsed.get("date"), session=session, users=user)
             if not tasks:
                 return ChatResponse(reply="📭 Bạn chưa có task nào.")
             lines = [
