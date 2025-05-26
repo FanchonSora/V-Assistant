@@ -23,10 +23,10 @@ modifyAction: kmodify taskTitle dueSpec? SET fieldAssign (',' fieldAssign)*;
 // helper clauses (actions command)
 dueSpec: IN INT timeUnit | AT DATE TIME;
 timeUnit: MINUTE | HOUR | DAY;
-rruleClause: REPEAT EVERY INT timeUnit;
+rruleClause: REPEAT EVERY INT? timeUnit;
 statusClause: AS STATUS;
 fieldAssign: IDENTIFIER '=' (IDENTIFIER | STATUS);
-taskTitle: IDENTIFIER ( ~(IN | INT | MINUTE | HOUR | DAY) IDENTIFIER )*;
+taskTitle: IDENTIFIER (IDENTIFIER)*;
 
 // confirmations
 affirmative: YES;
