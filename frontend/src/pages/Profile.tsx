@@ -7,13 +7,15 @@ import {
   Grid as MuiGrid,
   TextField,
   IconButton,
+  Alert,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useTranslation } from "react-i18next";
 import type { GridProps } from "@mui/material";
+import { get, post } from "../utils/api";
 
 const Grid = MuiGrid as React.ComponentType<
   GridProps & {
@@ -32,21 +34,47 @@ const Profile = () => {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "",
+    email: "",
   });
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await get<UserProfile>("/users/me", token || undefined);
+        setProfile(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch profile"
+        );
+      }
+    };
+    fetchProfile();
+  }, [token]);
 
   const handleEdit = () => {
     setIsEditing(true);
+    setError("");
+    setSuccess("");
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality with API call
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      await post("/users/me", profile, token || undefined);
+      setSuccess("Profile updated successfully");
+      setIsEditing(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update profile");
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
+    setError("");
+    setSuccess("");
   };
 
   const handleChange =
@@ -81,6 +109,18 @@ const Profile = () => {
             </Box>
           )}
         </Box>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
