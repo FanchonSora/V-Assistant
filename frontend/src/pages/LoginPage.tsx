@@ -5,20 +5,21 @@ import {
   Typography,
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   Box,
   Link,
   IconButton,
+  Alert,
 } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GoogleIcon from "@mui/icons-material/Google";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { GridProps } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Grid = MuiGrid as React.ComponentType<
   GridProps & {
@@ -32,34 +33,47 @@ const Grid = MuiGrid as React.ComponentType<
 interface LoginForm {
   username: string;
   password: string;
-  remember: boolean;
 }
 
 const Login = () => {
   const { t } = useTranslation();
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [countdown, setCountdown] = useState<number>(0);
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
     password: "",
-    remember: false,
   });
 
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value, type, checked } = e.target;
-      setForm((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    },
-    []
-  );
+  useEffect(() => {
+    let timer: number;
+    if (countdown > 0) {
+      timer = window.setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            navigate("/");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown, navigate]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +82,7 @@ const Login = () => {
     formData.append("username", form.username);
     formData.append("password", form.password);
 
-      try {
+    try {
       const res = await fetch("http://localhost:8000/auth/token", {
         method: "POST",
         headers: {
@@ -85,9 +99,11 @@ const Login = () => {
 
       const data = await res.json();
       localStorage.setItem("token", data.access_token);
-      window.location.href = "/";
+      login();
+      setSuccess("Login successful!");
+      setCountdown(5);
     } catch (err) {
-    setError("An error occurred during login.");
+      setError("An error occurred during login.");
     }
   };
 
@@ -146,37 +162,22 @@ const Login = () => {
                 />
               </Box>
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="remember"
-                    checked={form.remember}
-                    onChange={handleChange}
-                    color="primary"
-                  />
-                }
-                label={t("login.rememberMe", { defaultValue: "Remember me" })}
-                sx={{ mb: 2, maxWidth: 400, width: "100%" }}
-              />
-
               {error && (
-                <Typography
-                  color="error"
-                  align="center"
-                  sx={{ width: "100%", maxWidth: 400, mb: 1 }}
+                <Alert
+                  severity="error"
+                  sx={{ width: "100%", maxWidth: 400, mb: 2 }}
                 >
                   {error}
-                </Typography>
+                </Alert>
               )}
 
               {success && (
-                <Typography
-                  color="primary"
-                  align="center"
-                  sx={{ width: "100%", maxWidth: 400, mb: 1 }}
+                <Alert
+                  severity="success"
+                  sx={{ width: "100%", maxWidth: 400, mb: 2 }}
                 >
-                  {success}
-                </Typography>
+                  {success} Redirecting to homepage in {countdown} seconds...
+                </Alert>
               )}
 
               <Button
@@ -194,8 +195,14 @@ const Login = () => {
                 sx={{ width: "100%", maxWidth: 400 }}
                 component="div"
               >
-                <Link href="/signup" underline="hover" sx={{ cursor: "pointer", color: "black" }}>
-                  {t("login.createAccount", { defaultValue: "Create an account" })}
+                <Link
+                  href="/signup"
+                  underline="hover"
+                  sx={{ cursor: "pointer", color: "black" }}
+                >
+                  {t("login.createAccount", {
+                    defaultValue: "Create an account",
+                  })}
                 </Link>
               </Typography>
 

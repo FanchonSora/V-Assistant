@@ -9,11 +9,13 @@ import {
   FormControlLabel,
   Box,
   Link,
+  Alert,
 } from "@mui/material";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { post } from "../utils/api";
 import type { GridProps } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Grid = MuiGrid as React.ComponentType<
   GridProps & {
@@ -34,6 +36,8 @@ interface SignupForm {
 
 const Signup = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [countdown, setCountdown] = useState<number>(0);
 
   const [form, setForm] = useState<SignupForm>({
     name: "",
@@ -46,16 +50,31 @@ const Signup = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value, type, checked } = e.target;
-      setForm((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    },
-    []
-  );
+  useEffect(() => {
+    let timer: number;
+    if (countdown > 0) {
+      timer = window.setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            navigate("/login");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown, navigate]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     setError("");
@@ -74,8 +93,13 @@ const Signup = () => {
       return;
     }
     try {
-      await post("/auth/register", { username: form.name, email: form.email, password: form.password });
-      setSuccess("Account created successfully.");
+      await post("/auth/register", {
+        username: form.name,
+        email: form.email,
+        password: form.password,
+      });
+      setSuccess("Account created successfully!");
+      setCountdown(5);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Signup failed. Please try again."
@@ -186,23 +210,21 @@ const Signup = () => {
               />
 
               {error && (
-                <Typography
-                  color="error"
-                  align="center"
-                  sx={{ width: "100%", maxWidth: 400, mb: 1 }}
+                <Alert
+                  severity="error"
+                  sx={{ width: "100%", maxWidth: 400, mb: 2 }}
                 >
                   {error}
-                </Typography>
+                </Alert>
               )}
 
               {success && (
-                <Typography
-                  color="primary"
-                  align="center"
-                  sx={{ width: "100%", maxWidth: 400, mb: 1 }}
+                <Alert
+                  severity="success"
+                  sx={{ width: "100%", maxWidth: 400, mb: 2 }}
                 >
-                  {success}
-                </Typography>
+                  {success} Redirecting to login page in {countdown} seconds...
+                </Alert>
               )}
 
               <Button
@@ -220,8 +242,14 @@ const Signup = () => {
                 sx={{ width: "100%", maxWidth: 400 }}
                 component="div"
               >
-                <Link href="/login" underline="hover" sx={{ cursor: "pointer", color: "black" }}>
-                  {t("signup.alreadyMember", { defaultValue: "I am already a member" })}
+                <Link
+                  href="/login"
+                  underline="hover"
+                  sx={{ cursor: "pointer", color: "black" }}
+                >
+                  {t("signup.alreadyMember", {
+                    defaultValue: "I am already a member",
+                  })}
                 </Link>
               </Typography>
             </Box>
