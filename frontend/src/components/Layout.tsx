@@ -15,6 +15,7 @@ import {
   useTheme,
   useMediaQuery,
   Divider,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -24,6 +25,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import default styles
+import { useAuth } from "../context/AuthContext";
 
 type Value = Date | null | [Date | null, Date | null];
 
@@ -139,10 +141,10 @@ const Layout = ({ children }: LayoutProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth();
 
   const [date, setDate] = useState(new Date());
 
-  // Apply calendar theme variables
   useEffect(() => {
     const root = document.documentElement;
     const isDark = theme.palette.mode === "dark";
@@ -214,6 +216,10 @@ const Layout = ({ children }: LayoutProps) => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+  };
+
   const drawer = (
     <Box>
       <Toolbar>
@@ -280,6 +286,44 @@ const Layout = ({ children }: LayoutProps) => {
           <Typography variant="h6" noWrap component="div">
             V-Assistant
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleLogout}
+              sx={{
+                mr: 2,
+                backgroundColor:
+                  theme.palette.mode === "dark" ? "primary.dark" : "#000000",
+                color: theme.palette.mode === "dark" ? "inherit" : "#ffffff",
+                "&:hover": {
+                  backgroundColor:
+                    theme.palette.mode === "dark" ? "primary.main" : "#333333",
+                },
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/login")}
+              sx={{
+                mr: 2,
+                backgroundColor:
+                  theme.palette.mode === "dark" ? "primary.dark" : "#000000",
+                color: theme.palette.mode === "dark" ? "inherit" : "#ffffff",
+                "&:hover": {
+                  backgroundColor:
+                    theme.palette.mode === "dark" ? "primary.main" : "#333333",
+                },
+              }}
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 

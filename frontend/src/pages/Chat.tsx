@@ -7,6 +7,10 @@ import {
   Button,
   IconButton,
   Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState, useCallback, useRef, useEffect } from "react";
@@ -15,6 +19,8 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import PersonIcon from "@mui/icons-material/Person";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // Type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -57,9 +63,12 @@ interface ChatMessage {
 
 const Chat = () => {
   const { t } = useTranslation();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const token = localStorage.getItem("token");
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +81,11 @@ const Chat = () => {
   }, [chatMessages]);
 
   const handleSendMessage = useCallback(async () => {
+    if (!isLoggedIn) {
+      setShowLoginDialog(true);
+      return;
+    }
+
     if (!message.trim()) return;
 
     const userMsg: ChatMessage = {
@@ -106,7 +120,12 @@ const Chat = () => {
       };
       setChatMessages((prev) => [...prev, botMsg]);
     }
-  }, [message, token]);
+  }, [message, token, isLoggedIn]);
+
+  const handleLoginClick = () => {
+    setShowLoginDialog(false);
+    navigate("/login");
+  };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -277,6 +296,22 @@ const Chat = () => {
           </Button>
         </Box>
       </Box>
+
+      {/* Login Dialog */}
+      <Dialog open={showLoginDialog} onClose={() => setShowLoginDialog(false)}>
+        <DialogTitle>Login Required</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Please log in to start chatting with V-Assistant.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowLoginDialog(false)}>Cancel</Button>
+          <Button onClick={handleLoginClick} variant="contained">
+            Login
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
