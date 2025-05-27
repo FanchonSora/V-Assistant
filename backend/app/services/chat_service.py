@@ -191,18 +191,69 @@ class ChatService:
             if not tasks:
                 return ChatResponse(reply="📭 Bạn chưa có task nào.")
 
-            # Tạo bảng markdown
-            header = "| Tiêu đề | Trạng thái | Hạn |\n|-----------|---------------|--------|"
-            rows = []
+            from PIL import Image, ImageDraw, ImageFont
+            import io, base64
+
+            # Prepare table data.
+            columns = ["Title", "Status", "Deadline"]
+            rows = [columns]
             for t in tasks:
                 if t.task_date and t.task_time:
                     due = f"{t.task_date.strftime('%d/%m/%Y')} {t.task_time.strftime('%H:%M')}"
                 else:
-                    due = "Không có hạn"
-                rows.append(f"| {t.title} | {t.status} | {due} |")
+                    due = "Don't have deadline"
+                rows.append([t.title, t.status, due])
 
-            table = "\n".join([header] + rows)
-            return ChatResponse(reply=table)
+            # Use a monospaced font (fallback to default).
+            font = ImageFont.load_default()
+            cell_padding = 10
+            border_width = 1
+
+            # Calculate maximum width of each column.
+            num_cols = len(columns)
+            col_widths = [0] * num_cols
+            for row in rows:
+                for i, cell in enumerate(row):
+                    bbox = font.getbbox(cell)
+                    cell_width = bbox[2] - bbox[0]
+                    if cell_width > col_widths[i]:
+                        col_widths[i] = cell_width
+
+            # Calculate row heights (same for all rows using font height) and table dimensions.
+            row_height = (font.getbbox("Ag")[3] - font.getbbox("Ag")[1]) + cell_padding * 2
+            table_width = sum(col_widths) + cell_padding * 2 * num_cols + border_width * (num_cols + 1)
+            table_height = row_height * len(rows) + border_width * (len(rows) + 1)
+
+            # Create a new image for the table.
+            image = Image.new("RGB", (table_width, table_height), "white")
+            draw = ImageDraw.Draw(image)
+
+            # Draw table grid and text.
+            y_offset = border_width
+            for row in rows:
+                x_offset = border_width
+                for i, cell in enumerate(row):
+                    cell_width = col_widths[i] + cell_padding * 2
+                    # Draw cell border.
+                    draw.rectangle([x_offset, y_offset, x_offset + cell_width, y_offset + row_height], outline="black", width=border_width)
+                    # Calculate text position (centered vertically, left padded).
+                    bbox = font.getbbox(cell)
+                    text_width = bbox[2] - bbox[0]
+                    text_height = bbox[3] - bbox[1]
+                    text_x = x_offset + cell_padding
+                    text_y = y_offset + (row_height - text_height) // 2
+                    draw.text((text_x, text_y), cell, fill="black", font=font)
+                    x_offset += cell_width + border_width
+                y_offset += row_height + border_width
+
+            # Save image to an in-memory buffer and prepare a Base64 data URL.
+            buf = io.BytesIO()
+            image.save(buf, format="PNG")
+            buf.seek(0)
+            img_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+            data_url = f"data:image/png;base64,{img_base64}"
+            # Return HTML img tag to display the image directly in chat.
+            return ChatResponse(reply=f'<img src="{data_url}" alt="Tasks info" />')
         
         # ------------------------- fallback -------------------------
         return ChatResponse(reply="❓ Sorry, I don't have this response yet.")
