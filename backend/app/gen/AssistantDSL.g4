@@ -5,18 +5,24 @@ options { caseInsensitive = true; }
 program: command EOF;
 
 command: greetingCommand | actionCommand | supportCommand | confirmCommand;
-greetingCommand: introduce | greeting;
+greetingCommand: introduce | greeting | asking;
 actionCommand: createAction | viewAction | deleteAction | modifyAction;
-supportCommand: ksupport;
+supportCommand: supportTasks | supportGreetings | supportInfor;
 confirmCommand: affirmative | negative;
+
+// support 
+supportTasks: KSUPPORT 'tasks' 'instructions';
+supportGreetings: KSUPPORT 'greeting' 'instructions';
+supportInfor: KSUPPORT 'bot' 'information';
 
 // greetings
 introduce: 'what' 'is' 'your' 'name' QUESTION?;
 greeting: kgreeting ('my' 'name' 'is' IDENTIFIER)?;
+asking: kasking 'are' 'you' QUESTION?;
 
 // actions
 createAction: kcreate taskTitle dueSpec? rruleClause? statusClause?;
-viewAction: kview;
+viewAction: KVIEW 'tasks';
 deleteAction: kdelete taskTitle dueSpec?;
 modifyAction: kmodify taskTitle dueSpec? SET fieldAssign (',' fieldAssign)*;
 
@@ -35,15 +41,20 @@ negative: NO;
 // keyword groups
 kintroduce : ; // placeholder for compatibility
 kgreeting: KGREETING;
-ksupport: ('show' | 'view' | 'list' | 'Show' | 'View' | 'List' | 'SHOW' | 'VIEW' | 'LIST') 'some' 'instructions';
-kcreate: ('remind' | 'create' | 'Remind' | 'Create' | 'REMIND' | 'CREATE') 'me' 'to';
-kview: ('show' | 'list' | 'view' | 'Show' | 'List' | 'View' | 'SHOW' | 'LIST' | 'VIEW') 'tasks';
-kdelete: ('delete' | 'remove' | 'Delete' | 'Remove' | 'DELETE' | 'REMOVE') 'task';
-kmodify: ('update' | 'modify' | 'Update' | 'Modify' | 'UPDATE' | 'MODIFY') 'task';
+kasking: KASKING;
+kcreate: KCREATE 'me'? 'to';
+kdelete: KDELETE 'task';
+kmodify: KMODIFY 'task';
 
 // ────────────── lexer rules ──────────────
 QUESTION: '?';
 KGREETING: 'hi' | 'hello' | 'hey' | 'Hi' | 'HI' | 'Hello' | 'HELLO' | 'Hey' | 'HEY';
+KASKING: 'how' | 'How' | 'HOW';
+KSUPPORT: ('list' | 'List' | 'LIST');
+KVIEW: ('show' | 'list' | 'view' | 'Show' | 'List' | 'View' | 'SHOW' | 'LIST' | 'VIEW');
+KCREATE: ('remind' | 'create' | 'Remind' | 'Create' | 'REMIND' | 'CREATE');
+KDELETE: ('delete' | 'remove' | 'Delete' | 'Remove' | 'DELETE' | 'REMOVE');
+KMODIFY: ('update' | 'modify' | 'Update' | 'Modify' | 'UPDATE' | 'MODIFY');
 
 // reserved single-word tokens (appear before IDENTIFIER) if not it will define the INDENTIFIER before reserved the word
 IN: 'in';
@@ -58,7 +69,7 @@ YES: 'yes' | 'yep' | 'ok' | 'Yes' | 'Yep' | 'Ok' | 'YES' | 'YEP' | 'OK';
 NO: 'no' | 'nope' | 'NO' | 'NOPE' | 'No' | 'Nope';
 
 // status
-STATUS: 'pending' | 'done';
+STATUS: 'pending' | 'done' | 'inprogress';
 
 // time units
 MINUTE: 'minute' | 'minutes';

@@ -13,6 +13,6 @@ class DSLService:
 
         # Chỉ require có "action"
         if not isinstance(result, dict) or "action" not in result:
-            return {"error": "cannot_parse Chỉ require có action"}
+            return {"error": "Chỉ require có action"}
 
         return result

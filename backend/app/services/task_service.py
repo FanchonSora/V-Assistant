@@ -37,14 +37,16 @@ class TaskService:
         return TaskRead.model_validate(task)
 
     @staticmethod
-    async def list(date: str | None,
-                   users,
-                   session: AsyncSession
-                   ) -> List[TaskRead]:
+    async def list(date: str | None, users, session) -> List[TaskRead]:
         stmt = select(Task).where(Task.owner_id == users.id)
         if date:
-            target = datetime.fromisoformat(date)
-            stmt = stmt.where(Task.task_date == target.date())
+            try:
+                # If date parsing succeeds, filter by date.
+                target = datetime.fromisoformat(date)
+                stmt = stmt.where(Task.task_date == target.date())
+            except ValueError:
+                # If parsing fails, ignore the date filter.
+                pass
         rows = await session.scalars(stmt)
         return [TaskRead.model_validate(t) for t in rows]
 

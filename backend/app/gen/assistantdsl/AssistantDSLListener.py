@@ -1,4 +1,4 @@
-# Generated from E:/Homework/PPl/Project/V-Assistant/backend/app/utils/../gen/AssistantDSL.g4 by ANTLR 4.13.2
+# Generated from AssistantDSL.g4 by ANTLR 4.13.2
 from antlr4 import *
 if "." in __name__:
     from .AssistantDSLParser import AssistantDSLParser
@@ -62,6 +62,33 @@ class AssistantDSLListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by AssistantDSLParser#supportTasks.
+    def enterSupportTasks(self, ctx:AssistantDSLParser.SupportTasksContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#supportTasks.
+    def exitSupportTasks(self, ctx:AssistantDSLParser.SupportTasksContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#supportGreetings.
+    def enterSupportGreetings(self, ctx:AssistantDSLParser.SupportGreetingsContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#supportGreetings.
+    def exitSupportGreetings(self, ctx:AssistantDSLParser.SupportGreetingsContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#supportInfor.
+    def enterSupportInfor(self, ctx:AssistantDSLParser.SupportInforContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#supportInfor.
+    def exitSupportInfor(self, ctx:AssistantDSLParser.SupportInforContext):
+        pass
+
+
     # Enter a parse tree produced by AssistantDSLParser#introduce.
     def enterIntroduce(self, ctx:AssistantDSLParser.IntroduceContext):
         pass
@@ -77,6 +104,15 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#greeting.
     def exitGreeting(self, ctx:AssistantDSLParser.GreetingContext):
+        pass
+
+
+    # Enter a parse tree produced by AssistantDSLParser#asking.
+    def enterAsking(self, ctx:AssistantDSLParser.AskingContext):
+        pass
+
+    # Exit a parse tree produced by AssistantDSLParser#asking.
+    def exitAsking(self, ctx:AssistantDSLParser.AskingContext):
         pass
 
 
@@ -206,12 +242,12 @@ class AssistantDSLListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by AssistantDSLParser#ksupport.
-    def enterKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+    # Enter a parse tree produced by AssistantDSLParser#kasking.
+    def enterKasking(self, ctx:AssistantDSLParser.KaskingContext):
         pass
 
-    # Exit a parse tree produced by AssistantDSLParser#ksupport.
-    def exitKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+    # Exit a parse tree produced by AssistantDSLParser#kasking.
+    def exitKasking(self, ctx:AssistantDSLParser.KaskingContext):
         pass
 
 
@@ -221,15 +257,6 @@ class AssistantDSLListener(ParseTreeListener):
 
     # Exit a parse tree produced by AssistantDSLParser#kcreate.
     def exitKcreate(self, ctx:AssistantDSLParser.KcreateContext):
-        pass
-
-
-    # Enter a parse tree produced by AssistantDSLParser#kview.
-    def enterKview(self, ctx:AssistantDSLParser.KviewContext):
-        pass
-
-    # Exit a parse tree produced by AssistantDSLParser#kview.
-    def exitKview(self, ctx:AssistantDSLParser.KviewContext):
         pass
 
 

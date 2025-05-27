@@ -1,4 +1,4 @@
-# Generated from E:/Homework/PPl/Project/V-Assistant/backend/app/utils/../gen/AssistantDSL.g4 by ANTLR 4.13.2
+# Generated from AssistantDSL.g4 by ANTLR 4.13.2
 from antlr4 import *
 if "." in __name__:
     from .AssistantDSLParser import AssistantDSLParser
@@ -39,6 +39,21 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by AssistantDSLParser#supportTasks.
+    def visitSupportTasks(self, ctx:AssistantDSLParser.SupportTasksContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#supportGreetings.
+    def visitSupportGreetings(self, ctx:AssistantDSLParser.SupportGreetingsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#supportInfor.
+    def visitSupportInfor(self, ctx:AssistantDSLParser.SupportInforContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by AssistantDSLParser#introduce.
     def visitIntroduce(self, ctx:AssistantDSLParser.IntroduceContext):
         return self.visitChildren(ctx)
@@ -46,6 +61,11 @@ class AssistantDSLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by AssistantDSLParser#greeting.
     def visitGreeting(self, ctx:AssistantDSLParser.GreetingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by AssistantDSLParser#asking.
+    def visitAsking(self, ctx:AssistantDSLParser.AskingContext):
         return self.visitChildren(ctx)
 
 
@@ -119,18 +139,13 @@ class AssistantDSLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by AssistantDSLParser#ksupport.
-    def visitKsupport(self, ctx:AssistantDSLParser.KsupportContext):
+    # Visit a parse tree produced by AssistantDSLParser#kasking.
+    def visitKasking(self, ctx:AssistantDSLParser.KaskingContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by AssistantDSLParser#kcreate.
     def visitKcreate(self, ctx:AssistantDSLParser.KcreateContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by AssistantDSLParser#kview.
-    def visitKview(self, ctx:AssistantDSLParser.KviewContext):
         return self.visitChildren(ctx)
 
 
