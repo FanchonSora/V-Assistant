@@ -20,6 +20,7 @@ import type { GridProps } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { Link as RouterLink } from "react-router-dom";
 
 const Grid = MuiGrid as React.ComponentType<
   GridProps & {
@@ -190,21 +191,27 @@ const Login = () => {
                 {t("login.submit", { defaultValue: "Log in" })}
               </Button>
 
-              <Typography
-                textAlign="center"
-                sx={{ width: "100%", maxWidth: 400 }}
-                component="div"
-              >
-                <Link
-                  href="/signup"
-                  underline="hover"
-                  sx={{ cursor: "pointer", color: "black" }}
-                >
-                  {t("login.createAccount", {
-                    defaultValue: "Create an account",
-                  })}
-                </Link>
-              </Typography>
+              <Box sx={{ mt: 2, textAlign: "center" }}>
+                <Typography variant="body2" color="text.secondary">
+                  {t("login.noAccount", "Don't have an account?")}{" "}
+                  <Link
+                    component={RouterLink}
+                    to="/signup"
+                    sx={{
+                      color: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "white"
+                          : "primary.main",
+                      textDecoration: "none",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    {t("login.createAccount", "Create an account")}
+                  </Link>
+                </Typography>
+              </Box>
 
               <Typography
                 textAlign="center"
