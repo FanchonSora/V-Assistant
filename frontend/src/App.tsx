@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -6,6 +7,7 @@ import Settings from "./pages/Settings";
 import AppointmentPage from "./pages/Appointment";
 import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
+import ModernAuthPages from "./pages/ModernAuthPages";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import "./styles/calendar.css";
@@ -13,9 +15,6 @@ import "./styles/calendar.css";
 import CalendarWeekPageWrapper from "./pages/CalendarWeekPageWrapper";
 import CalendarDayPage from "./pages/CalendarDayPage";
 import CalendarMonthPage from "./pages/CalendarMonthPage";
-
-import Signup from "./pages/SignUpPage";
-import Login from "./pages/LoginPage";
 
 import ProtectedRoute from "./pages/ProtectedRoute";
 
@@ -25,44 +24,101 @@ function App() {
       <AuthProvider>
         <CssBaseline />
         <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/settings"
-                element={
-                  <ProtectedRoute>
+          <Routes>
+            {/* Public: no Layout */}
+            <Route path="/auth" element={<ModernAuthPages />} />
+
+            {/* Anything else needs Layout + auth */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Layout>
                     <Settings />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Layout>
                     <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/appointment" element={<AppointmentPage />} />
-              <Route path="/calendar/day/:date" element={<CalendarDayPage />} />
-              <Route
-                path="/calendar/week/:date"
-                element={<CalendarWeekPageWrapper />}
-              />
-              <Route
-                path="/calendar/month/:date"
-                element={<CalendarMonthPage />}
-              />
-              <Route
-                path="/calendar/:date"
-                element={<CalendarWeekPageWrapper />}
-              />
-            </Routes>
-          </Layout>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                  <Layout>
+                    <Chat />
+                  </Layout>
+              }
+            />
+            <Route
+              path="/appointment"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AppointmentPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/day/:date"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CalendarDayPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/week/:date"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CalendarWeekPageWrapper />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/month/:date"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CalendarMonthPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar/:date"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CalendarWeekPageWrapper />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/auth" replace />} />
+          </Routes>
         </Router>
       </AuthProvider>
     </ThemeProvider>

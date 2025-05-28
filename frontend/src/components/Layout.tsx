@@ -16,87 +16,98 @@ import {
   useMediaQuery,
   Divider,
   Button,
+  Avatar,
+  Menu,
+  MenuItem,
+  Chip,
+  Tooltip,
+  Fade,
+  Paper,
+  Badge,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { useNavigate } from "react-router-dom";
-import Calendar from "react-calendar"; // Import react-calendar
-import "react-calendar/dist/Calendar.css"; // Import default styles
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useNavigate, useLocation } from "react-router-dom";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { useAuth } from "../context/AuthContext";
 
 type Value = Date | null | [Date | null, Date | null];
 
-// Add custom styles for the calendar
+// Enhanced calendar styles with better theming
 const calendarStyles = {
   width: "100%",
   border: "none",
+  borderRadius: 2,
+  overflow: "hidden",
+  backgroundColor: "background.paper",
+  boxShadow: 1,
   "& .react-calendar": {
     width: "100%",
     fontSize: "0.75rem",
-    borderRadius: "8px",
-    overflow: "hidden",
-    backgroundColor: "background.paper",
+    fontFamily: "inherit",
+    backgroundColor: "transparent",
     color: "text.primary",
   },
   "& .react-calendar__navigation": {
     backgroundColor: "transparent",
-    marginBottom: "4px",
+    marginBottom: "8px",
+    padding: "4px",
   },
   "& .react-calendar__navigation button": {
     color: "text.primary",
     minWidth: "32px",
     background: "none",
     fontSize: "0.875rem",
-    marginTop: "4px",
-    padding: "4px",
+    padding: "8px",
+    borderRadius: "8px",
+    transition: "all 0.2s ease",
     "&:enabled:hover": {
       backgroundColor: "action.hover",
+      transform: "scale(1.05)",
     },
     "&:enabled:focus": {
       backgroundColor: "action.selected",
     },
   },
   "& .react-calendar__navigation__label": {
-    fontWeight: "bold",
+    fontWeight: 600,
     color: "text.primary",
     fontSize: "0.875rem",
   },
   "& .react-calendar__month-view__weekdays": {
     backgroundColor: "transparent",
     textTransform: "none",
-    fontWeight: "bold",
-    fontSize: "0.75rem",
-    color: "text.primary",
-  },
-  "& .react-calendar__month-view__weekdays__weekday": {
-    padding: "4px",
-  },
-  "& .react-calendar__month-view__weekdays__weekday abbr": {
-    textDecoration: "none",
-    color: "text.primary",
+    fontWeight: 600,
+    fontSize: "0.7rem",
+    color: "text.secondary",
   },
   "& .react-calendar__tile": {
-    padding: "4px",
+    padding: "8px 4px",
     fontSize: "0.75rem",
     color: "text.primary",
+    borderRadius: "6px",
+    margin: "1px",
+    transition: "all 0.2s ease",
     "&:enabled:hover": {
       backgroundColor: "action.hover",
-    },
-    "&:enabled:focus": {
-      backgroundColor: "action.selected",
+      transform: "scale(1.1)",
     },
   },
   "& .react-calendar__tile--now": {
-    backgroundColor: "action.selected",
-    color: "text.primary",
+    backgroundColor: "primary.light",
+    color: "primary.contrastText",
+    fontWeight: 700,
     "&:enabled:hover": {
-      backgroundColor: "action.hover",
-    },
-    "&:enabled:focus": {
-      backgroundColor: "action.selected",
+      backgroundColor: "primary.main",
     },
   },
   "& .react-calendar__tile--active": {
@@ -105,21 +116,6 @@ const calendarStyles = {
     "&:enabled:hover": {
       backgroundColor: "primary.dark",
     },
-    "&:enabled:focus": {
-      backgroundColor: "primary.dark",
-    },
-  },
-  "& .react-calendar__tile--now .highlight": {
-    backgroundColor: "primary.main",
-    color: "primary.contrastText",
-    borderRadius: "50%",
-    padding: "2px",
-  },
-  "& .react-calendar__month-view__days__day--neighboringMonth": {
-    color: "text.disabled",
-  },
-  "& .react-calendar__month-view": {
-    padding: "4px",
   },
 };
 
@@ -127,83 +123,46 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const drawerWidth = 240;
+const drawerWidth = 280;
+const collapsedDrawerWidth = 70;
 
 const menuItems = [
-  { text: "Home", icon: <HomeIcon />, path: "/" },
-  { text: "Profile", icon: <PersonIcon />, path: "/profile" },
-  { text: "Appointment", icon: <CalendarMonthIcon />, path: "/appointment" },
-  { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+  { text: "Dashboard", icon: <HomeIcon />, path: "/", badge: null },
+  { text: "Profile", icon: <PersonIcon />, path: "/profile", badge: null },
+  { text: "Appointments", icon: <CalendarMonthIcon />, path: "/appointment", badge: 3 },
+  { text: "Settings", icon: <SettingsIcon />, path: "/settings", badge: null },
 ];
 
 const Layout = ({ children }: LayoutProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDrawerCollapsed, setIsDrawerCollapsed] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
+
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const location = useLocation();
+  const { isLoggedIn, logout, user } = useAuth();
 
   const [date, setDate] = useState(new Date());
+  const currentDrawerWidth = isMobile ? drawerWidth : (isDrawerCollapsed ? collapsedDrawerWidth : drawerWidth);
 
+  // Auto-collapse drawer on mobile
   useEffect(() => {
-    const root = document.documentElement;
-    const isDark = theme.palette.mode === "dark";
-
-    root.style.setProperty(
-      "--calendar-text-color",
-      isDark ? "#ffffff" : "#000000"
-    );
-    root.style.setProperty(
-      "--calendar-text-secondary",
-      isDark ? "#b0bec5" : "#757575"
-    );
-    root.style.setProperty(
-      "--calendar-hover-bg",
-      isDark ? "#2c2c2c" : "#f8f8f8"
-    );
-    root.style.setProperty(
-      "--calendar-today-bg",
-      isDark ? "#1976d2" : "#ff9800"
-    );
-    root.style.setProperty(
-      "--calendar-today-text",
-      isDark ? "#ffffff" : "#000000"
-    );
-    root.style.setProperty(
-      "--calendar-today-hover-bg",
-      isDark ? "#1565c0" : "#1087ff"
-    );
-    root.style.setProperty("--calendar-today-hover-text", "#ffffff");
-    root.style.setProperty(
-      "--calendar-active-bg",
-      isDark ? "#1976d2" : "#006edc"
-    );
-    root.style.setProperty("--calendar-active-text", "#ffffff");
-    root.style.setProperty(
-      "--calendar-active-hover-bg",
-      isDark ? "#1565c0" : "#006edc"
-    );
-    root.style.setProperty("--calendar-active-hover-text", "#ffffff");
-    root.style.setProperty(
-      "--calendar-has-active-bg",
-      isDark ? "#1976d2" : "#ff9800"
-    );
-    root.style.setProperty(
-      "--calendar-has-active-text",
-      isDark ? "#ffffff" : "#000000"
-    );
-    root.style.setProperty(
-      "--calendar-has-active-hover-bg",
-      isDark ? "#1565c0" : "#ffb74d"
-    );
-    root.style.setProperty(
-      "--calendar-has-active-hover-text",
-      isDark ? "#ffffff" : "#000000"
-    );
-  }, [theme.palette.mode]);
+    if (isMobile) {
+      setIsDrawerCollapsed(false);
+    }
+  }, [isMobile]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleDrawerCollapse = () => {
+    if (!isMobile) {
+      setIsDrawerCollapsed(!isDrawerCollapsed);
+    }
   };
 
   const handleDateClick = (value: Value) => {
@@ -216,61 +175,158 @@ const Layout = ({ children }: LayoutProps) => {
     }
   };
 
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationAnchor(event.currentTarget);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationAnchor(null);
+  };
+
   const handleLogout = () => {
     logout();
+    handleProfileMenuClose();
+    navigate("/auth", { replace: true });
+  }
+
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
   };
 
   const drawer = (
-    <Box>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          V-Assistant
-        </Typography>
-      </Toolbar>
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Header */}
+      <Box sx={{ p: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        {!isDrawerCollapsed && (
+          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700, color: "primary.main" }}>
+
+          </Typography>
+        )}
+        {!isMobile && (
+          <IconButton onClick={handleDrawerCollapse} size="small">
+            {isDrawerCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        )}
+      </Box>
+
       <Divider />
-      <List>
+
+      {/* Navigation */}
+      <List sx={{ px: 1, py: 2 }}>
         {menuItems.map((item) => (
-          <ListItem
+          <Tooltip
             key={item.text}
-            onClick={() => {
-              navigate(item.path);
-              if (isMobile) {
-                setMobileOpen(false);
-              }
-            }}
-            sx={{ cursor: "pointer" }}
+            title={isDrawerCollapsed ? item.text : ""}
+            placement="right"
+            arrow
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
+            <ListItem
+              onClick={() => {
+                navigate(item.path);
+                if (isMobile) {
+                  setMobileOpen(false);
+                }
+              }}
+              sx={{
+                cursor: "pointer",
+                borderRadius: 2,
+                mb: 1,
+                backgroundColor: isActiveRoute(item.path) ? "primary.light" : "transparent",
+                color: isActiveRoute(item.path) ? "primary.contrastText" : "text.primary",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  backgroundColor: isActiveRoute(item.path) ? "primary.main" : "action.hover",
+                  transform: "translateX(4px)",
+                },
+                justifyContent: isDrawerCollapsed ? "center" : "flex-start",
+                px: isDrawerCollapsed ? 1 : 2,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: "inherit",
+                  minWidth: isDrawerCollapsed ? "auto" : 40,
+                  justifyContent: "center"
+                }}
+              >
+                {item.badge ? (
+                  <Badge badgeContent={item.badge} color="error">
+                    {item.icon}
+                  </Badge>
+                ) : (
+                  item.icon
+                )}
+              </ListItemIcon>
+              {!isDrawerCollapsed && <ListItemText primary={item.text} />}
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
-      {/* Mini Calendar */}
-      <Box sx={{ p: 1 }}>
-        <Box sx={calendarStyles}>
-          <Calendar
-            onChange={handleDateClick}
-            value={date}
-            calendarType="iso8601"
-            tileClassName={({ date, view }) =>
-              view === "month" &&
-              date.toDateString() === new Date().toDateString()
-                ? "highlight"
-                : null
-            }
-          />
+
+      {/* Mini Calendar - only show when not collapsed */}
+      {!isDrawerCollapsed && (
+        <Box sx={{ px: 2, py: 1, mt: "auto" }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+            Small Calendar
+          </Typography>
+          <Paper elevation={0} sx={calendarStyles}>
+            <Calendar
+              onChange={handleDateClick}
+              value={date}
+              calendarType="iso8601"
+              showNeighboringMonth={false}
+              tileClassName={({ date, view }) =>
+                view === "month" && date.toDateString() === new Date().toDateString()
+                  ? "highlight"
+                  : null
+              }
+            />
+          </Paper>
         </Box>
-      </Box>
+      )}
+
+      {/* User info at bottom - only show when not collapsed */}
+      {/* {!isDrawerCollapsed && isLoggedIn && (
+        <Box sx={{ p: 2, mt: "auto", borderTop: 1, borderColor: "divider" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.main" }}>
+              {user?.name?.charAt(0) || "U"}
+            </Avatar>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography variant="body2" noWrap fontWeight={600}>
+                {user?.name || "User"}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" noWrap>
+                {user?.email || "user@example.com"}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      )} */}
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
+      {/* App Bar */}
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { md: `calc(100% - ${currentDrawerWidth}px)` },
+          ml: { md: `${currentDrawerWidth}px` },
+          bgcolor: "background.paper",
+          color: "text.primary",
+          borderBottom: 1,
+          borderColor: "divider",
         }}
       >
         <Toolbar>
@@ -279,71 +335,128 @@ const Layout = ({ children }: LayoutProps) => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            V-Assistant
+
+          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600 }}>
+            {menuItems.find(item => isActiveRoute(item.path))?.text || "Dashboard"}
           </Typography>
+
           <Box sx={{ flexGrow: 1 }} />
-          {isLoggedIn ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleLogout}
-              sx={{
-                mr: 2,
-                backgroundColor:
-                  theme.palette.mode === "dark" ? "primary.dark" : "#000000",
-                color: theme.palette.mode === "dark" ? "inherit" : "#ffffff",
-                "&:hover": {
-                  backgroundColor:
-                    theme.palette.mode === "dark" ? "primary.main" : "#333333",
-                },
-              }}
-            >
-              Logout
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/login")}
-              sx={{
-                mr: 2,
-                backgroundColor:
-                  theme.palette.mode === "dark" ? "primary.dark" : "#000000",
-                color: theme.palette.mode === "dark" ? "inherit" : "#ffffff",
-                "&:hover": {
-                  backgroundColor:
-                    theme.palette.mode === "dark" ? "primary.main" : "#333333",
-                },
-              }}
-            >
-              Login
-            </Button>
-          )}
+
+          {/* Right side buttons */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {isLoggedIn ? (
+              <>
+                {/* Notifications */}
+                <IconButton
+                  color="inherit"
+                  onClick={handleNotificationClick}
+                  sx={{ mx: 1 }}
+                >
+                  <Badge badgeContent={5} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+
+                {/* Profile Menu */}
+                <IconButton
+                  onClick={handleProfileMenuOpen}
+                  sx={{ p: 0.5 }}
+                >
+                  <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.main" }}>
+                    {user?.name?.charAt(0) || "U"}
+                  </Avatar>
+                </IconButton>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={() => navigate("/auth")}
+                sx={{ borderRadius: 2 }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
 
+      {/* Profile Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileMenuClose}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        PaperProps={{
+          elevation: 3,
+          sx: { mt: 1, minWidth: 200 }
+        }}
+      >
+        <MenuItem onClick={() => { navigate("/profile"); handleProfileMenuClose(); }}>
+          <ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => { navigate("/settings"); handleProfileMenuClose(); }}>
+          <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
+          Settings
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+
+      {/* Notification Menu */}
+      <Menu
+        anchorEl={notificationAnchor}
+        open={Boolean(notificationAnchor)}
+        onClose={handleNotificationClose}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        PaperProps={{
+          elevation: 3,
+          sx: { mt: 1, minWidth: 300, maxHeight: 400 }
+        }}
+      >
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
+          <Typography variant="h6">Notifications</Typography>
+        </Box>
+        <MenuItem>
+          <Box>
+            <Typography variant="body2">New appointment scheduled</Typography>
+            <Typography variant="caption" color="text.secondary">2 minutes ago</Typography>
+          </Box>
+        </MenuItem>
+        <MenuItem>
+          <Box>
+            <Typography variant="body2">Profile updated successfully</Typography>
+            <Typography variant="caption" color="text.secondary">1 hour ago</Typography>
+          </Box>
+        </MenuItem>
+      </Menu>
+
+      {/* Navigation Drawer */}
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { md: currentDrawerWidth }, flexShrink: { md: 0 } }}
       >
         {/* Mobile drawer */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              bgcolor: "background.paper",
             },
           }}
         >
@@ -354,10 +467,14 @@ const Layout = ({ children }: LayoutProps) => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth,
+              width: currentDrawerWidth,
+              bgcolor: "background.paper",
+              borderRight: 1,
+              borderColor: "divider",
+              transition: "width 0.3s ease",
             },
           }}
           open
@@ -366,30 +483,61 @@ const Layout = ({ children }: LayoutProps) => {
         </Drawer>
       </Box>
 
+      {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          mt: "64px", // Height of AppBar
+          width: { md: `calc(100% - ${currentDrawerWidth}px)` },
+          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          minHeight: "calc(100vh - 64px)", // Subtract AppBar height
         }}
       >
-        <Box sx={{ flex: 1 }}>{children}</Box>
+        {/* Content Area */}
+        <Box
+          sx={{
+            flex: 1,
+            mt: "64px",
+            p: { xs: 2, sm: 3 },
+            bgcolor: "grey.50",
+            ...(theme.palette.mode === "dark" && {
+              bgcolor: "grey.900",
+            }),
+          }}
+        >
+          <Fade in timeout={300}>
+            <Box>{children}</Box>
+          </Fade>
+        </Box>
+
+        {/* Enhanced Footer */}
         <Box
           component="footer"
           sx={{
             py: 3,
+            px: 3,
             mt: "auto",
+            bgcolor: "background.paper",
+            borderTop: 1,
+            borderColor: "divider",
           }}
         >
           <Container maxWidth="lg">
-            <Typography variant="body2" color="text.secondary" align="center">
-              © {new Date().getFullYear()} V-Assistant. All rights reserved.
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                © {new Date().getFullYear()} V-Assistant. All rights reserved.
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Chip label="v2.1.0" size="small" variant="outlined" />
+                <Chip
+                  label="Online"
+                  size="small"
+                  color="success"
+                  sx={{ backgroundColor: "success.light" }}
+                />
+              </Box>
+            </Box>
           </Container>
         </Box>
       </Box>

@@ -42,7 +42,7 @@ negative: NO;
 kintroduce : ; // placeholder for compatibility
 kgreeting: KGREETING;
 kasking: KASKING;
-kcreate: KCREATE 'me'? 'to';
+kcreate: KCREATE 'me'? 'to'?;
 kdelete: KDELETE 'task';
 kmodify: KMODIFY 'task';
 
@@ -51,7 +51,7 @@ QUESTION: '?';
 KGREETING: 'hi' | 'hello' | 'hey' | 'Hi' | 'HI' | 'Hello' | 'HELLO' | 'Hey' | 'HEY';
 KASKING: 'how' | 'How' | 'HOW';
 KSUPPORT: ('list' | 'List' | 'LIST');
-KVIEW: ('show' | 'list' | 'view' | 'Show' | 'List' | 'View' | 'SHOW' | 'LIST' | 'VIEW');
+KVIEW: ('show' | 'view' | 'Show' | 'View' | 'SHOW' | 'VIEW');
 KCREATE: ('remind' | 'create' | 'Remind' | 'Create' | 'REMIND' | 'CREATE');
 KDELETE: ('delete' | 'remove' | 'Delete' | 'Remove' | 'DELETE' | 'REMOVE');
 KMODIFY: ('update' | 'modify' | 'Update' | 'Modify' | 'UPDATE' | 'MODIFY');

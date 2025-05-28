@@ -19,19 +19,24 @@ _PENDING: Dict[Any, Dict[str, Any]] = {}
 from PIL import Image, ImageDraw, ImageFont  # used only for table rendering
 import io, base64
 
-def _table_to_img(rows: List[List[str]]) -> str:
-    """Render a 2‑D list as a PNG table and return an <img> data‑URL."""
-    font = ImageFont.load_default()
+def _table_to_img(rows: List[List[str]], max_width: int = 1000) -> str:
+    try:
+        font = ImageFont.truetype("arial.ttf", 11)
+    except IOError:
+        font = ImageFont.load_default()
     pad, border = 8, 1
-    # column widths
+    # Tính chiều rộng từng cột
     col_w = [0] * len(rows[0])
     for row in rows:
         for i, cell in enumerate(row):
-            w = font.getbbox(cell)[2] - font.getbbox(cell)[0]
+            bbox = font.getbbox(cell)
+            w = bbox[2] - bbox[0]
             col_w[i] = max(col_w[i], w)
+
     row_h = (font.getbbox("Ag")[3] - font.getbbox("Ag")[1]) + pad * 2
     tbl_w = sum(col_w) + pad * 2 * len(col_w) + border * (len(col_w) + 1)
     tbl_h = row_h * len(rows) + border * (len(rows) + 1)
+    # Vẽ bảng lên ảnh gốc
     img = Image.new("RGB", (tbl_w, tbl_h), "white")
     draw = ImageDraw.Draw(img)
     y = border
@@ -40,50 +45,121 @@ def _table_to_img(rows: List[List[str]]) -> str:
         for i, cell in enumerate(row):
             cw = col_w[i] + pad * 2
             draw.rectangle([x, y, x + cw, y + row_h], outline="black", width=border)
+            text_bbox = font.getbbox(cell)
+            text_w = text_bbox[2] - text_bbox[0]
+            text_h = text_bbox[3] - text_bbox[1]
             tx = x + pad
-            ty = y + (row_h - (font.getbbox(cell)[3] - font.getbbox(cell)[1])) // 2
+            ty = y + (row_h - text_h) // 2
             draw.text((tx, ty), cell, fill="black", font=font)
             x += cw + border
         y += row_h + border
+    # Nếu quá rộng, thu nhỏ xuống max_width
+    if tbl_w > max_width:
+        scale = max_width / tbl_w
+        new_size = (int(tbl_w * scale), int(tbl_h * scale))
+        img = img.resize(new_size, Image.LANCZOS)
+    # Xuất ra data-URL
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     b64 = base64.b64encode(buf.getvalue()).decode()
     return f'<img src="data:image/png;base64,{b64}" alt="table" />'
 
-
 def _build_instruction_rows(topic: str) -> List[List[str]]:
-    """Return table rows for a given *support* topic defined in AssistantDSL."""
+    """Return table rows with command names, descriptions, and examples for a given support topic."""
     if topic == "tasks":
         return [
-            ["Command", "Description"],
-            ["remind me to <title> at <YYYY-MM-DD HH:MM>", "Create one‑off reminder on a precise date/time"],
-            ["remind me to <title> in <N> (minute|hour|day)", "Create relative reminder N units from now"],
-            ["remind me to <title> in <N> days repeat every <M> days", "Create recurring reminder"],
-            ["show tasks", "List all tasks"],
-            ["show tasks on <YYYY-MM-DD>", "List tasks for a specific date"],
-            ["update task <title> set status=pending|done", "Change task status"],
-            ["delete task <title>", "Delete task"],
-            ["cancel task <title>", "Mark task as cancelled"],
-            ["yes / no", "Confirm or cancel pending action"],
+            ["Command", "Description", "Example"],
+            [
+                "remind me to <title> at <YYYY-MM-DD HH:MM>",
+                "Create reminder on a specific date/time",
+                "remind me to submit report at 2025-06-01 09:00",
+            ],
+            [
+                "remind me to <title> in <N> minute(s)/hour(s)/day(s)",
+                "Create reminder triggers after specified time",
+                "remind to call customer in 30 minutes",
+            ],
+            [
+                "remind me to <title> in <N> days repeat every <M> days",
+                "Create a recurring reminder",
+                "remind fix bug in 2 days repeat every 7 days as pending",
+            ],
+            [
+                "show tasks",
+                "List all tasks regardless date",
+                "show tasks",
+            ],
+            [
+                "show tasks on <YYYY-MM-DD>",
+                "List tasks scheduled for specific date",
+                "show tasks on 2025-06-01",
+            ],
+            [
+                "update task <title> set <field>=<value>",
+                "Update task field(s)",
+                "update task submit report set status=done, title=report",
+            ],
+            [
+                "delete task <title>",
+                "Delete task by title",
+                "delete task submit report at 2025-06-01 09:00",
+            ],
+            [
+                "cancel task <title>",
+                "Mark a task as cancelled",
+                "cancel task submit report",
+            ],
+            [
+                "yes / no",
+                "Confirm or cancel a pending action",
+                "yes",
+            ],
         ]
     if topic == "greetings":
         return [
-            ["Command", "Description"],
-            ["hi / hello / hey", "Greet the bot"],
-            ["hi my name is <Name>", "Introduce yourself"],
-            ["what is your name?", "Ask the bot to introduce itself"],
-            ["how are you?", "Friendly chitchat"],
+            ["Command", "Description", "Example"],
+            [
+                "hi / hello / hey",
+                "Greet the bot",
+                "hi",
+            ],
+            [
+                "hi my name is <Name>",
+                "Introduce yourself to the bot",
+                "hi my name is John",
+            ],
+            [
+                "what is your name?",
+                "Ask the bot to introduce itself",
+                "what is your name?",
+            ],
+            [
+                "how are you?",
+                "Friendly chitchat with the bot",
+                "how are you?",
+            ],
         ]
     if topic == "info":
         return [
-            ["Command", "Description"],
-            ["list tasks instructions", "Show task‑related cheat‑sheet"],
-            ["list greeting instructions", "Show greeting cheat‑sheet"],
-            ["list bot information", "Show this table"],
+            ["Command", "Description", "Example"],
+            [
+                "list tasks instructions",
+                "Show a cheat‑sheet for task commands",
+                "list tasks instructions",
+            ],
+            [
+                "list greeting instructions",
+                "Show a cheat‑sheet for greeting commands",
+                "list greeting instructions",
+            ],
+            [
+                "list bot information",
+                "Show information about the bot",
+                "list bot information",
+            ],
         ]
-    # default fallback
-    return [["Command", "Description"], ["help", "Show help tables"]]
-
+    # default
+    return [["Command", "Description", "Example"], ["help", "Show help tables", "help"]]
 
 async def _apply_pending(uid, positive: bool, session: AsyncSession, user) -> str:
     if uid not in _PENDING:
@@ -95,7 +171,7 @@ async def _apply_pending(uid, positive: bool, session: AsyncSession, user) -> st
     # CREATE -------------------------------------------------------------------
     if action == "create":
         payload: dict[str, Any] = data["payload"]
-        task = await TaskService.create(TaskCreate(**payload), session=session, users=user)
+        task = await TaskService.create(TaskCreate(**payload), session=session, user=user)
         due_str = (
             f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m/%Y')}"
             if task.task_date and task.task_time else "no due date"
@@ -107,8 +183,7 @@ async def _apply_pending(uid, positive: bool, session: AsyncSession, user) -> st
         return "🗑️ Task deleted"
     # UPDATE -------------------------------------------------------------------
     if action == "update":
-        await TaskService.update(task_id=data["task_id"], data=TaskUpdate(**data["updates"]),
-                                 session=session, users=user)
+        await TaskService.update(task_id=data["task_id"], data=TaskUpdate(**data["updates"]), session=session, users=user)
         return "✏️ Task updated"
     return "⚠️ Unsupported pending action"
 
@@ -217,18 +292,19 @@ class ChatService:
             ok = await TaskService.cancel_by_ref(parsed["title"], session=session, users=user)
             return ChatResponse(reply="🚫 Task cancelled." if ok else "⚠️ Task not found")
 
-        # 9️⃣ View --------------------------------------------------------------
+                # 9️⃣ View --------------------------------------------------------------
         if action == "view":
-            tasks = await TaskService.list(parsed.get("date"), session=session, users=user)
+            # Ignore any date filter to list all tasks
+            tasks = await TaskService.list(None, session=session, users=user)
             if not tasks:
                 return ChatResponse(reply="📭 You have no tasks")
-            rows: List[List[str]] = [["Title", "Status", "Deadline"]]
+            # Build table with detailed task info: Title, Status, Date, Time, Recurrence
+            rows: List[List[str]] = [["Title", "Status", "Date", "Time", "Recurrence"]]
             for t in tasks:
-                due = (
-                    f"{t.task_date.strftime('%d/%m/%Y')} {t.task_time.strftime('%H:%M')}"
-                    if t.task_date and t.task_time else "No deadline"
-                )
-                rows.append([t.title, t.status, due])
+                date_str = t.task_date.strftime('%d/%m/%Y') if t.task_date else "N/A"
+                time_str = t.task_time.strftime('%H:%M') if t.task_time else "N/A"
+                recurrence = t.rrule if getattr(t, "rrule", None) else ""
+                rows.append([t.title, t.status, date_str, time_str, recurrence])
             return ChatResponse(reply=_table_to_img(rows))
 
         # 🔟 Confirm ------------------------------------------------------------

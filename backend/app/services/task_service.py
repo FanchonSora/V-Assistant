@@ -12,15 +12,13 @@ from app.services.scheduler_service import schedule_task_reminder
 
 from datetime import date
 from typing import List
+from app.services.notification_service import send_email  
 
 class TaskService:
     @staticmethod
-    async def create(data: TaskCreate,
-                     users,
-                     session: AsyncSession
-                     ) -> TaskRead:
+    async def create(data: TaskCreate, user, session: AsyncSession) -> TaskRead:
         task = Task(
-            owner_id=users.id,
+            owner_id=user.id,
             title=data.title,
             task_date=data.task_date,
             task_time=data.task_time,
@@ -30,10 +28,20 @@ class TaskService:
         session.add(task)
         await session.commit()
         await session.refresh(task)
-
         if task.task_date and task.task_time:
             await schedule_task_reminder(task)
-
+        # Prepare a due date string if available.
+        # due_str = (
+        #     f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m/%Y')}"
+        #     if task.task_date and task.task_time else "no due date"
+        # )
+        # Send a notification email to the task owner using the user's email.
+        # email_body = f'New task created: "{task.title}" – due {due_str}.'
+        # await send_email(
+        #     recipient=user.email, 
+        #     subject="New Task Notification",
+        #     body=email_body
+        # )
         return TaskRead.model_validate(task)
 
     @staticmethod
