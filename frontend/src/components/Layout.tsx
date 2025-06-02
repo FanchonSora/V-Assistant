@@ -24,6 +24,7 @@ import {
   Fade,
   Paper,
   Badge,
+  Popover,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -42,83 +43,6 @@ import { useAuth } from "../context/AuthContext";
 
 type Value = Date | null | [Date | null, Date | null];
 
-// Enhanced calendar styles with better theming
-const calendarStyles = {
-  width: "100%",
-  border: "none",
-  borderRadius: 2,
-  overflow: "hidden",
-  backgroundColor: "background.paper",
-  boxShadow: 1,
-  "& .react-calendar": {
-    width: "100%",
-    fontSize: "0.75rem",
-    fontFamily: "inherit",
-    backgroundColor: "transparent",
-    color: "text.primary",
-  },
-  "& .react-calendar__navigation": {
-    backgroundColor: "transparent",
-    marginBottom: "8px",
-    padding: "4px",
-  },
-  "& .react-calendar__navigation button": {
-    color: "text.primary",
-    minWidth: "32px",
-    background: "none",
-    fontSize: "0.875rem",
-    padding: "8px",
-    borderRadius: "8px",
-    transition: "all 0.2s ease",
-    "&:enabled:hover": {
-      backgroundColor: "action.hover",
-      transform: "scale(1.05)",
-    },
-    "&:enabled:focus": {
-      backgroundColor: "action.selected",
-    },
-  },
-  "& .react-calendar__navigation__label": {
-    fontWeight: 600,
-    color: "text.primary",
-    fontSize: "0.875rem",
-  },
-  "& .react-calendar__month-view__weekdays": {
-    backgroundColor: "transparent",
-    textTransform: "none",
-    fontWeight: 600,
-    fontSize: "0.7rem",
-    color: "text.secondary",
-  },
-  "& .react-calendar__tile": {
-    padding: "8px 4px",
-    fontSize: "0.75rem",
-    color: "text.primary",
-    borderRadius: "6px",
-    margin: "1px",
-    transition: "all 0.2s ease",
-    "&:enabled:hover": {
-      backgroundColor: "action.hover",
-      transform: "scale(1.1)",
-    },
-  },
-  "& .react-calendar__tile--now": {
-    backgroundColor: "primary.light",
-    color: "primary.contrastText",
-    fontWeight: 700,
-    "&:enabled:hover": {
-      backgroundColor: "primary.main",
-    },
-  },
-  "& .react-calendar__tile--active": {
-    backgroundColor: "primary.main",
-    color: "primary.contrastText",
-    "&:enabled:hover": {
-      backgroundColor: "primary.dark",
-    },
-  },
-};
-
 interface LayoutProps {
   children: ReactNode;
 }
@@ -129,7 +53,12 @@ const collapsedDrawerWidth = 70;
 const menuItems = [
   { text: "Dashboard", icon: <HomeIcon />, path: "/", badge: null },
   { text: "Profile", icon: <PersonIcon />, path: "/profile", badge: null },
-  { text: "Appointments", icon: <CalendarMonthIcon />, path: "/appointment", badge: 3 },
+  {
+    text: "Appointments",
+    icon: <CalendarMonthIcon />,
+    path: "/appointment",
+    badge: 3,
+  },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings", badge: null },
 ];
 
@@ -137,7 +66,11 @@ const Layout = ({ children }: LayoutProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDrawerCollapsed, setIsDrawerCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
+  const [notificationAnchor, setNotificationAnchor] =
+    useState<null | HTMLElement>(null);
+  const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -146,7 +79,23 @@ const Layout = ({ children }: LayoutProps) => {
   const { isLoggedIn, logout, user } = useAuth();
 
   const [date, setDate] = useState(new Date());
-  const currentDrawerWidth = isMobile ? drawerWidth : (isDrawerCollapsed ? collapsedDrawerWidth : drawerWidth);
+  const currentDrawerWidth = isMobile
+    ? drawerWidth
+    : isDrawerCollapsed
+    ? collapsedDrawerWidth
+    : drawerWidth;
+
+  // Sync small calendar date with main calendar
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith("/calendar/")) {
+      const dateStr = path.split("/calendar/")[1];
+      const [year, month, day] = dateStr.split("-").map(Number);
+      if (year && month && day) {
+        setDate(new Date(year, month - 1, day));
+      }
+    }
+  }, [location.pathname]);
 
   // Auto-collapse drawer on mobile
   useEffect(() => {
@@ -195,20 +144,99 @@ const Layout = ({ children }: LayoutProps) => {
     logout();
     handleProfileMenuClose();
     navigate("/auth", { replace: true });
-  }
+  };
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path;
   };
 
+  const handleCalendarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setCalendarAnchor(event.currentTarget);
+  };
+
+  const handleCalendarClose = () => {
+    setCalendarAnchor(null);
+  };
+
+  const calendarCustomStyles = {
+    "& .react-calendar": {
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+      borderRadius: 2,
+      border: `1px solid ${theme.palette.divider}`,
+      boxShadow: theme.palette.mode === "dark" ? 3 : 1,
+    },
+    "& .react-calendar__navigation button": {
+      color: theme.palette.text.primary,
+      background: "none",
+      borderRadius: 1,
+      "&:hover": {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+    "& .react-calendar__month-view__weekdays": {
+      color: theme.palette.text.secondary,
+      fontWeight: 600,
+    },
+    "& .react-calendar__tile": {
+      color: theme.palette.text.primary,
+      borderRadius: 1,
+      "&:enabled:hover": {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+    "& .react-calendar__tile--now": {
+      backgroundColor: "#FF9800",
+      color: "#fff",
+      fontWeight: 700,
+      position: "relative",
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        bottom: 2,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "4px",
+        height: "4px",
+        borderRadius: "50%",
+        backgroundColor: "#fff",
+      },
+      "&:enabled:hover": {
+        backgroundColor: "#F57C00",
+        color: "#fff",
+      },
+    },
+    "& .react-calendar__tile--active": {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      fontWeight: 700,
+      "&:enabled:hover": {
+        backgroundColor: theme.palette.primary.dark,
+      },
+    },
+    "& .react-calendar__month-view__days__day--neighboringMonth": {
+      color: theme.palette.text.disabled,
+    },
+  };
+
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Header */}
-      <Box sx={{ p: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {!isDrawerCollapsed && (
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700, color: "primary.main" }}>
-
-          </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ fontWeight: 700, color: "primary.main" }}
+          ></Typography>
         )}
         {!isMobile && (
           <IconButton onClick={handleDrawerCollapse} size="small">
@@ -239,11 +267,17 @@ const Layout = ({ children }: LayoutProps) => {
                 cursor: "pointer",
                 borderRadius: 2,
                 mb: 1,
-                backgroundColor: isActiveRoute(item.path) ? "primary.light" : "transparent",
-                color: isActiveRoute(item.path) ? "primary.contrastText" : "text.primary",
+                backgroundColor: isActiveRoute(item.path)
+                  ? "primary.light"
+                  : "transparent",
+                color: isActiveRoute(item.path)
+                  ? "primary.contrastText"
+                  : "text.primary",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  backgroundColor: isActiveRoute(item.path) ? "primary.main" : "action.hover",
+                  backgroundColor: isActiveRoute(item.path)
+                    ? "primary.main"
+                    : "action.hover",
                   transform: "translateX(4px)",
                 },
                 justifyContent: isDrawerCollapsed ? "center" : "flex-start",
@@ -254,7 +288,7 @@ const Layout = ({ children }: LayoutProps) => {
                 sx={{
                   color: "inherit",
                   minWidth: isDrawerCollapsed ? "auto" : 40,
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               >
                 {item.badge ? (
@@ -269,6 +303,36 @@ const Layout = ({ children }: LayoutProps) => {
             </ListItem>
           </Tooltip>
         ))}
+
+        {/* Calendar Button for Collapsed State */}
+        {isDrawerCollapsed && (
+          <Tooltip title="Calendar" placement="right" arrow>
+            <ListItem
+              onClick={handleCalendarClick}
+              sx={{
+                cursor: "pointer",
+                borderRadius: 2,
+                mb: 1,
+                justifyContent: "center",
+                px: 1,
+                "&:hover": {
+                  backgroundColor: "action.hover",
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: "inherit",
+                  minWidth: "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <CalendarMonthIcon />
+              </ListItemIcon>
+            </ListItem>
+          </Tooltip>
+        )}
       </List>
 
       {/* Mini Calendar - only show when not collapsed */}
@@ -277,18 +341,20 @@ const Layout = ({ children }: LayoutProps) => {
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
             Small Calendar
           </Typography>
-          <Paper elevation={0} sx={calendarStyles}>
-            <Calendar
-              onChange={handleDateClick}
-              value={date}
-              calendarType="iso8601"
-              showNeighboringMonth={false}
-              tileClassName={({ date, view }) =>
-                view === "month" && date.toDateString() === new Date().toDateString()
-                  ? "highlight"
-                  : null
-              }
-            />
+          <Paper elevation={0}>
+            <Box sx={calendarCustomStyles}>
+              <Calendar
+                onChange={handleDateClick}
+                value={date}
+                showNeighboringMonth={false}
+                tileClassName={({ date, view }) =>
+                  view === "month" &&
+                  date.toDateString() === new Date().toDateString()
+                    ? "highlight"
+                    : null
+                }
+              />
+            </Box>
           </Paper>
         </Box>
       )}
@@ -315,7 +381,13 @@ const Layout = ({ children }: LayoutProps) => {
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        bgcolor: "background.default",
+      }}
+    >
       {/* App Bar */}
       <AppBar
         position="fixed"
@@ -340,8 +412,14 @@ const Layout = ({ children }: LayoutProps) => {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600 }}>
-            {menuItems.find(item => isActiveRoute(item.path))?.text || "Dashboard"}
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ fontWeight: 600 }}
+          >
+            {menuItems.find((item) => isActiveRoute(item.path))?.text ||
+              "Dashboard"}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
@@ -362,11 +440,10 @@ const Layout = ({ children }: LayoutProps) => {
                 </IconButton>
 
                 {/* Profile Menu */}
-                <IconButton
-                  onClick={handleProfileMenuOpen}
-                  sx={{ p: 0.5 }}
-                >
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.main" }}>
+                <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0.5 }}>
+                  <Avatar
+                    sx={{ width: 36, height: 36, bgcolor: "primary.main" }}
+                  >
                     {user?.name?.charAt(0) || "U"}
                   </Avatar>
                 </IconButton>
@@ -393,20 +470,36 @@ const Layout = ({ children }: LayoutProps) => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         PaperProps={{
           elevation: 3,
-          sx: { mt: 1, minWidth: 200 }
+          sx: { mt: 1, minWidth: 200 },
         }}
       >
-        <MenuItem onClick={() => { navigate("/profile"); handleProfileMenuClose(); }}>
-          <ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon>
+        <MenuItem
+          onClick={() => {
+            navigate("/profile");
+            handleProfileMenuClose();
+          }}
+        >
+          <ListItemIcon>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={() => { navigate("/settings"); handleProfileMenuClose(); }}>
-          <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
+        <MenuItem
+          onClick={() => {
+            navigate("/settings");
+            handleProfileMenuClose();
+          }}
+        >
+          <ListItemIcon>
+            <SettingsIcon fontSize="small" />
+          </ListItemIcon>
           Settings
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
-          <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
+          <ListItemIcon>
+            <LogoutIcon fontSize="small" />
+          </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
@@ -420,7 +513,7 @@ const Layout = ({ children }: LayoutProps) => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         PaperProps={{
           elevation: 3,
-          sx: { mt: 1, minWidth: 300, maxHeight: 400 }
+          sx: { mt: 1, minWidth: 300, maxHeight: 400 },
         }}
       >
         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
@@ -429,16 +522,65 @@ const Layout = ({ children }: LayoutProps) => {
         <MenuItem>
           <Box>
             <Typography variant="body2">New appointment scheduled</Typography>
-            <Typography variant="caption" color="text.secondary">2 minutes ago</Typography>
+            <Typography variant="caption" color="text.secondary">
+              2 minutes ago
+            </Typography>
           </Box>
         </MenuItem>
         <MenuItem>
           <Box>
-            <Typography variant="body2">Profile updated successfully</Typography>
-            <Typography variant="caption" color="text.secondary">1 hour ago</Typography>
+            <Typography variant="body2">
+              Profile updated successfully
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              1 hour ago
+            </Typography>
           </Box>
         </MenuItem>
       </Menu>
+
+      {/* Calendar Popover */}
+      <Popover
+        open={Boolean(calendarAnchor)}
+        anchorEl={calendarAnchor}
+        onClose={handleCalendarClose}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "center",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            p: 2,
+            borderRadius: 2,
+            "& .react-calendar": {
+              border: "none",
+              boxShadow: "none",
+            },
+          },
+        }}
+      >
+        <Box sx={calendarCustomStyles}>
+          <Calendar
+            onChange={(value) => {
+              handleDateClick(value);
+              handleCalendarClose();
+            }}
+            value={date}
+            showNeighboringMonth={false}
+            tileClassName={({ date, view }) =>
+              view === "month" &&
+              date.toDateString() === new Date().toDateString()
+                ? "highlight"
+                : null
+            }
+          />
+        </Box>
+      </Popover>
 
       {/* Navigation Drawer */}
       <Box
@@ -524,7 +666,15 @@ const Layout = ({ children }: LayoutProps) => {
           }}
         >
           <Container maxWidth="lg">
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            >
               <Typography variant="body2" color="text.secondary">
                 © {new Date().getFullYear()} V-Assistant. All rights reserved.
               </Typography>
