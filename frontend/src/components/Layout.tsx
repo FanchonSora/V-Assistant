@@ -24,6 +24,7 @@ import {
   Fade,
   Paper,
   Badge,
+  Popover,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -67,6 +68,9 @@ const Layout = ({ children }: LayoutProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationAnchor, setNotificationAnchor] =
     useState<null | HTMLElement>(null);
+  const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -80,6 +84,18 @@ const Layout = ({ children }: LayoutProps) => {
     : isDrawerCollapsed
     ? collapsedDrawerWidth
     : drawerWidth;
+
+  // Sync small calendar date with main calendar
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith("/calendar/")) {
+      const dateStr = path.split("/calendar/")[1];
+      const [year, month, day] = dateStr.split("-").map(Number);
+      if (year && month && day) {
+        setDate(new Date(year, month - 1, day));
+      }
+    }
+  }, [location.pathname]);
 
   // Auto-collapse drawer on mobile
   useEffect(() => {
@@ -132,6 +148,14 @@ const Layout = ({ children }: LayoutProps) => {
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path;
+  };
+
+  const handleCalendarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setCalendarAnchor(event.currentTarget);
+  };
+
+  const handleCalendarClose = () => {
+    setCalendarAnchor(null);
   };
 
   const calendarCustomStyles = {
@@ -279,6 +303,36 @@ const Layout = ({ children }: LayoutProps) => {
             </ListItem>
           </Tooltip>
         ))}
+
+        {/* Calendar Button for Collapsed State */}
+        {isDrawerCollapsed && (
+          <Tooltip title="Calendar" placement="right" arrow>
+            <ListItem
+              onClick={handleCalendarClick}
+              sx={{
+                cursor: "pointer",
+                borderRadius: 2,
+                mb: 1,
+                justifyContent: "center",
+                px: 1,
+                "&:hover": {
+                  backgroundColor: "action.hover",
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: "inherit",
+                  minWidth: "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <CalendarMonthIcon />
+              </ListItemIcon>
+            </ListItem>
+          </Tooltip>
+        )}
       </List>
 
       {/* Mini Calendar - only show when not collapsed */}
@@ -484,6 +538,49 @@ const Layout = ({ children }: LayoutProps) => {
           </Box>
         </MenuItem>
       </Menu>
+
+      {/* Calendar Popover */}
+      <Popover
+        open={Boolean(calendarAnchor)}
+        anchorEl={calendarAnchor}
+        onClose={handleCalendarClose}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "center",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            p: 2,
+            borderRadius: 2,
+            "& .react-calendar": {
+              border: "none",
+              boxShadow: "none",
+            },
+          },
+        }}
+      >
+        <Box sx={calendarCustomStyles}>
+          <Calendar
+            onChange={(value) => {
+              handleDateClick(value);
+              handleCalendarClose();
+            }}
+            value={date}
+            showNeighboringMonth={false}
+            tileClassName={({ date, view }) =>
+              view === "month" &&
+              date.toDateString() === new Date().toDateString()
+                ? "highlight"
+                : null
+            }
+          />
+        </Box>
+      </Popover>
 
       {/* Navigation Drawer */}
       <Box
