@@ -62,9 +62,11 @@ function App() {
             <Route
               path="/chat"
               element={
+                <ProtectedRoute>
                   <Layout>
                     <Chat />
                   </Layout>
+                </ProtectedRoute>
               }
             />
             <Route
