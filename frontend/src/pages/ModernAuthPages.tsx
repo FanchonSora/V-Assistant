@@ -19,11 +19,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "@mui/material/styles";
 
 const ModernAuthPages: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login: contextLogin } = useAuth();
+  const theme = useTheme();
 
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +56,7 @@ const ModernAuthPages: React.FC = () => {
     return () => window.clearInterval(timer);
   }, [countdown]);
 
-  // After login countdown, navigate back or to “/”
+  // After login countdown, navigate back or to "/
   useEffect(() => {
     if (countdown === 0 && success === "Login successful!" && isLogin) {
       let dest = "/";
@@ -209,8 +211,7 @@ const ModernAuthPages: React.FC = () => {
   const styles = {
     container: {
       minHeight: "100vh",
-      background:
-        "linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #f0fdff 100%)",
+      background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 50%, ${theme.palette.background.default} 100%)`,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -232,29 +233,29 @@ const ModernAuthPages: React.FC = () => {
       justifyContent: "center",
       width: "4rem",
       height: "4rem",
-      background: "linear-gradient(45deg, #4f46e5, #06b6d4)",
+      background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
       borderRadius: "1rem",
       marginBottom: "1.5rem",
-      boxShadow: "0 10px 25px rgba(79, 70, 229, 0.3)",
+      boxShadow: theme.shadows[4],
     },
     title: {
       fontSize: "1.875rem",
       fontWeight: "bold" as const,
-      color: "#111827",
+      color: theme.palette.text.primary,
       marginBottom: "0.5rem",
       margin: 0,
     },
     subtitle: {
-      color: "#6b7280",
+      color: theme.palette.text.secondary,
       margin: 0,
     },
     card: {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.background.paper,
       borderRadius: "1.5rem",
-      boxShadow: "0 25px 50px rgba(79, 70, 229, 0.1)",
+      boxShadow: theme.shadows[8],
       padding: "2rem",
       backdropFilter: "blur(10px)",
-      border: "1px solid rgba(255, 255, 255, 0.2)",
+      border: `1px solid ${theme.palette.divider}`,
     },
     tabContainer: {
       display: "flex",

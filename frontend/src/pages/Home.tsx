@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Container,
   Typography,
@@ -26,16 +26,21 @@ const Home = () => {
   const t = (key: string) => {
     const translations: Record<string, string> = {
       "welcome.title": "Welcome to AI Assistant",
-      "welcome.subtitle": "Experience the future of intelligent conversation with our advanced AI assistant",
+      "welcome.subtitle":
+        "Experience the future of intelligent conversation with our advanced AI assistant",
       "welcome.getStarted": "Ready to start your AI-powered journey?",
       "features.smartAssistant.title": "Smart Assistant",
-      "features.smartAssistant.description": "Advanced AI that understands context and provides intelligent responses",
+      "features.smartAssistant.description":
+        "Advanced AI that understands context and provides intelligent responses",
       "features.easyIntegration.title": "Easy Integration",
-      "features.easyIntegration.description": "Seamlessly integrate with your existing workflow and tools",
+      "features.easyIntegration.description":
+        "Seamlessly integrate with your existing workflow and tools",
       "features.support.title": "24/7 Support",
-      "features.support.description": "Round-the-clock assistance whenever you need help",
+      "features.support.description":
+        "Round-the-clock assistance whenever you need help",
       "features.customization.title": "Full Customization",
-      "features.customization.description": "Tailor the experience to match your specific needs and preferences",
+      "features.customization.description":
+        "Tailor the experience to match your specific needs and preferences",
     };
     return translations[key] || key;
   };
@@ -176,7 +181,8 @@ const Home = () => {
                           transform: "translateY(-4px)",
                         },
                       }}
-                    >{
+                    >
+                      {
                         <CardContent sx={{ py: 2 }}>
                           <Typography variant="h4" sx={{ mb: 1 }}>
                             {stat.icon}
@@ -187,7 +193,8 @@ const Home = () => {
                           <Typography variant="body2" sx={{ opacity: 0.8 }}>
                             {stat.label}
                           </Typography>
-                        </CardContent>}
+                        </CardContent>
+                      }
                     </Card>
                   </Slide>
                 </Grid>
@@ -211,7 +218,8 @@ const Home = () => {
                 "&:hover": {
                   transform: "translateY(-2px)",
                   boxShadow: "0 12px 40px rgba(255, 107, 107, 0.6)",
-                  background: "linear-gradient(45deg, #FF8E53 30%, #FF6B6B 90%)",
+                  background:
+                    "linear-gradient(45deg, #FF8E53 30%, #FF6B6B 90%)",
                 },
               }}
             >
@@ -240,7 +248,12 @@ const Home = () => {
 
           <Grid container spacing={4}>
             {features.map((feature, index) => (
-              <Grid container spacing={2} justifyContent="center" sx={{ mb: 6 }}>
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                sx={{ mb: 6 }}
+              >
                 <Slide in timeout={2000 + index * 200} direction="up">
                   <Card
                     sx={{
@@ -260,7 +273,9 @@ const Home = () => {
                       },
                     }}
                   >
-                    <CardContent sx={{ p: 4, textAlign: "center", color: "white" }}>
+                    <CardContent
+                      sx={{ p: 4, textAlign: "center", color: "white" }}
+                    >
                       <Avatar
                         sx={{
                           width: 80,
@@ -320,7 +335,8 @@ const Home = () => {
                 left: "-50%",
                 width: "200%",
                 height: "200%",
-                background: "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent)",
+                background:
+                  "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent)",
                 animation: "rotate 10s linear infinite",
                 "@keyframes rotate": {
                   "0%": { transform: "rotate(0deg)" },
@@ -354,7 +370,8 @@ const Home = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Join thousands of users who are already experiencing the power of AI-assisted conversations.
+                Join thousands of users who are already experiencing the power
+                of AI-assisted conversations.
               </Typography>
               <Button
                 variant="outlined"
