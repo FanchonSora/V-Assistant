@@ -179,11 +179,11 @@ async def _apply_pending(uid, positive: bool, session: AsyncSession, user) -> st
         return f"✅ Created reminder \"{task.title}\" – due {due_str}"
     # DELETE -------------------------------------------------------------------
     if action == "delete":
-        await TaskService.delete(data["task_id"], session=session, users=user)
+        await TaskService.delete(data["task_id"], session=session, user=user)
         return "🗑️ Task deleted"
     # UPDATE -------------------------------------------------------------------
     if action == "update":
-        await TaskService.update(task_id=data["task_id"], data=TaskUpdate(**data["updates"]), session=session, users=user)
+        await TaskService.update(task_id=data["task_id"], data=TaskUpdate(**data["updates"]), session=session, user=user)
         return "✏️ Task updated"
     return "⚠️ Unsupported pending action"
 
@@ -250,7 +250,7 @@ class ChatService:
                 _PENDING[uid] = {"action": "create", "payload": payload}
                 parts = ", ".join(missing)
                 return ChatResponse(reply=(f"You didn't specify {parts}. Create reminder \"{payload['title']}\" anyway? (Yes/No)"))
-            task = await TaskService.create(TaskCreate(**payload), session=session, users=user)
+            task = await TaskService.create(TaskCreate(**payload), session=session, user=user)
             due_str = (
                 f"{task.task_time.strftime('%H:%M')} {task.task_date.strftime('%d/%m/%Y')}"
                 if task.task_date and task.task_time else "no due date"
@@ -263,7 +263,7 @@ class ChatService:
                 parsed.get("title"),
                 task_date=parsed.get("task_date"),
                 task_time=parsed.get("task_time"),
-                session=session, users=user,
+                session=session, user=user,
             )
             if not task:
                 return ChatResponse(reply="⚠️ Task not found")
@@ -276,7 +276,7 @@ class ChatService:
                 parsed.get("title"),
                 task_date=parsed.get("task_date"),
                 task_time=parsed.get("task_time"),
-                session=session, users=user,
+                session=session, user=user,
             )
             if not task:
                 return ChatResponse(reply="⚠️ Task not found")
@@ -289,13 +289,13 @@ class ChatService:
 
         # 8️⃣ Cancel ------------------------------------------------------------
         if action == "cancel":
-            ok = await TaskService.cancel_by_ref(parsed["title"], session=session, users=user)
+            ok = await TaskService.cancel_by_ref(parsed["title"], session=session, user=user)
             return ChatResponse(reply="🚫 Task cancelled." if ok else "⚠️ Task not found")
 
                 # 9️⃣ View --------------------------------------------------------------
         if action == "view":
             # Ignore any date filter to list all tasks
-            tasks = await TaskService.list(None, session=session, users=user)
+            tasks = await TaskService.list(None, session=session, user=user)
             if not tasks:
                 return ChatResponse(reply="📭 You have no tasks")
             # Build table with detailed task info: Title, Status, Date, Time, Recurrence

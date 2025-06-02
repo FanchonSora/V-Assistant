@@ -45,8 +45,8 @@ class TaskService:
         return TaskRead.model_validate(task)
 
     @staticmethod
-    async def list(date: str | None, users, session) -> List[TaskRead]:
-        stmt = select(Task).where(Task.owner_id == users.id)
+    async def list(date: str | None, user, session) -> List[TaskRead]:
+        stmt = select(Task).where(Task.owner_id == user.id)
         if date:
             try:
                 # If date parsing succeeds, filter by date.
@@ -60,11 +60,11 @@ class TaskService:
 
     @staticmethod
     async def update(task_id: str, data: TaskUpdate,
-                     users,
+                     user,
                      session: AsyncSession
                      ) -> TaskRead:
         task = await session.get(Task, task_id)
-        if not task or task.owner_id != users.id:
+        if not task or task.owner_id != user.id:
             raise HTTPException(status_code=404, detail="Task not found")
 
         for k, v in data.model_dump(exclude_unset=True).items():
@@ -76,27 +76,27 @@ class TaskService:
 
     @staticmethod
     async def delete(task_id: str,
-                     users,
+                     user,
                      session: AsyncSession
                      ) -> None:
         task = await session.get(Task, task_id)
-        if not task or task.owner_id != users.id:
+        if not task or task.owner_id != user.id:
             raise HTTPException(status_code=404, detail="Task not found")
         await session.delete(task)
         await session.commit()
     @staticmethod
     async def get_by_ref(ref: str,
-                        users,
+                        user,
                         session: AsyncSession,
                         task_date=None,
                         task_time=None
                         ) -> Task | None:
         # Thử theo id trước
         task = await session.get(Task, ref)
-        if task and task.owner_id == users.id:
+        if task and task.owner_id == user.id:
             return task
         # Nếu không phải id hợp lệ, tìm theo tiêu đề
-        stmt = select(Task).where(Task.owner_id == users.id,
+        stmt = select(Task).where(Task.owner_id == user.id,
                                 func.lower(Task.title) == ref.lower())
         if task_date:
             stmt = stmt.where(Task.task_date == task_date)
@@ -111,7 +111,7 @@ class TaskService:
     @staticmethod
     async def list_by_range(start_date: str,
                             end_date: str,
-                            users,
+                            user,
                             session: AsyncSession
                             ) -> List[TaskRead]:
         try:
@@ -121,7 +121,7 @@ class TaskService:
             raise HTTPException(status_code=400, detail="Invalid date format, expected YYYY-MM-DD")
 
         stmt = select(Task).where(
-            Task.owner_id == users.id,
+            Task.owner_id == user.id,
             Task.task_date >= start,
             Task.task_date <= end
         )
