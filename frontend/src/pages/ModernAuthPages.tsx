@@ -11,9 +11,6 @@ import {
   Mail,
   Lock,
   User,
-  Facebook,
-  Twitter,
-  Chrome,
   ArrowRight,
   CheckCircle2,
   AlertCircle,
@@ -31,6 +28,8 @@ const ModernAuthPages: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const [signupForm, setSignupForm] = useState({
@@ -44,6 +43,8 @@ const ModernAuthPages: React.FC = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   // Countdown timer
   useEffect(() => {
@@ -97,12 +98,53 @@ const ModernAuthPages: React.FC = () => {
     setLoginForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+
+    if (password.length < minLength) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!hasUpperCase) {
+      return "Password must contain at least one uppercase letter";
+    }
+    if (!hasLowerCase) {
+      return "Password must contain at least one lowercase letter";
+    }
+    if (!hasNumbers) {
+      return "Password must contain at least one number";
+    }
+    return "";
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) {
+      return "Email is required";
+    }
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
   const handleSignupChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setSignupForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    if (name === "password") {
+      const error = validatePassword(value);
+      setPasswordError(error);
+    }
+    if (name === "email") {
+      const error = validateEmail(value);
+      setEmailError(error);
+    }
   }, []);
 
   const handleLogin = async () => {
@@ -168,6 +210,16 @@ const ModernAuthPages: React.FC = () => {
       !signupForm.termsAccepted
     ) {
       setError("Please fill in all fields and accept the Terms of Service.");
+      setIsLoading(false);
+      return;
+    }
+    if (emailError) {
+      setError("Please enter a valid email address.");
+      setIsLoading(false);
+      return;
+    }
+    if (passwordError) {
+      setError("Please fix the password requirements.");
       setIsLoading(false);
       return;
     }
@@ -290,6 +342,7 @@ const ModernAuthPages: React.FC = () => {
     },
     inputContainer: {
       position: "relative" as const,
+      marginBottom: "1rem",
     },
     inputIcon: {
       position: "absolute" as const,
@@ -298,6 +351,7 @@ const ModernAuthPages: React.FC = () => {
       transform: "translateY(-50%)",
       color: "#9ca3af",
       pointerEvents: "none" as React.CSSProperties["pointerEvents"],
+      zIndex: 1,
     },
     input: {
       width: "100%",
@@ -329,6 +383,7 @@ const ModernAuthPages: React.FC = () => {
       cursor: "pointer",
       color: "#9ca3af",
       padding: "0.25rem",
+      zIndex: 1,
     },
     checkboxContainer: {
       display: "flex",
@@ -427,26 +482,6 @@ const ModernAuthPages: React.FC = () => {
       color: "#6b7280",
       fontSize: "0.875rem",
     },
-    socialContainer: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, 1fr)",
-      gap: "0.75rem",
-      marginTop: "1.5rem",
-    },
-    socialButton: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "0.75rem",
-      border: "1px solid #e5e7eb",
-      borderRadius: "1rem",
-      backgroundColor: "white",
-      cursor: "pointer",
-      transition: "all 0.2s ease",
-    },
-    socialButtonHover: {
-      backgroundColor: "#f9fafb",
-    },
     toggleContainer: {
       marginTop: "2rem",
       textAlign: "center" as const,
@@ -470,6 +505,115 @@ const ModernAuthPages: React.FC = () => {
       fontSize: "0.875rem",
       color: "#6b7280",
     },
+    passwordRequirements: {
+      marginTop: "0.5rem",
+      padding: "0.75rem",
+      backgroundColor: "#f9fafb",
+      borderRadius: "0.5rem",
+      fontSize: "0.875rem",
+    },
+    requirementsTitle: {
+      margin: "0 0 0.5rem",
+      color: "#374151",
+      fontWeight: "500",
+    },
+    requirementsList: {
+      margin: 0,
+      paddingLeft: "1.25rem",
+      listStyleType: "disc",
+    },
+    inputError: {
+      borderColor: "#dc2626",
+      backgroundColor: "#fef2f2",
+    },
+    errorMessage: {
+      color: "#dc2626",
+      fontSize: "0.75rem",
+      marginTop: "0.25rem",
+      marginLeft: "0.5rem",
+    },
+    linkButton: {
+      background: "none",
+      border: "none",
+      color: "#4f46e5",
+      padding: 0,
+      font: "inherit",
+      cursor: "pointer",
+      textDecoration: "none",
+    },
+    modalOverlay: {
+      position: "fixed" as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+      opacity: 0,
+      animation: "fadeIn 0.3s ease forwards",
+    },
+    modalContent: {
+      backgroundColor: "white",
+      borderRadius: "1rem",
+      width: "90%",
+      maxWidth: "600px",
+      maxHeight: "80vh",
+      overflow: "auto",
+      position: "relative" as const,
+      boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      transform: "scale(0.95)",
+      animation: "slideIn 0.3s ease forwards",
+    },
+    modalHeader: {
+      padding: "1.5rem",
+      borderBottom: "1px solid #e5e7eb",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      position: "sticky" as const,
+      top: 0,
+      backgroundColor: "white",
+      zIndex: 1,
+    },
+    modalTitle: {
+      margin: 0,
+      fontSize: "1.5rem",
+      fontWeight: "600",
+      color: "#111827",
+    },
+    modalCloseButton: {
+      background: "none",
+      border: "none",
+      fontSize: "1.5rem",
+      color: "#6b7280",
+      cursor: "pointer",
+      padding: "0.5rem",
+      lineHeight: 1,
+      borderRadius: "0.375rem",
+      transition: "all 0.2s ease",
+      "&:hover": {
+        backgroundColor: "#f3f4f6",
+        color: "#374151",
+      },
+    },
+    modalBody: {
+      padding: "1.5rem",
+      color: "#374151",
+      "& h3": {
+        margin: "1.5rem 0 0.75rem",
+        fontSize: "1.125rem",
+        fontWeight: "600",
+        color: "#111827",
+      },
+      "& p": {
+        margin: "0.5rem 0",
+        lineHeight: 1.5,
+      },
+    },
   };
 
   return (
@@ -478,6 +622,46 @@ const ModernAuthPages: React.FC = () => {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideIn {
+          from { 
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+          }
+          to { 
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        @keyframes slideOut {
+          from { 
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+          to { 
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+          }
+        }
+        .modal-enter {
+          animation: fadeIn 0.3s ease forwards;
+        }
+        .modal-exit {
+          animation: fadeOut 0.3s ease forwards;
+        }
+        .modal-content-enter {
+          animation: slideIn 0.3s ease forwards;
+        }
+        .modal-content-exit {
+          animation: slideOut 0.3s ease forwards;
         }
         .input-focus:focus {
           border-color: #4f46e5 !important;
@@ -576,9 +760,15 @@ const ModernAuthPages: React.FC = () => {
                 value={isLogin ? loginForm.username : signupForm.email}
                 onChange={isLogin ? handleLoginChange : handleSignupChange}
                 placeholder={isLogin ? "Username" : "Email Address"}
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  ...(emailError && !isLogin ? styles.inputError : {}),
+                }}
                 className="input-focus"
               />
+              {!isLogin && emailError && (
+                <div style={styles.errorMessage}>{emailError}</div>
+              )}
             </div>
 
             <div style={styles.inputContainer}>
@@ -631,6 +821,49 @@ const ModernAuthPages: React.FC = () => {
               </div>
             )}
 
+            {!isLogin && signupForm.password && (
+              <div style={styles.passwordRequirements}>
+                <p style={styles.requirementsTitle}>Password must contain:</p>
+                <ul style={styles.requirementsList}>
+                  <li
+                    style={{
+                      color:
+                        signupForm.password.length >= 8 ? "#16a34a" : "#6b7280",
+                    }}
+                  >
+                    At least 8 characters
+                  </li>
+                  <li
+                    style={{
+                      color: /[A-Z]/.test(signupForm.password)
+                        ? "#16a34a"
+                        : "#6b7280",
+                    }}
+                  >
+                    One uppercase letter
+                  </li>
+                  <li
+                    style={{
+                      color: /[a-z]/.test(signupForm.password)
+                        ? "#16a34a"
+                        : "#6b7280",
+                    }}
+                  >
+                    One lowercase letter
+                  </li>
+                  <li
+                    style={{
+                      color: /\d/.test(signupForm.password)
+                        ? "#16a34a"
+                        : "#6b7280",
+                    }}
+                  >
+                    One number
+                  </li>
+                </ul>
+              </div>
+            )}
+
             {!isLogin && (
               <div style={styles.checkboxContainer}>
                 <input
@@ -642,13 +875,21 @@ const ModernAuthPages: React.FC = () => {
                 />
                 <label style={styles.checkboxLabel}>
                   I agree to the{" "}
-                  <a href="#" style={styles.link} className="link-hover">
+                  <button
+                    onClick={() => setShowTermsModal(true)}
+                    style={styles.linkButton}
+                    className="link-hover"
+                  >
                     Terms of Service
-                  </a>{" "}
+                  </button>{" "}
                   and{" "}
-                  <a href="#" style={styles.link} className="link-hover">
+                  <button
+                    onClick={() => setShowPrivacyModal(true)}
+                    style={styles.linkButton}
+                    className="link-hover"
+                  >
                     Privacy Policy
-                  </a>
+                  </button>
                 </label>
               </div>
             )}
@@ -710,24 +951,6 @@ const ModernAuthPages: React.FC = () => {
             )}
           </div>
 
-          {/* Social Login */}
-          <div style={styles.divider}>
-            <div style={styles.dividerLine} />
-            <span style={styles.dividerText}>Or continue with</span>
-          </div>
-
-          <div style={styles.socialContainer}>
-            <button style={styles.socialButton} className="social-hover">
-              <Facebook size={20} color="#1877f2" />
-            </button>
-            <button style={styles.socialButton} className="social-hover">
-              <Twitter size={20} color="#1da1f2" />
-            </button>
-            <button style={styles.socialButton} className="social-hover">
-              <Chrome size={20} color="#ea4335" />
-            </button>
-          </div>
-
           {/* Toggle Link */}
           <div style={styles.toggleContainer}>
             <p style={styles.toggleText}>
@@ -743,6 +966,119 @@ const ModernAuthPages: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      {showTermsModal && (
+        <div
+          style={styles.modalOverlay}
+          className="modal-enter"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowTermsModal(false);
+            }
+          }}
+        >
+          <div style={styles.modalContent} className="modal-content-enter">
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Terms of Service</h2>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                style={styles.modalCloseButton}
+              >
+                ×
+              </button>
+            </div>
+            <div style={styles.modalBody}>
+              <h3>1. Acceptance of Terms</h3>
+              <p>
+                By accessing and using this application, you accept and agree to
+                be bound by the terms and provision of this agreement.
+              </p>
+
+              <h3>2. Use License</h3>
+              <p>
+                Permission is granted to temporarily use this application for
+                personal, non-commercial transitory viewing only.
+              </p>
+
+              <h3>3. User Account</h3>
+              <p>
+                You are responsible for maintaining the confidentiality of your
+                account and password.
+              </p>
+
+              <h3>4. User Conduct</h3>
+              <p>
+                You agree to use the application only for lawful purposes and in
+                accordance with these Terms.
+              </p>
+
+              <h3>5. Termination</h3>
+              <p>
+                We may terminate or suspend your account and bar access to the
+                application immediately, without prior notice or liability.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyModal && (
+        <div
+          style={styles.modalOverlay}
+          className="modal-enter"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowPrivacyModal(false);
+            }
+          }}
+        >
+          <div style={styles.modalContent} className="modal-content-enter">
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Privacy Policy</h2>
+              <button
+                onClick={() => setShowPrivacyModal(false)}
+                style={styles.modalCloseButton}
+              >
+                ×
+              </button>
+            </div>
+            <div style={styles.modalBody}>
+              <h3>1. Information We Collect</h3>
+              <p>
+                We collect information that you provide directly to us,
+                including your name, email address, and any other information
+                you choose to provide.
+              </p>
+
+              <h3>2. How We Use Your Information</h3>
+              <p>
+                We use the information we collect to provide, maintain, and
+                improve our services.
+              </p>
+
+              <h3>3. Information Sharing</h3>
+              <p>
+                We do not share your personal information with third parties
+                except as described in this privacy policy.
+              </p>
+
+              <h3>4. Data Security</h3>
+              <p>
+                We take reasonable measures to help protect your personal
+                information from loss, theft, misuse, and unauthorized access.
+              </p>
+
+              <h3>5. Your Rights</h3>
+              <p>
+                You have the right to access, correct, or delete your personal
+                information.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

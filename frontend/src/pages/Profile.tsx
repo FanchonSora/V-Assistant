@@ -11,7 +11,6 @@ import {
   Avatar,
   Divider,
   Fade,
-  Chip,
   useTheme,
   alpha,
 } from "@mui/material";
@@ -252,16 +251,6 @@ const Profile = () => {
                 >
                   {t("profile.title", { defaultValue: "Profile" })}
                 </Typography>
-                <Chip
-                  label={isEditing ? "Editing Mode" : "View Mode"}
-                  size="small"
-                  sx={{
-                    bgcolor: alpha("#fff", 0.2),
-                    color: "white",
-                    backdropFilter: "blur(10px)",
-                    border: `1px solid ${alpha("#fff", 0.3)}`,
-                  }}
-                />
               </Box>
               <Box sx={{ display: "flex", gap: 1 }}>
                 {!isEditing ? (
