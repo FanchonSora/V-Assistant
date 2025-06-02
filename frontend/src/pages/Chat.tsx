@@ -13,7 +13,6 @@ import {
   DialogActions,
   Fade,
   Slide,
-  Chip,
   useTheme,
   alpha,
 } from "@mui/material";
@@ -127,8 +126,9 @@ const Chat = () => {
     } catch (err) {
       setTimeout(() => {
         const botMsg: ChatMessage = {
-          text: `⚠️ Server Error: ${err instanceof Error ? err.message : "Unknown error"
-            }`,
+          text: `⚠️ Server Error: ${
+            err instanceof Error ? err.message : "Unknown error"
+          }`,
           isUser: false,
           timestamp: new Date(),
         };
@@ -298,7 +298,8 @@ const Chat = () => {
                   gutterBottom
                   sx={{
                     fontWeight: 700,
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -329,6 +330,8 @@ const Chat = () => {
               ref={chatContainerRef}
               sx={{
                 flex: 1,
+                minHeight: 0,
+                maxHeight: "60vh",
                 overflowY: "auto",
                 p: 3,
                 display: "flex",
@@ -367,7 +370,8 @@ const Chat = () => {
                     Start a conversation
                   </Typography>
                   <Typography variant="body2">
-                    Type a message below to begin chatting with your AI assistant
+                    Type a message below to begin chatting with your AI
+                    assistant
                   </Typography>
                 </Box>
               )}
@@ -390,7 +394,8 @@ const Chat = () => {
                       <Avatar
                         sx={{
                           bgcolor: "primary.main",
-                          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                           boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
                           animation: "fadeIn 0.5s ease-in-out",
                         }}
@@ -410,7 +415,9 @@ const Chat = () => {
                           ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
                           : alpha(theme.palette.grey[100], 0.8),
                         color: "black", // Force text color to black
-                        borderRadius: msg.isUser ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                        borderRadius: msg.isUser
+                          ? "18px 18px 4px 18px"
+                          : "18px 18px 18px 4px",
                         backdropFilter: "blur(10px)",
                         border: "1px solid rgba(255, 255, 255, 0.2)",
                         boxShadow: msg.isUser
@@ -516,15 +523,21 @@ const Chat = () => {
                 <IconButton
                   onClick={startListening}
                   sx={{
-                    bgcolor: isListening ? "error.main" : alpha(theme.palette.primary.main, 0.1),
+                    bgcolor: isListening
+                      ? "error.main"
+                      : alpha(theme.palette.primary.main, 0.1),
                     color: isListening ? "white" : "primary.main",
                     width: 48,
                     height: 48,
                     border: "1px solid",
-                    borderColor: isListening ? "error.main" : alpha(theme.palette.primary.main, 0.3),
+                    borderColor: isListening
+                      ? "error.main"
+                      : alpha(theme.palette.primary.main, 0.3),
                     animation: isListening ? "pulse 1s infinite" : "none",
                     "&:hover": {
-                      bgcolor: isListening ? "error.dark" : alpha(theme.palette.primary.main, 0.2),
+                      bgcolor: isListening
+                        ? "error.dark"
+                        : alpha(theme.palette.primary.main, 0.2),
                       transform: "scale(1.05)",
                     },
                     transition: "all 0.3s ease",
@@ -543,7 +556,8 @@ const Chat = () => {
                     py: 1.5,
                     minWidth: "100px",
                     height: 48,
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     boxShadow: "0 4px 20px rgba(102, 126, 234, 0.4)",
                     "&:hover": {
                       transform: "translateY(-2px)",
@@ -581,7 +595,8 @@ const Chat = () => {
           </DialogTitle>
           <DialogContent>
             <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
-              Please log in to start chatting with V-Assistant and unlock the full experience.
+              Please log in to start chatting with V-Assistant and unlock the
+              full experience.
             </Typography>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center", gap: 1, pb: 3 }}>

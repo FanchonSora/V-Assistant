@@ -125,8 +125,8 @@ export default function CalendarMonthPage() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
-        Month {inputDate.getMonth() + 1} - {inputDate.getFullYear()}
+      <Typography variant="h4" gutterBottom>
+        Monthly Calendar
       </Typography>
 
       <CalendarViewSelector />
@@ -199,34 +199,36 @@ export default function CalendarMonthPage() {
               </Typography>
               {dayEvents.length > 0 && (
                 <List dense disablePadding>
-                {dayEvents.map((event) => (
-                  <ListItem
-                    key={event.id}
-                    disablePadding
-                    sx={{ minHeight: 24 }}
-                    onClick={(e) => handleEventClick(event, e)}
-                  >
-                    <ListItemText
-                      primary={event.title}
-                      primaryTypographyProps={{
-                        variant: "caption",
-                        sx: {
-                          px: 1,
-                          py: 0.25,
-                          borderRadius: 1,
-                          backgroundColor: isToday ? "background.paper" : "primary.main",
-                          color: isToday ? "primary.main" : "white",
-                          fontWeight: 500,
-                          display: "block",
-                          maxWidth: "100%",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        },
-                      }}
-                    />
-                  </ListItem>
-                ))}
+                  {dayEvents.map((event) => (
+                    <ListItem
+                      key={event.id}
+                      disablePadding
+                      sx={{ minHeight: 24 }}
+                      onClick={(e) => handleEventClick(event, e)}
+                    >
+                      <ListItemText
+                        primary={event.title}
+                        primaryTypographyProps={{
+                          variant: "caption",
+                          sx: {
+                            px: 1,
+                            py: 0.25,
+                            borderRadius: 1,
+                            backgroundColor: isToday
+                              ? "background.paper"
+                              : "primary.main",
+                            color: isToday ? "primary.main" : "white",
+                            fontWeight: 500,
+                            display: "block",
+                            maxWidth: "100%",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          },
+                        }}
+                      />
+                    </ListItem>
+                  ))}
                 </List>
               )}
             </Box>

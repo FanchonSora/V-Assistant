@@ -1,5 +1,19 @@
 // src/pages/Profile.tsx
-import {Container,Paper,Typography,Box,Grid as MuiGrid,TextField,IconButton,Alert,Avatar,Divider,Fade,Chip,useTheme,alpha,} from "@mui/material";
+import {
+  Container,
+  Paper,
+  Typography,
+  Box,
+  Grid as MuiGrid,
+  TextField,
+  IconButton,
+  Alert,
+  Avatar,
+  Divider,
+  Fade,
+  useTheme,
+  alpha,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -160,7 +174,7 @@ const Profile = () => {
   if (!isLoggedIn) {
     return (
       <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Alert 
+        <Alert
           severity="error"
           sx={{
             borderRadius: 2,
@@ -176,75 +190,81 @@ const Profile = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Fade in timeout={600}>
-        <Paper 
+        <Paper
           elevation={0}
           sx={{
             borderRadius: 3,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.02)} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`,
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            overflow: 'hidden',
+            bgcolor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`,
+            overflow: "hidden",
           }}
         >
           {/* Header Section */}
           <Box
             sx={{
               background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-              color: 'white',
+              color: theme.palette.primary.contrastText,
               p: 4,
-              position: 'relative',
-              '&::before': {
+              position: "relative",
+              "&::before": {
                 content: '""',
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               },
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 3, position: 'relative', zIndex: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 3,
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
               <Avatar
                 sx={{
                   width: 80,
                   height: 80,
-                  fontSize: '2rem',
+                  fontSize: "2rem",
                   fontWeight: 600,
-                  bgcolor: alpha('#fff', 0.2),
-                  backdropFilter: 'blur(10px)',
-                  border: `2px solid ${alpha('#fff', 0.3)}`,
+                  bgcolor: alpha("#fff", 0.2),
+                  backdropFilter: "blur(10px)",
+                  border: `2px solid ${alpha("#fff", 0.3)}`,
                 }}
               >
-                {profile.username ? getInitials(profile.username) : <PersonIcon fontSize="large" />}
+                {profile.username ? (
+                  getInitials(profile.username)
+                ) : (
+                  <PersonIcon fontSize="large" />
+                )}
               </Avatar>
               <Box sx={{ flex: 1 }}>
-                <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  sx={{ fontWeight: 600, mb: 1 }}
+                >
                   {t("profile.title", { defaultValue: "Profile" })}
                 </Typography>
-                <Chip 
-                  label={isEditing ? "Editing Mode" : "View Mode"}
-                  size="small"
-                  sx={{
-                    bgcolor: alpha('#fff', 0.2),
-                    color: 'white',
-                    backdropFilter: 'blur(10px)',
-                    border: `1px solid ${alpha('#fff', 0.3)}`,
-                  }}
-                />
               </Box>
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: "flex", gap: 1 }}>
                 {!isEditing ? (
-                  <IconButton 
-                    onClick={handleEdit} 
+                  <IconButton
+                    onClick={handleEdit}
                     sx={{
-                      color: 'white',
-                      bgcolor: alpha('#fff', 0.1),
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${alpha('#fff', 0.2)}`,
-                      transition: 'all 0.2s ease-in-out',
-                      '&:hover': {
-                        bgcolor: alpha('#fff', 0.2),
-                        transform: 'translateY(-2px)',
+                      color: "white",
+                      bgcolor: alpha("#fff", 0.1),
+                      backdropFilter: "blur(10px)",
+                      border: `1px solid ${alpha("#fff", 0.2)}`,
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        bgcolor: alpha("#fff", 0.2),
+                        transform: "translateY(-2px)",
                       },
                     }}
                   >
@@ -252,33 +272,33 @@ const Profile = () => {
                   </IconButton>
                 ) : (
                   <>
-                    <IconButton 
-                      onClick={handleSave} 
+                    <IconButton
+                      onClick={handleSave}
                       sx={{
-                        color: 'white',
-                        bgcolor: alpha('#4caf50', 0.3),
-                        backdropFilter: 'blur(10px)',
-                        border: `1px solid ${alpha('#4caf50', 0.5)}`,
-                        transition: 'all 0.2s ease-in-out',
-                        '&:hover': {
-                          bgcolor: alpha('#4caf50', 0.4),
-                          transform: 'translateY(-2px)',
+                        color: "white",
+                        bgcolor: alpha("#4caf50", 0.3),
+                        backdropFilter: "blur(10px)",
+                        border: `1px solid ${alpha("#4caf50", 0.5)}`,
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          bgcolor: alpha("#4caf50", 0.4),
+                          transform: "translateY(-2px)",
                         },
                       }}
                     >
                       <SaveIcon />
                     </IconButton>
-                    <IconButton 
+                    <IconButton
                       onClick={handleCancel}
                       sx={{
-                        color: 'white',
-                        bgcolor: alpha('#f44336', 0.3),
-                        backdropFilter: 'blur(10px)',
-                        border: `1px solid ${alpha('#f44336', 0.5)}`,
-                        transition: 'all 0.2s ease-in-out',
-                        '&:hover': {
-                          bgcolor: alpha('#f44336', 0.4),
-                          transform: 'translateY(-2px)',
+                        color: "white",
+                        bgcolor: alpha("#f44336", 0.3),
+                        backdropFilter: "blur(10px)",
+                        border: `1px solid ${alpha("#f44336", 0.5)}`,
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          bgcolor: alpha("#f44336", 0.4),
+                          transform: "translateY(-2px)",
                         },
                       }}
                     >
@@ -295,9 +315,9 @@ const Profile = () => {
             {/* Alert Messages */}
             {error && (
               <Fade in>
-                <Alert 
-                  severity="error" 
-                  sx={{ 
+                <Alert
+                  severity="error"
+                  sx={{
                     mb: 3,
                     borderRadius: 2,
                     border: `1px solid ${alpha(theme.palette.error.main, 0.2)}`,
@@ -310,12 +330,15 @@ const Profile = () => {
             )}
             {success && (
               <Fade in>
-                <Alert 
-                  severity="success" 
-                  sx={{ 
+                <Alert
+                  severity="success"
+                  sx={{
                     mb: 3,
                     borderRadius: 2,
-                    border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+                    border: `1px solid ${alpha(
+                      theme.palette.success.main,
+                      0.2
+                    )}`,
                     bgcolor: alpha(theme.palette.success.main, 0.05),
                   }}
                 >
@@ -326,46 +349,50 @@ const Profile = () => {
 
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Box sx={{ position: 'relative' }}>
-                  <PersonIcon 
-                    sx={{ 
-                      position: 'absolute',
+                <Box sx={{ position: "relative" }}>
+                  <PersonIcon
+                    sx={{
+                      position: "absolute",
                       left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
+                      top: "50%",
+                      transform: "translateY(-50%)",
                       color: theme.palette.text.secondary,
                       zIndex: 1,
-                    }} 
+                    }}
                   />
                   <TextField
                     fullWidth
                     label={t("profile.username", { defaultValue: "Username" })}
                     name="username"
-                    value={isEditing ? editedProfile.username : profile.username}
+                    value={
+                      isEditing ? editedProfile.username : profile.username
+                    }
                     onChange={handleChange}
                     disabled={!isEditing}
                     variant="outlined"
                     sx={{
-                      '& .MuiOutlinedInput-root': {
+                      "& .MuiOutlinedInput-root": {
                         borderRadius: 2,
-                        paddingLeft: '40px',
-                        transition: 'all 0.2s ease-in-out',
-                        bgcolor: isEditing ? alpha(theme.palette.primary.main, 0.02) : 'transparent',
-                        '&:hover': {
-                          '& .MuiOutlinedInput-notchedOutline': {
+                        paddingLeft: "40px",
+                        transition: "all 0.2s ease-in-out",
+                        bgcolor: isEditing
+                          ? alpha(theme.palette.primary.main, 0.02)
+                          : "transparent",
+                        "&:hover": {
+                          "& .MuiOutlinedInput-notchedOutline": {
                             borderColor: theme.palette.primary.main,
                           },
                         },
-                        '&.Mui-focused': {
-                          '& .MuiOutlinedInput-notchedOutline': {
+                        "&.Mui-focused": {
+                          "& .MuiOutlinedInput-notchedOutline": {
                             borderWidth: 2,
                             borderColor: theme.palette.primary.main,
                           },
                         },
                       },
-                      '& .MuiInputLabel-root': {
-                        paddingLeft: '40px',
-                        '&.Mui-focused': {
+                      "& .MuiInputLabel-root": {
+                        paddingLeft: "40px",
+                        "&.Mui-focused": {
                           color: theme.palette.primary.main,
                         },
                       },
@@ -375,16 +402,16 @@ const Profile = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <Box sx={{ position: 'relative' }}>
-                  <EmailIcon 
-                    sx={{ 
-                      position: 'absolute',
+                <Box sx={{ position: "relative" }}>
+                  <EmailIcon
+                    sx={{
+                      position: "absolute",
                       left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
+                      top: "50%",
+                      transform: "translateY(-50%)",
                       color: theme.palette.text.secondary,
                       zIndex: 1,
-                    }} 
+                    }}
                   />
                   <TextField
                     fullWidth
@@ -396,26 +423,28 @@ const Profile = () => {
                     disabled={!isEditing}
                     variant="outlined"
                     sx={{
-                      '& .MuiOutlinedInput-root': {
+                      "& .MuiOutlinedInput-root": {
                         borderRadius: 2,
-                        paddingLeft: '40px',
-                        transition: 'all 0.2s ease-in-out',
-                        bgcolor: isEditing ? alpha(theme.palette.primary.main, 0.02) : 'transparent',
-                        '&:hover': {
-                          '& .MuiOutlinedInput-notchedOutline': {
+                        paddingLeft: "40px",
+                        transition: "all 0.2s ease-in-out",
+                        bgcolor: isEditing
+                          ? alpha(theme.palette.primary.main, 0.02)
+                          : "transparent",
+                        "&:hover": {
+                          "& .MuiOutlinedInput-notchedOutline": {
                             borderColor: theme.palette.primary.main,
                           },
                         },
-                        '&.Mui-focused': {
-                          '& .MuiOutlinedInput-notchedOutline': {
+                        "&.Mui-focused": {
+                          "& .MuiOutlinedInput-notchedOutline": {
                             borderWidth: 2,
                             borderColor: theme.palette.primary.main,
                           },
                         },
                       },
-                      '& .MuiInputLabel-root': {
-                        paddingLeft: '40px',
-                        '&.Mui-focused': {
+                      "& .MuiInputLabel-root": {
+                        paddingLeft: "40px",
+                        "&.Mui-focused": {
                           color: theme.palette.primary.main,
                         },
                       },
@@ -427,17 +456,20 @@ const Profile = () => {
 
             {/* Profile Stats or Additional Info */}
             <Divider sx={{ my: 4, opacity: 0.3 }} />
-            
-            <Box sx={{ 
-              textAlign: 'center',
-              p: 3,
-              borderRadius: 2,
-              bgcolor: alpha(theme.palette.primary.main, 0.02),
-              border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            }}>
+
+            <Box
+              sx={{
+                textAlign: "center",
+                p: 3,
+                borderRadius: 2,
+                bgcolor: alpha(theme.palette.primary.main, 0.02),
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+              }}
+            >
               <Typography variant="body2" color="text.secondary">
-                {t("profile.lastUpdated", { 
-                  defaultValue: "Profile information can be updated anytime by clicking the edit button above." 
+                {t("profile.lastUpdated", {
+                  defaultValue:
+                    "Profile information can be updated anytime by clicking the edit button above.",
                 })}
               </Typography>
             </Box>

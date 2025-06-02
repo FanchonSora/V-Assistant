@@ -48,7 +48,7 @@ export default function CalendarDayPage() {
       try {
         const dateStr = inputDate.toISOString().slice(0, 10);
         const token = localStorage.getItem("token");
-        
+
         const tasks = await getTasks(token ?? undefined, dateStr);
 
         const formattedTasks: CalendarEvent[] = tasks.map((task: any) => {
@@ -109,15 +109,10 @@ export default function CalendarDayPage() {
 
   return (
     <Box sx={{ p: 2, position: "relative" }}>
-      <CalendarViewSelector />
-
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{ color: isDarkMode ? "#fff" : "inherit" }}
-      >
-        {displayDate} ({dayAbbr})
+      <Typography variant="h4" gutterBottom>
+        Daily Calendar
       </Typography>
+      <CalendarViewSelector />
 
       {/* Calendar grid */}
       <Box
