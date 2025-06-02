@@ -1,6 +1,23 @@
-import React, { useState, useCallback, useEffect, type ChangeEvent, } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  type ChangeEvent,
+} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User, Facebook, Twitter, Chrome, ArrowRight, CheckCircle2, AlertCircle, } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Facebook,
+  Twitter,
+  Chrome,
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const ModernAuthPages: React.FC = () => {
@@ -15,7 +32,7 @@ const ModernAuthPages: React.FC = () => {
 
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const [signupForm, setSignupForm] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -40,31 +57,51 @@ const ModernAuthPages: React.FC = () => {
   // After login countdown, navigate back or to “/”
   useEffect(() => {
     if (countdown === 0 && success === "Login successful!" && isLogin) {
-      const dest =
-        (location.state as any)?.from?.pathname ||
-        "/"; /* fallback home */
+      let dest = "/";
+      const state = location.state as unknown;
+      function isFromState(
+        obj: unknown
+      ): obj is { from: { pathname: string } } {
+        return (
+          typeof obj === "object" &&
+          obj !== null &&
+          "from" in obj &&
+          typeof (obj as { from?: unknown }).from === "object" &&
+          (obj as { from: { pathname?: unknown } }).from !== null &&
+          "pathname" in (obj as { from: { pathname?: unknown } }).from &&
+          typeof (obj as { from: { pathname: unknown } }).from.pathname ===
+            "string"
+        );
+      }
+      if (isFromState(state)) {
+        dest = state.from.pathname;
+      }
       navigate(dest, { replace: true });
     }
   }, [countdown, success, isLogin, navigate, location.state]);
 
-  const handleLoginChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setLoginForm((prev) => ({ ...prev, [name]: value }));
-    },
-    []
-  );
+  useEffect(() => {
+    if (success === "Account created successfully!") {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        setIsLogin(true); // Switch to login form
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
-  const handleSignupChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { name, value, type, checked } = e.target;
-      setSignupForm((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    },
-    []
-  );
+  const handleLoginChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleSignupChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setSignupForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }, []);
 
   const handleLogin = async () => {
     setError("");
@@ -77,10 +114,30 @@ const ModernAuthPages: React.FC = () => {
     }
 
     try {
-      await new Promise((r) => setTimeout(r, 1500));
-      contextLogin();                // persist token + user
+      const res = await fetch("http://localhost:8000/auth/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          username: loginForm.username,
+          password: loginForm.password,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        if (data.detail === "Bad credentials") {
+          setError("Wrong username or password");
+        } else {
+          setError(data.detail || "Login failed. Please try again.");
+        }
+        setIsLoading(false);
+        return;
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.access_token);
+      contextLogin();
       setSuccess("Login successful!");
-      setCountdown(3);
+      setCountdown(1); // quick redirect
+      navigate("/"); // Go to Home page
     } catch {
       setError("Login failed. Please try again.");
     } finally {
@@ -88,19 +145,27 @@ const ModernAuthPages: React.FC = () => {
     }
   };
 
+  // Hide error after 3 seconds
+  useEffect(() => {
+    if (error === "Wrong username or password") {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const handleSignup = async () => {
     setError("");
     setIsLoading(true);
     if (
-      !signupForm.name ||
+      !signupForm.username ||
       !signupForm.email ||
       !signupForm.password ||
       !signupForm.confirmPassword ||
       !signupForm.termsAccepted
     ) {
-      setError(
-        "Please fill in all fields and accept the Terms of Service."
-      );
+      setError("Please fill in all fields and accept the Terms of Service.");
       setIsLoading(false);
       return;
     }
@@ -110,7 +175,21 @@ const ModernAuthPages: React.FC = () => {
       return;
     }
     try {
-      await new Promise((r) => setTimeout(r, 1500));
+      const res = await fetch("http://localhost:8000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: signupForm.username,
+          email: signupForm.email,
+          password: signupForm.password,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.detail || "Signup failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
       setSuccess("Account created successfully!");
       setCountdown(5);
     } catch {
@@ -140,84 +219,84 @@ const ModernAuthPages: React.FC = () => {
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     },
     wrapper: {
-      width: '100%',
-      maxWidth: '28rem'
+      width: "100%",
+      maxWidth: "28rem",
     },
     header: {
-      textAlign: 'center' as const,
-      marginBottom: '2rem'
+      textAlign: "center" as const,
+      marginBottom: "2rem",
     },
     logoBox: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '4rem',
-      height: '4rem',
-      background: 'linear-gradient(45deg, #4f46e5, #06b6d4)',
-      borderRadius: '1rem',
-      marginBottom: '1.5rem',
-      boxShadow: '0 10px 25px rgba(79, 70, 229, 0.3)'
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "4rem",
+      height: "4rem",
+      background: "linear-gradient(45deg, #4f46e5, #06b6d4)",
+      borderRadius: "1rem",
+      marginBottom: "1.5rem",
+      boxShadow: "0 10px 25px rgba(79, 70, 229, 0.3)",
     },
     title: {
-      fontSize: '1.875rem',
-      fontWeight: 'bold' as const,
-      color: '#111827',
-      marginBottom: '0.5rem',
-      margin: 0
+      fontSize: "1.875rem",
+      fontWeight: "bold" as const,
+      color: "#111827",
+      marginBottom: "0.5rem",
+      margin: 0,
     },
     subtitle: {
-      color: '#6b7280',
-      margin: 0
+      color: "#6b7280",
+      margin: 0,
     },
     card: {
-      backgroundColor: 'white',
-      borderRadius: '1.5rem',
-      boxShadow: '0 25px 50px rgba(79, 70, 229, 0.1)',
-      padding: '2rem',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255, 255, 255, 0.2)'
+      backgroundColor: "white",
+      borderRadius: "1.5rem",
+      boxShadow: "0 25px 50px rgba(79, 70, 229, 0.1)",
+      padding: "2rem",
+      backdropFilter: "blur(10px)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
     },
     tabContainer: {
-      display: 'flex',
-      backgroundColor: '#f3f4f6',
-      borderRadius: '1rem',
-      padding: '0.25rem',
-      marginBottom: '2rem'
+      display: "flex",
+      backgroundColor: "#f3f4f6",
+      borderRadius: "1rem",
+      padding: "0.25rem",
+      marginBottom: "2rem",
     },
     tab: {
       flex: 1,
-      padding: '0.75rem 1rem',
-      borderRadius: '0.75rem',
-      fontWeight: '600' as const,
-      border: 'none',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      fontSize: '0.875rem'
+      padding: "0.75rem 1rem",
+      borderRadius: "0.75rem",
+      fontWeight: "600" as const,
+      border: "none",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      fontSize: "0.875rem",
     },
     tabActive: {
-      backgroundColor: 'white',
-      color: '#4f46e5',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+      backgroundColor: "white",
+      color: "#4f46e5",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     tabInactive: {
-      color: '#6b7280',
-      backgroundColor: 'transparent'
+      color: "#6b7280",
+      backgroundColor: "transparent",
     },
     formContainer: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '1.5rem'
+      display: "flex",
+      flexDirection: "column" as const,
+      gap: "1.5rem",
     },
     inputContainer: {
-      position: 'relative' as const
+      position: "relative" as const,
     },
     inputIcon: {
-      position: 'absolute' as const,
-      left: '1rem',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      color: '#9ca3af',
-      pointerEvents: 'none' as 'none'
+      position: "absolute" as const,
+      left: "1rem",
+      top: "50%",
+      transform: "translateY(-50%)",
+      color: "#9ca3af",
+      pointerEvents: "none" as React.CSSProperties["pointerEvents"],
     },
     input: {
       width: "100%",
@@ -232,164 +311,164 @@ const ModernAuthPages: React.FC = () => {
       outline: "none",
     },
     inputWithRightIcon: {
-      paddingRight: '3rem'
+      paddingRight: "3rem",
     },
     inputFocus: {
-      borderColor: '#4f46e5',
-      boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.1)',
-      backgroundColor: 'white'
+      borderColor: "#4f46e5",
+      boxShadow: "0 0 0 3px rgba(79, 70, 229, 0.1)",
+      backgroundColor: "white",
     },
     eyeButton: {
-      position: 'absolute' as const,
-      right: '1rem',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      color: '#9ca3af',
-      padding: '0.25rem'
+      position: "absolute" as const,
+      right: "1rem",
+      top: "50%",
+      transform: "translateY(-50%)",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: "#9ca3af",
+      padding: "0.25rem",
     },
     checkboxContainer: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '0.75rem'
+      display: "flex",
+      alignItems: "flex-start",
+      gap: "0.75rem",
     },
     checkbox: {
-      marginTop: '0.125rem',
-      width: '1rem',
-      height: '1rem',
-      accentColor: '#4f46e5'
+      marginTop: "0.125rem",
+      width: "1rem",
+      height: "1rem",
+      accentColor: "#4f46e5",
     },
     checkboxLabel: {
-      fontSize: '0.875rem',
-      color: '#6b7280',
-      lineHeight: '1.5'
+      fontSize: "0.875rem",
+      color: "#6b7280",
+      lineHeight: "1.5",
     },
     link: {
-      color: '#4f46e5',
-      textDecoration: 'none',
-      fontWeight: '500'
+      color: "#4f46e5",
+      textDecoration: "none",
+      fontWeight: "500",
     },
     alert: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      padding: '1rem',
-      borderRadius: '1rem',
-      fontSize: '0.875rem',
-      border: '1px solid'
+      display: "flex",
+      alignItems: "center",
+      gap: "0.5rem",
+      padding: "1rem",
+      borderRadius: "1rem",
+      fontSize: "0.875rem",
+      border: "1px solid",
     },
     alertError: {
-      backgroundColor: '#fef2f2',
-      borderColor: '#fecaca',
-      color: '#dc2626'
+      backgroundColor: "#fef2f2",
+      borderColor: "#fecaca",
+      color: "#dc2626",
     },
     alertSuccess: {
-      backgroundColor: '#f0fdf4',
-      borderColor: '#bbf7d0',
-      color: '#16a34a'
+      backgroundColor: "#f0fdf4",
+      borderColor: "#bbf7d0",
+      color: "#16a34a",
     },
     button: {
-      width: '100%',
-      background: 'linear-gradient(45deg, #4f46e5, #06b6d4)',
-      color: 'white',
-      padding: '1rem 1.5rem',
-      borderRadius: '1rem',
-      fontWeight: '600' as const,
-      border: 'none',
-      cursor: 'pointer',
-      fontSize: '1rem',
-      transition: 'all 0.2s ease',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '0.5rem',
-      boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)'
+      width: "100%",
+      background: "linear-gradient(45deg, #4f46e5, #06b6d4)",
+      color: "white",
+      padding: "1rem 1.5rem",
+      borderRadius: "1rem",
+      fontWeight: "600" as const,
+      border: "none",
+      cursor: "pointer",
+      fontSize: "1rem",
+      transition: "all 0.2s ease",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "0.5rem",
+      boxShadow: "0 4px 14px rgba(79, 70, 229, 0.3)",
     },
     buttonHover: {
-      transform: 'translateY(-1px)',
-      boxShadow: '0 6px 20px rgba(79, 70, 229, 0.4)'
+      transform: "translateY(-1px)",
+      boxShadow: "0 6px 20px rgba(79, 70, 229, 0.4)",
     },
     buttonDisabled: {
       opacity: 0.5,
-      cursor: 'not-allowed',
-      transform: 'none'
+      cursor: "not-allowed",
+      transform: "none",
     },
     spinner: {
-      width: '1.5rem',
-      height: '1.5rem',
-      border: '2px solid rgba(255, 255, 255, 0.3)',
-      borderTop: '2px solid white',
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite'
+      width: "1.5rem",
+      height: "1.5rem",
+      border: "2px solid rgba(255, 255, 255, 0.3)",
+      borderTop: "2px solid white",
+      borderRadius: "50%",
+      animation: "spin 1s linear infinite",
     },
     forgotPassword: {
-      textAlign: 'center' as const,
-      marginTop: '1rem'
+      textAlign: "center" as const,
+      marginTop: "1rem",
     },
     divider: {
-      margin: '2rem 0',
-      position: 'relative' as const,
-      textAlign: 'center' as const
+      margin: "2rem 0",
+      position: "relative" as const,
+      textAlign: "center" as const,
     },
     dividerLine: {
-      position: 'absolute' as const,
-      top: '50%',
+      position: "absolute" as const,
+      top: "50%",
       left: 0,
       right: 0,
-      height: '1px',
-      backgroundColor: '#e5e7eb'
+      height: "1px",
+      backgroundColor: "#e5e7eb",
     },
     dividerText: {
-      backgroundColor: 'white',
-      padding: '0 1rem',
-      color: '#6b7280',
-      fontSize: '0.875rem'
+      backgroundColor: "white",
+      padding: "0 1rem",
+      color: "#6b7280",
+      fontSize: "0.875rem",
     },
     socialContainer: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: '0.75rem',
-      marginTop: '1.5rem'
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gap: "0.75rem",
+      marginTop: "1.5rem",
     },
     socialButton: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '0.75rem',
-      border: '1px solid #e5e7eb',
-      borderRadius: '1rem',
-      backgroundColor: 'white',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease'
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "0.75rem",
+      border: "1px solid #e5e7eb",
+      borderRadius: "1rem",
+      backgroundColor: "white",
+      cursor: "pointer",
+      transition: "all 0.2s ease",
     },
     socialButtonHover: {
-      backgroundColor: '#f9fafb'
+      backgroundColor: "#f9fafb",
     },
     toggleContainer: {
-      marginTop: '2rem',
-      textAlign: 'center' as const
+      marginTop: "2rem",
+      textAlign: "center" as const,
     },
     toggleText: {
-      color: '#6b7280',
-      margin: 0
+      color: "#6b7280",
+      margin: 0,
     },
     toggleButton: {
-      color: '#4f46e5',
-      fontWeight: '600' as const,
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      textDecoration: 'none',
-      transition: 'color 0.2s ease'
+      color: "#4f46e5",
+      fontWeight: "600" as const,
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      textDecoration: "none",
+      transition: "color 0.2s ease",
     },
     footer: {
-      textAlign: 'center' as const,
-      marginTop: '2rem',
-      fontSize: '0.875rem',
-      color: '#6b7280'
-    }
+      textAlign: "center" as const,
+      marginTop: "2rem",
+      fontSize: "0.875rem",
+      color: "#6b7280",
+    },
   };
 
   return (
@@ -430,10 +509,12 @@ const ModernAuthPages: React.FC = () => {
             <Lock color="white" size={32} />
           </div>
           <h1 style={styles.title}>
-            {isLogin ? 'Welcome Back' : 'Create Account'}
+            {isLogin ? "Welcome Back" : "Create Account"}
           </h1>
           <p style={styles.subtitle}>
-            {isLogin ? 'Sign in to your account to continue' : 'Join us today and get started'}
+            {isLogin
+              ? "Sign in to your account to continue"
+              : "Join us today and get started"}
           </p>
         </div>
 
@@ -445,9 +526,9 @@ const ModernAuthPages: React.FC = () => {
               onClick={() => setIsLogin(true)}
               style={{
                 ...styles.tab,
-                ...(isLogin ? styles.tabActive : styles.tabInactive)
+                ...(isLogin ? styles.tabActive : styles.tabInactive),
               }}
-              className={!isLogin ? 'tab-inactive' : ''}
+              className={!isLogin ? "tab-inactive" : ""}
             >
               Sign In
             </button>
@@ -455,9 +536,9 @@ const ModernAuthPages: React.FC = () => {
               onClick={() => setIsLogin(false)}
               style={{
                 ...styles.tab,
-                ...(!isLogin ? styles.tabActive : styles.tabInactive)
+                ...(!isLogin ? styles.tabActive : styles.tabInactive),
               }}
-              className={isLogin ? 'tab-inactive' : ''}
+              className={isLogin ? "tab-inactive" : ""}
             >
               Sign Up
             </button>
@@ -465,32 +546,35 @@ const ModernAuthPages: React.FC = () => {
 
           {/* Forms */}
           <div style={styles.formContainer}>
+            {/* Add Username input for Sign Up */}
             {!isLogin && (
               <div style={styles.inputContainer}>
                 <div style={styles.inputIcon}>
                   <User size={20} />
                 </div>
                 <input
-                  type={isLogin ? "text" : "email"}
-                  name={isLogin ? "username" : "email"}
-                  value={isLogin ? loginForm.username : signupForm.email}
-                  onChange={isLogin ? handleLoginChange : handleSignupChange}
-                  placeholder={isLogin ? "Username" : "Email"}
+                  type="text"
+                  name="username"
+                  value={signupForm.username}
+                  onChange={handleSignupChange}
+                  placeholder="Username"
                   style={styles.input}
+                  className="input-focus"
                 />
               </div>
             )}
 
+            {/* Username/Email input */}
             <div style={styles.inputContainer}>
               <div style={styles.inputIcon}>
                 {isLogin ? <User size={20} /> : <Mail size={20} />}
               </div>
               <input
-                type={isLogin ? 'text' : 'email'}
-                name={isLogin ? 'username' : 'email'}
+                type={isLogin ? "text" : "email"}
+                name={isLogin ? "username" : "email"}
                 value={isLogin ? loginForm.username : signupForm.email}
                 onChange={isLogin ? handleLoginChange : handleSignupChange}
-                placeholder={isLogin ? 'Username' : 'Email Address'}
+                placeholder={isLogin ? "Username" : "Email Address"}
                 style={styles.input}
                 className="input-focus"
               />
@@ -501,7 +585,7 @@ const ModernAuthPages: React.FC = () => {
                 <Lock size={20} />
               </div>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={isLogin ? loginForm.password : signupForm.password}
                 onChange={isLogin ? handleLoginChange : handleSignupChange}
@@ -524,7 +608,7 @@ const ModernAuthPages: React.FC = () => {
                   <Lock size={20} />
                 </div>
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={signupForm.confirmPassword}
                   onChange={handleSignupChange}
@@ -537,7 +621,11 @@ const ModernAuthPages: React.FC = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   style={styles.eyeButton}
                 >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             )}
@@ -552,11 +640,11 @@ const ModernAuthPages: React.FC = () => {
                   style={styles.checkbox}
                 />
                 <label style={styles.checkboxLabel}>
-                  I agree to the{' '}
+                  I agree to the{" "}
                   <a href="#" style={styles.link} className="link-hover">
                     Terms of Service
-                  </a>{' '}
-                  and{' '}
+                  </a>{" "}
+                  and{" "}
                   <a href="#" style={styles.link} className="link-hover">
                     Privacy Policy
                   </a>
@@ -578,7 +666,7 @@ const ModernAuthPages: React.FC = () => {
                 <div>
                   <div>{success}</div>
                   {countdown > 0 && (
-                    <div style={{ marginTop: '0.25rem' }}>
+                    <div style={{ marginTop: "0.25rem" }}>
                       Redirecting in {countdown} seconds...
                     </div>
                   )}
@@ -593,7 +681,7 @@ const ModernAuthPages: React.FC = () => {
               disabled={isLoading}
               style={{
                 ...styles.button,
-                ...(isLoading ? styles.buttonDisabled : {})
+                ...(isLoading ? styles.buttonDisabled : {}),
               }}
               className="button-hover"
             >
@@ -601,7 +689,7 @@ const ModernAuthPages: React.FC = () => {
                 <div style={styles.spinner} />
               ) : (
                 <>
-                  <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                  <span>{isLogin ? "Sign In" : "Create Account"}</span>
                   <ArrowRight size={20} />
                 </>
               )}
@@ -610,7 +698,11 @@ const ModernAuthPages: React.FC = () => {
             {/* Forgot Password (Login only) */}
             {isLogin && (
               <div style={styles.forgotPassword}>
-                <a href="#" style={{ ...styles.link, fontSize: '0.875rem' }} className="link-hover">
+                <a
+                  href="#"
+                  style={{ ...styles.link, fontSize: "0.875rem" }}
+                  className="link-hover"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -638,13 +730,13 @@ const ModernAuthPages: React.FC = () => {
           {/* Toggle Link */}
           <div style={styles.toggleContainer}>
             <p style={styles.toggleText}>
-              {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
+              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
                 onClick={toggleMode}
                 style={styles.toggleButton}
                 className="toggle-hover"
               >
-                {isLogin ? 'Create one' : 'Sign in'}
+                {isLogin ? "Create one" : "Sign in"}
               </button>
             </p>
           </div>
