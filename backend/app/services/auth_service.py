@@ -1,6 +1,6 @@
 # app/services/auth_service.py
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from fastapi import HTTPException, status
 
 from app.models.user import User
@@ -16,9 +16,24 @@ class AuthService:
         if session is None:  # allow manual injection for tests
             async for session in get_session():
                 break
-        exists = await session.scalar(select(User).where(User.username == data.username))
-        if exists:
-            raise HTTPException(status_code=409, detail="Username taken")
+
+        existing_user = await session.scalar(
+            select(User).where(
+                or_(
+                    User.username == data.username,
+                    User.email == data.email
+                )
+            )
+        )
+
+        if existing_user:
+            errors = []
+            if existing_user.username == data.username:
+                errors.append("username")
+            if existing_user.email == data.email:
+                errors.append("email")
+            joined = " and ".join(errors)
+            raise HTTPException(status_code=409, detail=f"{joined.capitalize()} taken")
 
         user = User(username=data.username,
                     email=data.email,

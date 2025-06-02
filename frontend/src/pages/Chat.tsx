@@ -126,9 +126,8 @@ const Chat = () => {
     } catch (err) {
       setTimeout(() => {
         const botMsg: ChatMessage = {
-          text: `⚠️ Server Error: ${
-            err instanceof Error ? err.message : "Unknown error"
-          }`,
+          text: `⚠️ Server Error: ${err instanceof Error ? err.message : "Unknown error"
+            }`,
           isUser: false,
           timestamp: new Date(),
         };
@@ -407,7 +406,8 @@ const Chat = () => {
                       elevation={msg.isUser ? 8 : 3}
                       sx={{
                         p: 2.5,
-                        maxWidth: "75%",
+                        width: "fit-content",
+                        maxWidth: "100%",
                         bgcolor: msg.isUser
                           ? "primary.main"
                           : alpha(theme.palette.grey[100], 0.8),
@@ -433,14 +433,22 @@ const Chat = () => {
                         },
                       }}
                     >
-                      <div
-                        dangerouslySetInnerHTML={{ __html: msg.text }}
-                        style={{
-                          whiteSpace: "pre-line",
-                          lineHeight: 1.5,
-                          color: "black", // Ensure inner HTML text is black as well
+                      <Box
+                        sx={{
+                          width: "fit-content",
+                          maxWidth: "100%",
                         }}
-                      />
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{ __html: msg.text }}
+                          style={{
+                            whiteSpace: "pre-line",
+                            lineHeight: 1.5,
+                            color: "black",
+                          }}
+                        />
+                      </Box>
+
                       <Typography
                         variant="caption"
                         sx={{
