@@ -10,12 +10,13 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Fab,
 } from "@mui/material";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
+import { useTheme } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 
 interface Appointment {
   id: string;
@@ -138,6 +139,7 @@ const CalendarPage = () => {
     startTime: "",
     endTime: "",
   });
+  const theme = useTheme();
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
@@ -196,7 +198,28 @@ const CalendarPage = () => {
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{
+            mt: 3,
+            mb: 4,
+            fontWeight: 600,
+            color: theme.palette.text.primary,
+            position: "relative",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              bottom: -8,
+              left: 0,
+              width: 60,
+              height: 4,
+              background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+              borderRadius: 2,
+            },
+          }}
+        >
           {t("appointment.title", "Appointment")}
         </Typography>
         <Box
@@ -218,6 +241,35 @@ const CalendarPage = () => {
                 />
               </Box>
             </Paper>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setIsDialogOpen(true)}
+              sx={{
+                mt: 2,
+                width: "100%",
+                py: 1.5,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                boxShadow: `0 4px 20px ${alpha(
+                  theme.palette.primary.main,
+                  0.3
+                )}`,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: `0 8px 25px ${alpha(
+                    theme.palette.primary.main,
+                    0.4
+                  )}`,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+                },
+                "&:active": {
+                  transform: "translateY(0) scale(0.98)",
+                },
+              }}
+            >
+              {t("calendar.addAppointment", "Add Appointment")}
+            </Button>
           </Box>
 
           <Box sx={{ flex: 7 }}>
@@ -229,45 +281,139 @@ const CalendarPage = () => {
                 <Box
                   key={appointment.id}
                   sx={{
-                    p: 2,
+                    p: 3,
                     mb: 2,
-                    borderRadius: 1,
-                    backgroundColor: "action.hover",
+                    borderRadius: 2,
+                    backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                    border: `1px solid ${alpha(
+                      theme.palette.primary.main,
+                      0.1
+                    )}`,
+                    boxShadow: `0 4px 12px ${alpha(
+                      theme.palette.primary.main,
+                      0.05
+                    )}`,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      boxShadow: `0 6px 16px ${alpha(
+                        theme.palette.primary.main,
+                        0.1
+                      )}`,
+                      borderColor: alpha(theme.palette.primary.main, 0.2),
+                    },
+                    position: "relative",
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: 4,
+                      height: "100%",
+                      background: `linear-gradient(to bottom, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                      borderTopLeftRadius: 8,
+                      borderBottomLeftRadius: 8,
+                    },
                   }}
                 >
-                  <Typography variant="subtitle1">
-                    {appointment.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {formatTimeTo12Hour(appointment.startTime)} -{" "}
-                    {formatTimeTo12Hour(appointment.endTime)}
-                  </Typography>
-                  {appointment.description && (
-                    <Typography variant="body2" color="text.secondary">
-                      {appointment.description}
+                  <Box sx={{ pl: 2 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 1,
+                        fontWeight: 600,
+                        color: theme.palette.text.primary,
+                      }}
+                    >
+                      {appointment.title}
                     </Typography>
-                  )}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: theme.palette.primary.main,
+                          fontWeight: 500,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                        }}
+                      >
+                        {formatTimeTo12Hour(appointment.startTime)} -{" "}
+                        {formatTimeTo12Hour(appointment.endTime)}
+                      </Typography>
+                    </Box>
+                    {appointment.description && (
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          mt: 1,
+                          lineHeight: 1.6,
+                          pl: 0.5,
+                        }}
+                      >
+                        {appointment.description}
+                      </Typography>
+                    )}
+                  </Box>
                 </Box>
               ))}
             </Paper>
           </Box>
         </Box>
 
-        <Fab
-          color="primary"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
-          onClick={() => setIsDialogOpen(true)}
+        <Dialog
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              minWidth: { xs: "90%", sm: 500 },
+              maxWidth: 600,
+              overflow: "hidden",
+              boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.2)}`,
+            },
+          }}
         >
-          <AddIcon />
-        </Fab>
-
-        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-          <DialogTitle>
-            {t("calendar.addAppointment", "Add Appointment")}
+          <DialogTitle
+            sx={{
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              color: "white",
+              py: 3,
+              px: 4,
+              position: "relative",
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: "4px",
+                background: `linear-gradient(90deg, ${alpha(
+                  theme.palette.primary.light,
+                  0.5
+                )} 0%, ${alpha(theme.palette.primary.main, 0.5)} 100%)`,
+              },
+            }}
+          >
+            <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
+              {t("calendar.addAppointment", "Add Appointment")}
+            </Typography>
           </DialogTitle>
-          <DialogContent>
+          <DialogContent sx={{ p: 4 }}>
             <Box
-              sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+              }}
             >
               <TextField
                 label={t("calendar.title", "Title")}
@@ -279,6 +425,25 @@ const CalendarPage = () => {
                   })
                 }
                 fullWidth
+                variant="outlined"
+                sx={{
+                  mt: 2,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: 2,
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  },
+                }}
               />
               <TextField
                 label={t("calendar.description", "Description")}
@@ -291,49 +456,141 @@ const CalendarPage = () => {
                 }
                 fullWidth
                 multiline
-                rows={2}
-              />
-              <TextField
-                label={t("calendar.startTime", "Start Time")}
-                type="time"
-                value={newAppointment.startTime}
-                onChange={(e) =>
-                  setNewAppointment({
-                    ...newAppointment,
-                    startTime: e.target.value,
-                  })
-                }
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                inputProps={{
-                  step: 300, // 5 min
-                  format: "12h",
+                rows={3}
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: 2,
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  },
                 }}
               />
-              <TextField
-                label={t("calendar.endTime", "End Time")}
-                type="time"
-                value={newAppointment.endTime}
-                onChange={(e) =>
-                  setNewAppointment({
-                    ...newAppointment,
-                    endTime: e.target.value,
-                  })
-                }
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                inputProps={{
-                  step: 300, // 5 min
-                  format: "12h",
-                }}
-              />
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  label={t("calendar.startTime", "Start Time")}
+                  type="time"
+                  value={newAppointment.startTime}
+                  onChange={(e) =>
+                    setNewAppointment({
+                      ...newAppointment,
+                      startTime: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{
+                    step: 300, // 5 min
+                    format: "12h",
+                  }}
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                      "&.Mui-focused": {
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderWidth: 2,
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  label={t("calendar.endTime", "End Time")}
+                  type="time"
+                  value={newAppointment.endTime}
+                  onChange={(e) =>
+                    setNewAppointment({
+                      ...newAppointment,
+                      endTime: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{
+                    step: 300, // 5 min
+                    format: "12h",
+                  }}
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                      "&.Mui-focused": {
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderWidth: 2,
+                          borderColor: theme.palette.primary.main,
+                        },
+                      },
+                    },
+                  }}
+                />
+              </Box>
             </Box>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setIsDialogOpen(false)}>
+          <DialogActions
+            sx={{
+              px: 4,
+              py: 3,
+              borderTop: `1px solid ${theme.palette.divider}`,
+              gap: 2,
+            }}
+          >
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              variant="outlined"
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                "&:hover": {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                },
+              }}
+            >
               {t("common.cancel", "Cancel")}
             </Button>
-            <Button onClick={handleAddAppointment} variant="contained">
+            <Button
+              onClick={handleAddAppointment}
+              variant="contained"
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                "&:hover": {
+                  background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+                  transform: "translateY(-1px)",
+                  boxShadow: `0 4px 12px ${alpha(
+                    theme.palette.primary.main,
+                    0.3
+                  )}`,
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+              }}
+            >
               {t("common.add", "Add")}
             </Button>
           </DialogActions>
