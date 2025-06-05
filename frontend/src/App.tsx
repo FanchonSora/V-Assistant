@@ -4,7 +4,6 @@ import { CssBaseline } from "@mui/material";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
-import AppointmentPage from "./pages/Appointment";
 import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
 import ModernAuthPages from "./pages/ModernAuthPages";
@@ -65,16 +64,6 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <Chat />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/appointment"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <AppointmentPage />
                   </Layout>
                 </ProtectedRoute>
               }

@@ -53,12 +53,6 @@ const collapsedDrawerWidth = 70;
 const menuItems = [
   { text: "Dashboard", icon: <HomeIcon />, path: "/", badge: null },
   { text: "Profile", icon: <PersonIcon />, path: "/profile", badge: null },
-  {
-    text: "Appointments",
-    icon: <CalendarMonthIcon />,
-    path: "/appointment",
-    badge: 3,
-  },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings", badge: null },
 ];
 
@@ -519,14 +513,6 @@ const Layout = ({ children }: LayoutProps) => {
         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
           <Typography variant="h6">Notifications</Typography>
         </Box>
-        <MenuItem>
-          <Box>
-            <Typography variant="body2">New appointment scheduled</Typography>
-            <Typography variant="caption" color="text.secondary">
-              2 minutes ago
-            </Typography>
-          </Box>
-        </MenuItem>
         <MenuItem>
           <Box>
             <Typography variant="body2">
