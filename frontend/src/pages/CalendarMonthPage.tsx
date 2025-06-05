@@ -206,8 +206,8 @@ export default function CalendarMonthPage() {
                 color: isToday
                   ? "primary.contrastText"
                   : isCurrentMonth
-                    ? "text.primary"
-                    : "text.disabled",
+                  ? "text.primary"
+                  : "text.disabled",
                 cursor: "pointer",
                 "&:hover": {
                   bgcolor: isToday ? "primary.dark" : "action.hover",
@@ -224,15 +224,46 @@ export default function CalendarMonthPage() {
               </Typography>
               {dayEvents.length > 0 && (
                 <List dense disablePadding>
-                  {dayEvents.map((event) => (
+                  {dayEvents
+                    .slice(0, dayEvents.length === 2 ? 2 : 1)
+                    .map((event) => (
+                      <ListItem
+                        key={event.id}
+                        disablePadding
+                        sx={{ minHeight: 24 }}
+                        onClick={(e) => handleEventClick(event, e)}
+                      >
+                        <ListItemText
+                          primary={event.title}
+                          primaryTypographyProps={{
+                            variant: "caption",
+                            sx: {
+                              px: 1,
+                              py: 0.25,
+                              borderRadius: 1,
+                              backgroundColor: isToday
+                                ? "background.paper"
+                                : "primary.main",
+                              color: isToday ? "primary.main" : "white",
+                              fontWeight: 500,
+                              display: "block",
+                              maxWidth: "100%",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            },
+                          }}
+                        />
+                      </ListItem>
+                    ))}
+                  {dayEvents.length > 2 && (
                     <ListItem
-                      key={event.id}
                       disablePadding
                       sx={{ minHeight: 24 }}
-                      onClick={(e) => handleEventClick(event, e)}
+                      onClick={() => handleDateClick(day)}
                     >
                       <ListItemText
-                        primary={event.title}
+                        primary={`+${dayEvents.length - 1} more events`}
                         primaryTypographyProps={{
                           variant: "caption",
                           sx: {
@@ -241,19 +272,27 @@ export default function CalendarMonthPage() {
                             borderRadius: 1,
                             backgroundColor: isToday
                               ? "background.paper"
-                              : "primary.main",
-                            color: isToday ? "primary.main" : "white",
+                              : "primary.light",
+                            color: isToday ? "primary.main" : "primary.dark",
                             fontWeight: 500,
                             display: "block",
                             maxWidth: "100%",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
+                            cursor: "pointer",
+                            "&:hover": {
+                              boxShadow: 2,
+                              backgroundColor: isToday
+                                ? "background.paper"
+                                : "primary.light",
+                              color: isToday ? "primary.main" : "primary.dark",
+                            },
                           },
                         }}
                       />
                     </ListItem>
-                  ))}
+                  )}
                 </List>
               )}
             </Box>
