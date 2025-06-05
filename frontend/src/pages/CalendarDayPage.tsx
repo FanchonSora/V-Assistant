@@ -6,6 +6,7 @@ import EventModal from "./EventModal";
 import { getTasks } from "../utils/api";
 
 import { deleteTask } from "../services/taskService";
+import { updateTask } from "../services/taskService";
 
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -104,6 +105,21 @@ export default function CalendarDayPage() {
       prevEvents.map((e) => (e.id === editedEvent.id ? editedEvent : e))
     );
   }, []);
+
+    const handleEventSave = async (editedEvent: CalendarEvent) => {
+      try {
+        const token = localStorage.getItem("token") ?? "";
+        await updateTask(token, editedEvent.id, {
+          title: editedEvent.title,
+          task_date: editedEvent.task_date,
+          task_time: editedEvent.task_time,
+        });
+      } catch (error: any) {
+        console.error("Failed to update task:", error);
+        alert(`Error updating task: ${error.message}`);
+        throw error;
+      }
+    };
 
   const handleEventDelete = async (eventId: string) => {
     try {
@@ -229,6 +245,7 @@ export default function CalendarDayPage() {
         onClose={() => setModalOpen(false)}
         onDelete={handleEventDelete}
         onEdit={handleEventEdit}
+        onSave={handleEventSave}
       />
     </Box>
   );

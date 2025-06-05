@@ -14,6 +14,7 @@ import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 
 import { deleteTask } from "../services/taskService";
+import { updateTask } from "../services/taskService";
 
 import { getTasksByRange } from "../utils/api";
 
@@ -120,6 +121,21 @@ export default function CalendarMonthPage() {
     );
   }, []);
 
+  const handleEventSave = async (editedEvent: Event) => {
+    try {
+      const token = localStorage.getItem("token") ?? "";
+      await updateTask(token, editedEvent.id, {
+        title: editedEvent.title,
+        task_date: editedEvent.task_date,
+        task_time: editedEvent.task_time,
+      });
+    } catch (error: any) {
+      console.error("Failed to update task:", error);
+      alert(`Error updating task: ${error.message}`);
+      throw error;
+    }
+  };
+
   const handleEventDelete = async (eventId: string) => {
     try {
       const token = localStorage.getItem("token") ?? "";
@@ -190,8 +206,8 @@ export default function CalendarMonthPage() {
                 color: isToday
                   ? "primary.contrastText"
                   : isCurrentMonth
-                  ? "text.primary"
-                  : "text.disabled",
+                    ? "text.primary"
+                    : "text.disabled",
                 cursor: "pointer",
                 "&:hover": {
                   bgcolor: isToday ? "primary.dark" : "action.hover",
@@ -252,6 +268,7 @@ export default function CalendarMonthPage() {
         onClose={() => setModalOpen(false)}
         onDelete={handleEventDelete}
         onEdit={handleEventEdit}
+        onSave={handleEventSave}
       />
     </Box>
   );

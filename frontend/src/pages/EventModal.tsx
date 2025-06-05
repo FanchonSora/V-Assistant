@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -10,7 +10,6 @@ import {
   Stack,
   Divider,
   TextField,
-  MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,12 +17,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import EventIcon from "@mui/icons-material/Event";
 import SaveIcon from "@mui/icons-material/Save";
 
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
+import formatDateLocal from "../utils/formatDataLocal";
+
 interface Event {
   id: string;
   title: string;
-  task_date: string;
-  task_time: string;
-  day: string;
+  task_date: string; // YYYY-MM-DD
+  task_time: string; // HH:mm
+  day: string;       // bạn có thể bỏ hoặc giữ nếu cần
 }
 
 interface EventModalProps {
@@ -32,6 +36,7 @@ interface EventModalProps {
   onClose: () => void;
   onDelete: (eventId: string) => void;
   onEdit: (event: Event) => void;
+  onSave: (event: Event) => Promise<void>;
 }
 
 const EventModal: React.FC<EventModalProps> = ({
@@ -40,11 +45,12 @@ const EventModal: React.FC<EventModalProps> = ({
   onClose,
   onDelete,
   onEdit,
+  onSave,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedEvent, setEditedEvent] = useState<Event | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
-  // Initialize editedEvent when event changes
   React.useEffect(() => {
     if (event) {
       setEditedEvent(event);
@@ -55,16 +61,24 @@ const EventModal: React.FC<EventModalProps> = ({
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editedEvent) {
-      onEdit(editedEvent);
-      setIsEditing(false);
+      try {
+        await onSave(editedEvent);
+        onEdit(editedEvent);
+        setIsEditing(false);
+        setShowCalendar(false);
+      } catch (error) {
+        alert("Failed to save changes. Please try again.");
+        console.error(error);
+      }
     }
   };
 
   const handleCancel = () => {
     setEditedEvent(event);
     setIsEditing(false);
+    setShowCalendar(false);
   };
 
   const handleDelete = () => {
@@ -125,10 +139,21 @@ const EventModal: React.FC<EventModalProps> = ({
               }
               variant="standard"
               sx={{
+                "& .MuiInputBase-root": {
+                  padding: "12px 8px",
+                  display: "block",
+                  width: "100%",
+                  minHeight: "48px",
+                },
                 "& .MuiInputBase-input": {
                   color: "white",
                   fontSize: "1.5rem",
                   fontWeight: "bold",
+                  padding: 0,
+                  lineHeight: 1.4,
+                  width: "100%",
+                  boxSizing: "border-box",
+                  cursor: "text",
                 },
                 "& .MuiInput-underline:before": {
                   borderBottomColor: "rgba(255, 255, 255, 0.7)",
@@ -150,37 +175,47 @@ const EventModal: React.FC<EventModalProps> = ({
           <Stack spacing={2}>
             {isEditing ? (
               <>
+                {/* Time input */}
                 <TextField
                   label="Time"
                   type="time"
                   value={editedEvent?.task_time || ""}
                   onChange={(e) =>
                     setEditedEvent((prev) =>
-                      prev ? { ...prev, time: e.target.value } : null
+                      prev ? { ...prev, task_time: e.target.value } : null
                     )
                   }
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
                 />
+
+                {/* Date input with calendar popup */}
                 <TextField
-                  select
-                  label="Day"
-                  value={editedEvent?.day || ""}
-                  onChange={(e) =>
-                    setEditedEvent((prev) =>
-                      prev ? { ...prev, day: e.target.value } : null
-                    )
-                  }
+                  label="Date"
+                  value={editedEvent?.task_date || ""}
+                  onClick={() => setShowCalendar((show) => !show)}
                   fullWidth
-                >
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                    (day) => (
-                      <MenuItem key={day} value={day}>
-                        {day}
-                      </MenuItem>
-                    )
-                  )}
-                </TextField>
+                  InputProps={{ readOnly: true }}
+                />
+                {showCalendar && (
+                  <Box sx={{ mt: 1 }}>
+                    <Calendar
+                      onChange={(value) => {
+                        if (value instanceof Date) {
+                          const formattedDate = formatDateLocal(value);
+                          setEditedEvent((prev) =>
+                            prev ? { ...prev, task_date: formattedDate } : null
+                          );
+                          setShowCalendar(false);
+                        }
+                      }}
+                      value={
+                        editedEvent?.task_date
+                          ? new Date(editedEvent.task_date)
+                          : new Date()
+                      }
+                    />
+                  </Box>
+                )}
               </>
             ) : (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
