@@ -11,12 +11,9 @@ import { updateTask } from "../services/taskService";
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-// Function to format hour in 12-hour format
+// Function to format hour in 24-hour format
 const formatHour = (hour: number): string => {
-  if (hour === 0) return "12 AM";
-  if (hour === 12) return "Noon";
-  if (hour > 12) return `${hour - 12} PM`;
-  return `${hour} AM`;
+  return `${hour.toString().padStart(2, "0")}:00`;
 };
 
 interface CalendarEvent {
@@ -106,20 +103,20 @@ export default function CalendarDayPage() {
     );
   }, []);
 
-    const handleEventSave = async (editedEvent: CalendarEvent) => {
-      try {
-        const token = localStorage.getItem("token") ?? "";
-        await updateTask(token, editedEvent.id, {
-          title: editedEvent.title,
-          task_date: editedEvent.task_date,
-          task_time: editedEvent.task_time,
-        });
-      } catch (error: any) {
-        console.error("Failed to update task:", error);
-        alert(`Error updating task: ${error.message}`);
-        throw error;
-      }
-    };
+  const handleEventSave = async (editedEvent: CalendarEvent) => {
+    try {
+      const token = localStorage.getItem("token") ?? "";
+      await updateTask(token, editedEvent.id, {
+        title: editedEvent.title,
+        task_date: editedEvent.task_date,
+        task_time: editedEvent.task_time,
+      });
+    } catch (error: any) {
+      console.error("Failed to update task:", error);
+      alert(`Error updating task: ${error.message}`);
+      throw error;
+    }
+  };
 
   const handleEventDelete = async (eventId: string) => {
     try {
@@ -132,7 +129,6 @@ export default function CalendarDayPage() {
       alert(`Error deleting task: ${error.message}`);
     }
   };
-  
 
   return (
     <Box sx={{ p: 2, position: "relative" }}>
@@ -156,8 +152,9 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
-                  }`,
+                borderBottom: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
                 px: 1,
                 fontSize: 12,
                 color: isDarkMode ? "#fff" : "text.secondary",
@@ -180,10 +177,12 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
-                  }`,
-                borderLeft: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
-                  }`,
+                borderBottom: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
+                borderLeft: `1px solid ${
+                  isDarkMode ? "#fff" : theme.palette.divider
+                }`,
               }}
             />
           ))}

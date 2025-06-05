@@ -10,6 +10,7 @@ import {
   Stack,
   Divider,
   TextField,
+  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -27,7 +28,7 @@ interface Event {
   title: string;
   task_date: string; // YYYY-MM-DD
   task_time: string; // HH:mm
-  day: string;       // bạn có thể bỏ hoặc giữ nếu cần
+  day: string; // bạn có thể bỏ hoặc giữ nếu cần
 }
 
 interface EventModalProps {
@@ -47,6 +48,7 @@ const EventModal: React.FC<EventModalProps> = ({
   onEdit,
   onSave,
 }) => {
+  const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [editedEvent, setEditedEvent] = useState<Event | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -68,6 +70,8 @@ const EventModal: React.FC<EventModalProps> = ({
         onEdit(editedEvent);
         setIsEditing(false);
         setShowCalendar(false);
+        // Refresh the page after successful save
+        window.location.reload();
       } catch (error) {
         alert("Failed to save changes. Please try again.");
         console.error(error);
@@ -198,22 +202,88 @@ const EventModal: React.FC<EventModalProps> = ({
                 />
                 {showCalendar && (
                   <Box sx={{ mt: 1 }}>
-                    <Calendar
-                      onChange={(value) => {
-                        if (value instanceof Date) {
-                          const formattedDate = formatDateLocal(value);
-                          setEditedEvent((prev) =>
-                            prev ? { ...prev, task_date: formattedDate } : null
-                          );
-                          setShowCalendar(false);
-                        }
+                    <Box
+                      sx={{
+                        "& .react-calendar": {
+                          backgroundColor: theme.palette.background.paper,
+                          color: theme.palette.text.primary,
+                          borderRadius: 2,
+                          border: `1px solid ${theme.palette.divider}`,
+                          boxShadow: theme.palette.mode === "dark" ? 3 : 1,
+                        },
+                        "& .react-calendar__navigation button": {
+                          color: theme.palette.text.primary,
+                          background: "none",
+                          borderRadius: 1,
+                          "&:hover": {
+                            backgroundColor: theme.palette.action.hover,
+                          },
+                        },
+                        "& .react-calendar__month-view__weekdays": {
+                          color: theme.palette.text.secondary,
+                          fontWeight: 600,
+                        },
+                        "& .react-calendar__tile": {
+                          color: theme.palette.text.primary,
+                          borderRadius: 1,
+                          "&:enabled:hover": {
+                            backgroundColor: theme.palette.action.hover,
+                          },
+                        },
+                        "& .react-calendar__tile--now": {
+                          backgroundColor: "#FF9800",
+                          color: "#fff",
+                          fontWeight: 700,
+                          position: "relative",
+                          "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: 2,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: "4px",
+                            height: "4px",
+                            borderRadius: "50%",
+                            backgroundColor: "#fff",
+                          },
+                          "&:enabled:hover": {
+                            backgroundColor: "#F57C00",
+                            color: "#fff",
+                          },
+                        },
+                        "& .react-calendar__tile--active": {
+                          backgroundColor: theme.palette.primary.main,
+                          color: theme.palette.primary.contrastText,
+                          fontWeight: 700,
+                          "&:enabled:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
+                        },
+                        "& .react-calendar__month-view__days__day--neighboringMonth":
+                          {
+                            color: theme.palette.text.disabled,
+                          },
                       }}
-                      value={
-                        editedEvent?.task_date
-                          ? new Date(editedEvent.task_date)
-                          : new Date()
-                      }
-                    />
+                    >
+                      <Calendar
+                        onChange={(value) => {
+                          if (value instanceof Date) {
+                            const formattedDate = formatDateLocal(value);
+                            setEditedEvent((prev) =>
+                              prev
+                                ? { ...prev, task_date: formattedDate }
+                                : null
+                            );
+                            setShowCalendar(false);
+                          }
+                        }}
+                        value={
+                          editedEvent?.task_date
+                            ? new Date(editedEvent.task_date)
+                            : new Date()
+                        }
+                      />
+                    </Box>
                   </Box>
                 )}
               </>

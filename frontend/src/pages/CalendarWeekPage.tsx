@@ -13,12 +13,9 @@ import { updateTask } from "../services/taskService";
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-// Function to format hour in 12-hour format
+// Function to format hour in 24-hour format
 const formatHour = (hour: number): string => {
-  if (hour === 0) return "12 AM";
-  if (hour === 12) return "Noon";
-  if (hour > 12) return `${hour - 12} PM`;
-  return `${hour} AM`;
+  return `${hour.toString().padStart(2, "0")}:00`;
 };
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
@@ -119,7 +116,6 @@ export default function CalendarWeekView() {
       throw error;
     }
   };
-
 
   const handleEventDelete = async (eventId: string) => {
     try {

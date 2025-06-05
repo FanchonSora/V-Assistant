@@ -126,8 +126,9 @@ const Chat = () => {
     } catch (err) {
       setTimeout(() => {
         const botMsg: ChatMessage = {
-          text: `⚠️ Server Error: ${err instanceof Error ? err.message : "Unknown error"
-            }`,
+          text: `⚠️ Server Error: ${
+            err instanceof Error ? err.message : "Unknown error"
+          }`,
           isUser: false,
           timestamp: new Date(),
         };
@@ -255,7 +256,7 @@ const Chat = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        bgcolor: "#fafafa",
         position: "relative",
       }}
     >
