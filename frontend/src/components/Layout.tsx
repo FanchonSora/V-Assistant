@@ -34,6 +34,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChatIcon from "@mui/icons-material/Chat";
 import { useNavigate, useLocation } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -50,6 +51,7 @@ const collapsedDrawerWidth = 80;
 
 const menuItems = [
   { text: "Dashboard", icon: <HomeIcon />, path: "/", badge: null },
+  { text: "Chat", icon: <ChatIcon />, path: "/chat", badge: null },
   { text: "Profile", icon: <PersonIcon />, path: "/profile", badge: null },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings", badge: null },
 ];
@@ -217,8 +219,19 @@ const Layout = ({ children }: LayoutProps) => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ fontWeight: 700, color: "primary.main" }}
-          ></Typography>
+            sx={{
+              fontWeight: 700,
+              color: "primary.main",
+              fontSize: "1.5rem",
+              letterSpacing: "0.5px",
+              background: "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            V-Assistant
+          </Typography>
         )}
         {!isMobile && (
           <IconButton onClick={handleDrawerCollapse} size="small">
@@ -381,9 +394,10 @@ const Layout = ({ children }: LayoutProps) => {
           color: "text.primary",
           borderBottom: 1,
           borderColor: "divider",
+          height: "72px",
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ height: "100%", minHeight: "72px !important" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"

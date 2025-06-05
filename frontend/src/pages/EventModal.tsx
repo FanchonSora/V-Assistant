@@ -11,6 +11,10 @@ import {
   Divider,
   TextField,
   useTheme,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,6 +33,7 @@ interface Event {
   task_date: string; // YYYY-MM-DD
   task_time: string; // HH:mm
   day: string; // bạn có thể bỏ hoặc giữ nếu cần
+  status: "pending" | "done"; // Add status field
 }
 
 interface EventModalProps {
@@ -55,7 +60,10 @@ const EventModal: React.FC<EventModalProps> = ({
 
   React.useEffect(() => {
     if (event) {
-      setEditedEvent(event);
+      setEditedEvent({
+        ...event,
+        status: event.status || "pending",
+      });
     }
   }, [event]);
 
@@ -192,6 +200,28 @@ const EventModal: React.FC<EventModalProps> = ({
                   fullWidth
                 />
 
+                {/* Status input */}
+                <FormControl fullWidth>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={editedEvent?.status || "pending"}
+                    label="Status"
+                    onChange={(e) =>
+                      setEditedEvent((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              status: e.target.value as "pending" | "done",
+                            }
+                          : null
+                      )
+                    }
+                  >
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="done">Done</MenuItem>
+                  </Select>
+                </FormControl>
+
                 {/* Date input with calendar popup */}
                 <TextField
                   label="Date"
@@ -288,12 +318,31 @@ const EventModal: React.FC<EventModalProps> = ({
                 )}
               </>
             ) : (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <EventIcon color="primary" />
-                <Typography variant="body1" color="text.secondary">
-                  {event.task_date} at {event.task_time}
-                </Typography>
-              </Box>
+              <>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <EventIcon color="primary" />
+                  <Typography variant="body1" color="text.secondary">
+                    {event.task_date} at {event.task_time}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography variant="body1" color="text.secondary">
+                    Status:{" "}
+                    <Typography
+                      component="span"
+                      color={
+                        (event.status || "pending") === "done"
+                          ? "success.main"
+                          : "warning.main"
+                      }
+                      fontWeight="bold"
+                    >
+                      {(event.status || "pending").charAt(0).toUpperCase() +
+                        (event.status || "pending").slice(1)}
+                    </Typography>
+                  </Typography>
+                </Box>
+              </>
             )}
           </Stack>
         </Box>

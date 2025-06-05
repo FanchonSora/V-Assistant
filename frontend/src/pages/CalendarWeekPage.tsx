@@ -26,6 +26,7 @@ interface CalendarEvent {
   task_date: string;
   task_time: string;
   day: string;
+  status: "pending" | "done";
 }
 
 export default function CalendarWeekView() {
@@ -49,6 +50,7 @@ export default function CalendarWeekView() {
           task_date: item.task_date,
           task_time: item.task_time,
           day: item.day,
+          status: item.status || "pending",
         }));
         setEvents(cleanedData);
       })
@@ -109,10 +111,15 @@ export default function CalendarWeekView() {
         title: editedEvent.title,
         task_date: editedEvent.task_date,
         task_time: editedEvent.task_time,
+        status: editedEvent.status,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to update task:", error);
-      alert(`Error updating task: ${error.message}`);
+      alert(
+        `Error updating task: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
       throw error;
     }
   };
@@ -203,27 +210,43 @@ export default function CalendarWeekView() {
               >
                 {eventsByDay[day]
                   .filter((e) => parseInt(e.task_time.split(":")[0]) === hour)
-                  .map((e) => (
-                    <Paper
-                      key={e.id}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 4,
-                        right: 4,
-                        height: 60,
-                        bgcolor: "#1976d2",
-                        color: "#fff",
-                        p: 1,
-                        fontSize: 12,
-                        overflow: "hidden",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleEventClick(e)}
-                    >
-                      {e.title}
-                    </Paper>
-                  ))}
+                  .map((event, index) => {
+                    // Find overlapping events
+                    const overlappingEvents = eventsByDay[day]
+                      .filter(
+                        (e) => parseInt(e.task_time.split(":")[0]) === hour
+                      )
+                      .filter((otherEvent) => otherEvent.id !== event.id);
+
+                    // Calculate width and left position based on overlapping events
+                    const totalOverlapping = overlappingEvents.length + 1;
+                    const width = `${100 / totalOverlapping}%`;
+                    const left = `${
+                      (index % totalOverlapping) * (100 / totalOverlapping)
+                    }%`;
+
+                    return (
+                      <Paper
+                        key={event.id}
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left,
+                          width,
+                          height: 60,
+                          bgcolor: "#1976d2",
+                          color: "#fff",
+                          p: 1,
+                          fontSize: 12,
+                          overflow: "hidden",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleEventClick(event)}
+                      >
+                        {event.title}
+                      </Paper>
+                    );
+                  })}
               </Box>
             ))}
           </Box>

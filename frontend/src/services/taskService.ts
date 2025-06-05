@@ -15,22 +15,25 @@ export async function deleteTask(token: string, taskId: string): Promise<void> {
     }
   } catch (error: any) {
     const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Failed to delete task";
+      error.response?.data?.detail || error.message || "Failed to delete task";
     throw new Error(message);
   }
 }
 
-export async function updateTask(token: string, taskId: string, data: Partial<{ title: string; task_date: string; task_time: string }>) {
-  const response = await axios.patch(
-    `${API_BASE}/tasks/${taskId}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+export async function updateTask(
+  token: string,
+  taskId: string,
+  data: Partial<{
+    title: string;
+    task_date: string;
+    task_time: string;
+    status: "pending" | "done";
+  }>
+) {
+  const response = await axios.patch(`${API_BASE}/tasks/${taskId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }

@@ -42,6 +42,7 @@ interface Event {
   task_date: string;
   task_time: string;
   day: string;
+  status: "pending" | "done";
 }
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
@@ -93,6 +94,7 @@ export default function CalendarMonthPage() {
           task_date: item.task_date,
           task_time: item.task_time,
           day: item.day,
+          status: item.status || "pending",
         }));
         setEvents(cleanedData);
       })
@@ -128,10 +130,15 @@ export default function CalendarMonthPage() {
         title: editedEvent.title,
         task_date: editedEvent.task_date,
         task_time: editedEvent.task_time,
+        status: editedEvent.status,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to update task:", error);
-      alert(`Error updating task: ${error.message}`);
+      alert(
+        `Error updating task: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
       throw error;
     }
   };

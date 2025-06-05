@@ -22,6 +22,7 @@ interface CalendarEvent {
   task_date: string;
   task_time: string;
   day: string;
+  status: "pending" | "done";
 }
 
 // Hàm lấy tên ngày dạng 3 ký tự (Sun, Mon...)
@@ -46,12 +47,9 @@ export default function CalendarDayPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const dateStr = inputDate.toISOString().slice(0, 10);
         const token = localStorage.getItem("token");
-
-        const tasks = await getTasks(token ?? undefined, dateStr);
-
-        const formattedTasks: CalendarEvent[] = tasks.map((task: any) => {
+        const data = await getTasks(token ?? undefined, date);
+        const cleanedData: CalendarEvent[] = data.map((task: any) => {
           const dateObj = new Date(task.task_date);
           return {
             id: task.id,
@@ -59,17 +57,17 @@ export default function CalendarDayPage() {
             task_date: task.task_date,
             task_time: task.task_time,
             day: days[dateObj.getDay()],
+            status: task.status || "pending",
           };
         });
-
-        setEvents(formattedTasks);
+        setEvents(cleanedData);
       } catch (error) {
-        console.error("Failed to fetch events:", error);
+        console.error("Error fetching tasks:", error);
       }
     };
 
     fetchEvents();
-  }, [inputDate]);
+  }, [date]);
 
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
@@ -110,10 +108,15 @@ export default function CalendarDayPage() {
         title: editedEvent.title,
         task_date: editedEvent.task_date,
         task_time: editedEvent.task_time,
+        status: editedEvent.status,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to update task:", error);
-      alert(`Error updating task: ${error.message}`);
+      alert(
+        `Error updating task: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
       throw error;
     }
   };
@@ -124,9 +127,13 @@ export default function CalendarDayPage() {
       await deleteTask(token, eventId);
       setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
       setModalOpen(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to delete task:", error);
-      alert(`Error deleting task: ${error.message}`);
+      alert(
+        `Error deleting task: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   };
 
@@ -188,13 +195,32 @@ export default function CalendarDayPage() {
           ))}
 
           {/* Render event */}
-          {eventsInDay.map((event) => {
+          {eventsInDay.map((event, index) => {
             const [hourStr, minuteStr] = event.task_time.split(":");
             const eventStartHour = parseInt(hourStr, 10);
             const eventStartMinute = parseInt(minuteStr, 10);
             const top =
               (eventStartHour - hours[0]) * 60 + (eventStartMinute / 60) * 60;
             const height = 60; // Fixed height for events
+
+            // Find overlapping events
+            const overlappingEvents = eventsInDay.filter((otherEvent) => {
+              if (otherEvent.id === event.id) return false;
+              const [otherHourStr, otherMinuteStr] =
+                otherEvent.task_time.split(":");
+              const otherStartHour = parseInt(otherHourStr, 10);
+              const otherStartMinute = parseInt(otherMinuteStr, 10);
+              const otherTop =
+                (otherStartHour - hours[0]) * 60 + (otherStartMinute / 60) * 60;
+              return Math.abs(otherTop - top) < height;
+            });
+
+            // Calculate width and left position based on overlapping events
+            const totalOverlapping = overlappingEvents.length + 1;
+            const width = `${100 / totalOverlapping}%`;
+            const left = `${
+              (index % totalOverlapping) * (100 / totalOverlapping)
+            }%`;
 
             // Nếu sự kiện ngoài khung giờ thì bỏ qua hiển thị
             if (
@@ -211,8 +237,8 @@ export default function CalendarDayPage() {
                 sx={{
                   position: "absolute",
                   top,
-                  left: 4,
-                  right: 4,
+                  left,
+                  width,
                   height,
                   bgcolor: isDarkMode ? "#90caf9" : "primary.main",
                   color: isDarkMode ? "#000" : "primary.contrastText",
