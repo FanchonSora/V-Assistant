@@ -80,6 +80,8 @@ class TaskService:
                      session: AsyncSession
                      ) -> None:
         task = await session.get(Task, task_id)
+        print(f"Deleting task {task_id} for user {user.id}")
+        print(f"Found task: {task.id} owned by {task.owner_id}")
         if not task or task.owner_id != user.id:
             raise HTTPException(status_code=404, detail="Task not found")
         await session.delete(task)

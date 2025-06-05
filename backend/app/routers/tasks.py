@@ -33,6 +33,10 @@ async def update_task(task_id: str, data: TaskUpdate):
     return await TaskService.update(task_id, data)
 
 @router.delete('/{task_id}', status_code=204)
-async def delete_task(task_id: str):
-    await TaskService.delete(task_id)
+async def delete_task(
+    task_id: str,
+    current_user = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session)
+):
+    await TaskService.delete(task_id, current_user, session)
     return {'detail': 'Deleted'}

@@ -5,6 +5,8 @@ import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
 import { getTasks } from "../utils/api";
 
+import { deleteTask } from "../services/taskService";
+
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -103,9 +105,18 @@ export default function CalendarDayPage() {
     );
   }, []);
 
-  const handleEventDelete = useCallback((eventId: string) => {
-    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
-  }, []);
+  const handleEventDelete = async (eventId: string) => {
+    try {
+      const token = localStorage.getItem("token") ?? "";
+      await deleteTask(token, eventId);
+      setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+      setModalOpen(false);
+    } catch (error: any) {
+      console.error("Failed to delete task:", error);
+      alert(`Error deleting task: ${error.message}`);
+    }
+  };
+  
 
   return (
     <Box sx={{ p: 2, position: "relative" }}>
@@ -129,9 +140,8 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: `1px solid ${
-                  isDarkMode ? "#fff" : theme.palette.divider
-                }`,
+                borderBottom: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
+                  }`,
                 px: 1,
                 fontSize: 12,
                 color: isDarkMode ? "#fff" : "text.secondary",
@@ -154,12 +164,10 @@ export default function CalendarDayPage() {
               key={hour}
               sx={{
                 height: 60,
-                borderBottom: `1px solid ${
-                  isDarkMode ? "#fff" : theme.palette.divider
-                }`,
-                borderLeft: `1px solid ${
-                  isDarkMode ? "#fff" : theme.palette.divider
-                }`,
+                borderBottom: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
+                  }`,
+                borderLeft: `1px solid ${isDarkMode ? "#fff" : theme.palette.divider
+                  }`,
               }}
             />
           ))}

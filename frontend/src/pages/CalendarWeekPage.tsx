@@ -7,6 +7,8 @@ import EventModal from "./EventModal";
 
 import { getTasks } from "../utils/api";
 
+import { deleteTask } from "../services/taskService";
+
 const hours = Array.from({ length: 24 }, (_, i) => i); // 0h - 23h
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -102,9 +104,17 @@ export default function CalendarWeekView() {
     );
   }, []);
 
-  const handleEventDelete = useCallback((eventId: string) => {
-    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
-  }, []);
+  const handleEventDelete = async (eventId: string) => {
+    try {
+      const token = localStorage.getItem("token") ?? "";
+      await deleteTask(token, eventId);
+      setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+      setModalOpen(false);
+    } catch (error: any) {
+      console.error("Failed to delete task:", error);
+      alert(`Error deleting task: ${error.message}`);
+    }
+  };
 
   const handleDayClick = useCallback(
     (day: Date) => {

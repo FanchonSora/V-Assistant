@@ -12,7 +12,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { GridProps } from "@mui/material";
 import CalendarViewSelector from "../components/CalendarViewSelector";
 import EventModal from "./EventModal";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+
+import { deleteTask } from "../services/taskService";
 
 import { getTasksByRange } from "../utils/api";
 
@@ -119,9 +120,17 @@ export default function CalendarMonthPage() {
     );
   }, []);
 
-  const handleEventDelete = useCallback((eventId: string) => {
-    setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
-  }, []);
+  const handleEventDelete = async (eventId: string) => {
+    try {
+      const token = localStorage.getItem("token") ?? "";
+      await deleteTask(token, eventId);
+      setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+      setModalOpen(false);
+    } catch (error: any) {
+      console.error("Failed to delete task:", error);
+      alert(`Error deleting task: ${error.message}`);
+    }
+  };
 
   return (
     <Box sx={{ p: 2 }}>
