@@ -79,6 +79,7 @@ const Chat = () => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const token = localStorage.getItem("token");
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const mode = theme.palette.mode;
 
   // Add useEffect to handle auto-scrolling
   useEffect(() => {
@@ -126,8 +127,9 @@ const Chat = () => {
     } catch (err) {
       setTimeout(() => {
         const botMsg: ChatMessage = {
-          text: `⚠️ Server Error: ${err instanceof Error ? err.message : "Unknown error"
-            }`,
+          text: `⚠️ Server Error: ${
+            err instanceof Error ? err.message : "Unknown error"
+          }`,
           isUser: false,
           timestamp: new Date(),
         };
@@ -255,7 +257,7 @@ const Chat = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        bgcolor: mode === "dark" ? "#212121" : "#fafafa",
         position: "relative",
       }}
     >
@@ -267,9 +269,13 @@ const Chat = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: 0.05,
+          opacity: mode === "dark" ? 0.05 : 0.1,
           backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(102, 126, 234, 0.8) 1px, transparent 0)
+            radial-gradient(circle at 1px 1px, ${
+              mode === "dark"
+                ? "rgba(255, 255, 255, 0.8)"
+                : "rgba(102, 126, 234, 0.8)"
+            } 1px, transparent 0)
           `,
           backgroundSize: "20px 20px",
         }}
@@ -298,7 +304,9 @@ const Chat = () => {
                   sx={{
                     fontWeight: 700,
                     background:
-                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      mode === "dark"
+                        ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                        : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -318,9 +326,16 @@ const Chat = () => {
               mx: { xs: 1, sm: 2 },
               borderRadius: 4,
               overflow: "hidden",
-              bgcolor: alpha("#ffffff", 0.9),
+              bgcolor:
+                mode === "dark"
+                  ? "rgba(33, 33, 33, 0.9)"
+                  : "rgba(255, 255, 255, 0.9)",
               backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
+              border: `1px solid ${
+                mode === "dark"
+                  ? "rgba(255, 255, 255, 0.1)"
+                  : "rgba(255, 255, 255, 0.2)"
+              }`,
               display: "flex",
               flexDirection: "column",
             }}
@@ -340,14 +355,23 @@ const Chat = () => {
                   width: "6px",
                 },
                 "&::-webkit-scrollbar-track": {
-                  bgcolor: alpha(theme.palette.grey[300], 0.3),
+                  bgcolor:
+                    mode === "dark"
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
                   borderRadius: "10px",
                 },
                 "&::-webkit-scrollbar-thumb": {
-                  bgcolor: alpha(theme.palette.primary.main, 0.5),
+                  bgcolor:
+                    mode === "dark"
+                      ? "rgba(255, 255, 255, 0.2)"
+                      : "rgba(0, 0, 0, 0.2)",
                   borderRadius: "10px",
                   "&:hover": {
-                    bgcolor: alpha(theme.palette.primary.main, 0.7),
+                    bgcolor:
+                      mode === "dark"
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "rgba(0, 0, 0, 0.3)",
                   },
                 },
               }}
@@ -392,7 +416,8 @@ const Chat = () => {
                     {!msg.isUser && (
                       <Avatar
                         sx={{
-                          bgcolor: "primary.main",
+                          bgcolor:
+                            mode === "dark" ? "primary.dark" : "primary.main",
                           background:
                             "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                           boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
@@ -409,17 +434,29 @@ const Chat = () => {
                         width: "fit-content",
                         maxWidth: "100%",
                         bgcolor: msg.isUser
-                          ? "primary.main"
-                          : alpha(theme.palette.grey[100], 0.8),
+                          ? mode === "dark"
+                            ? "primary.dark"
+                            : "primary.main"
+                          : mode === "dark"
+                          ? "rgba(255, 255, 255, 0.05)"
+                          : "rgba(0, 0, 0, 0.05)",
                         background: msg.isUser
                           ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                          : alpha(theme.palette.grey[100], 0.8),
-                        color: "black", // Force text color to black
+                          : "none",
+                        color: msg.isUser
+                          ? "white"
+                          : mode === "dark"
+                          ? "white"
+                          : "black",
                         borderRadius: msg.isUser
                           ? "18px 18px 4px 18px"
                           : "18px 18px 18px 4px",
                         backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        border: `1px solid ${
+                          mode === "dark"
+                            ? "rgba(255, 255, 255, 0.1)"
+                            : "rgba(255, 255, 255, 0.2)"
+                        }`,
                         boxShadow: msg.isUser
                           ? "0 8px 32px rgba(102, 126, 234, 0.4)"
                           : "0 4px 20px rgba(0, 0, 0, 0.1)",
@@ -444,31 +481,41 @@ const Chat = () => {
                           style={{
                             whiteSpace: "pre-line",
                             lineHeight: 1.5,
-                            color: "black",
+                            color: msg.isUser
+                              ? "white"
+                              : mode === "dark"
+                              ? "white"
+                              : "black",
                           }}
                         />
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: "block",
+                            mt: 1,
+                            opacity: 0.7,
+                            fontSize: "0.75rem",
+                            color: msg.isUser
+                              ? "white"
+                              : mode === "dark"
+                              ? "white"
+                              : "black",
+                          }}
+                        >
+                          {msg.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </Typography>
                       </Box>
-
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          display: "block",
-                          mt: 1,
-                          opacity: 0.7,
-                          fontSize: "0.75rem",
-                          color: "black",
-                        }}
-                      >
-                        {msg.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </Typography>
                     </Paper>
                     {msg.isUser && (
                       <Avatar
                         sx={{
-                          bgcolor: alpha(theme.palette.grey[500], 0.8),
+                          bgcolor:
+                            mode === "dark"
+                              ? "rgba(255, 255, 255, 0.1)"
+                              : "rgba(0, 0, 0, 0.1)",
                           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
                         }}
                       >
@@ -486,9 +533,15 @@ const Chat = () => {
             <Box
               sx={{
                 p: 3,
-                bgcolor: alpha("#ffffff", 0.95),
+                bgcolor:
+                  mode === "dark"
+                    ? "rgba(33, 33, 33, 0.95)"
+                    : "rgba(255, 255, 255, 0.95)",
                 borderTop: "1px solid",
-                borderColor: alpha(theme.palette.grey[300], 0.3),
+                borderColor:
+                  mode === "dark"
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
                 backdropFilter: "blur(10px)",
               }}
             >
@@ -513,9 +566,16 @@ const Chat = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "24px",
-                      bgcolor: alpha("#ffffff", 0.9),
+                      bgcolor:
+                        mode === "dark"
+                          ? "rgba(255, 255, 255, 0.05)"
+                          : "rgba(255, 255, 255, 0.9)",
                       backdropFilter: "blur(10px)",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      border: `1px solid ${
+                        mode === "dark"
+                          ? "rgba(255, 255, 255, 0.1)"
+                          : "rgba(255, 255, 255, 0.3)"
+                      }`,
                       "&:hover": {
                         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
                       },
@@ -523,7 +583,7 @@ const Chat = () => {
                         boxShadow: "0 8px 32px rgba(102, 126, 234, 0.2)",
                       },
                       "& .MuiInputBase-input": {
-                        color: "black", // Force input text color to black
+                        color: mode === "dark" ? "white" : "black",
                       },
                     },
                   }}
@@ -533,19 +593,29 @@ const Chat = () => {
                   sx={{
                     bgcolor: isListening
                       ? "error.main"
-                      : alpha(theme.palette.primary.main, 0.1),
-                    color: isListening ? "white" : "primary.main",
+                      : mode === "dark"
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.05)",
+                    color: isListening
+                      ? "white"
+                      : mode === "dark"
+                      ? "white"
+                      : "primary.main",
                     width: 48,
                     height: 48,
                     border: "1px solid",
                     borderColor: isListening
                       ? "error.main"
-                      : alpha(theme.palette.primary.main, 0.3),
+                      : mode === "dark"
+                      ? "rgba(255, 255, 255, 0.2)"
+                      : "rgba(0, 0, 0, 0.1)",
                     animation: isListening ? "pulse 1s infinite" : "none",
                     "&:hover": {
                       bgcolor: isListening
                         ? "error.dark"
-                        : alpha(theme.palette.primary.main, 0.2),
+                        : mode === "dark"
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "rgba(0, 0, 0, 0.1)",
                       transform: "scale(1.05)",
                     },
                     transition: "all 0.3s ease",
@@ -567,6 +637,8 @@ const Chat = () => {
                     background:
                       "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     boxShadow: "0 4px 20px rgba(102, 126, 234, 0.4)",
+                    transform: "translateY(0)",
+                    transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-2px)",
                       boxShadow: "0 8px 32px rgba(102, 126, 234, 0.5)",
@@ -575,7 +647,6 @@ const Chat = () => {
                       opacity: 0.6,
                       transform: "none",
                     },
-                    transition: "all 0.3s ease",
                   }}
                 >
                   Send

@@ -11,8 +11,8 @@ class DSLService:
             print("Parser error:", e)
             return {"error": "cannot_parse"}
 
-        # Chỉ require có "action"
+        # error input
         if not isinstance(result, dict) or "action" not in result:
-            return {"error": "Chỉ require có action"}
+            return {"error": "Error input! Please check your input again."}
 
         return result

@@ -31,11 +31,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChatIcon from "@mui/icons-material/Chat";
 import { useNavigate, useLocation } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -47,11 +46,12 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const drawerWidth = 280;
-const collapsedDrawerWidth = 70;
+const drawerWidth = 320;
+const collapsedDrawerWidth = 80;
 
 const menuItems = [
   { text: "Dashboard", icon: <HomeIcon />, path: "/", badge: null },
+  { text: "Chat", icon: <ChatIcon />, path: "/chat", badge: null },
   { text: "Profile", icon: <PersonIcon />, path: "/profile", badge: null },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings", badge: null },
 ];
@@ -60,8 +60,6 @@ const Layout = ({ children }: LayoutProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isDrawerCollapsed, setIsDrawerCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notificationAnchor, setNotificationAnchor] =
-    useState<null | HTMLElement>(null);
   const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(
     null
   );
@@ -70,7 +68,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, logout, user } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
 
   const [date, setDate] = useState(new Date());
   const currentDrawerWidth = isMobile
@@ -124,14 +122,6 @@ const Layout = ({ children }: LayoutProps) => {
 
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
-    setNotificationAnchor(event.currentTarget);
-  };
-
-  const handleNotificationClose = () => {
-    setNotificationAnchor(null);
   };
 
   const handleLogout = () => {
@@ -229,8 +219,19 @@ const Layout = ({ children }: LayoutProps) => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ fontWeight: 700, color: "primary.main" }}
-          ></Typography>
+            sx={{
+              fontWeight: 700,
+              color: "primary.main",
+              fontSize: "1.5rem",
+              letterSpacing: "0.5px",
+              background: "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            V-Assistant
+          </Typography>
         )}
         {!isMobile && (
           <IconButton onClick={handleDrawerCollapse} size="small">
@@ -298,6 +299,30 @@ const Layout = ({ children }: LayoutProps) => {
           </Tooltip>
         ))}
 
+        {/* Mini Calendar - only show when not collapsed */}
+        {!isDrawerCollapsed && (
+          <Box sx={{ px: 2, py: 1 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+              Small Calendar
+            </Typography>
+            <Paper elevation={0}>
+              <Box sx={calendarCustomStyles}>
+                <Calendar
+                  onChange={handleDateClick}
+                  value={date}
+                  showNeighboringMonth={false}
+                  tileClassName={({ date, view }) =>
+                    view === "month" &&
+                    date.toDateString() === new Date().toDateString()
+                      ? "highlight"
+                      : null
+                  }
+                />
+              </Box>
+            </Paper>
+          </Box>
+        )}
+
         {/* Calendar Button for Collapsed State */}
         {isDrawerCollapsed && (
           <Tooltip title="Calendar" placement="right" arrow>
@@ -328,30 +353,6 @@ const Layout = ({ children }: LayoutProps) => {
           </Tooltip>
         )}
       </List>
-
-      {/* Mini Calendar - only show when not collapsed */}
-      {!isDrawerCollapsed && (
-        <Box sx={{ px: 2, py: 1, mt: "auto" }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-            Small Calendar
-          </Typography>
-          <Paper elevation={0}>
-            <Box sx={calendarCustomStyles}>
-              <Calendar
-                onChange={handleDateClick}
-                value={date}
-                showNeighboringMonth={false}
-                tileClassName={({ date, view }) =>
-                  view === "month" &&
-                  date.toDateString() === new Date().toDateString()
-                    ? "highlight"
-                    : null
-                }
-              />
-            </Box>
-          </Paper>
-        </Box>
-      )}
 
       {/* User info at bottom - only show when not collapsed */}
       {/* {!isDrawerCollapsed && isLoggedIn && (
@@ -393,9 +394,10 @@ const Layout = ({ children }: LayoutProps) => {
           color: "text.primary",
           borderBottom: 1,
           borderColor: "divider",
+          height: "72px",
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ height: "100%", minHeight: "72px !important" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -422,23 +424,19 @@ const Layout = ({ children }: LayoutProps) => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {isLoggedIn ? (
               <>
-                {/* Notifications */}
-                <IconButton
-                  color="inherit"
-                  onClick={handleNotificationClick}
-                  sx={{ mx: 1 }}
-                >
-                  <Badge badgeContent={5} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-
                 {/* Profile Menu */}
                 <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0.5 }}>
                   <Avatar
-                    sx={{ width: 36, height: 36, bgcolor: "primary.main" }}
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      bgcolor: "primary.main",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    {user?.name?.charAt(0) || "U"}
+                    <PersonIcon />
                   </Avatar>
                 </IconButton>
               </>
@@ -495,33 +493,6 @@ const Layout = ({ children }: LayoutProps) => {
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
           Logout
-        </MenuItem>
-      </Menu>
-
-      {/* Notification Menu */}
-      <Menu
-        anchorEl={notificationAnchor}
-        open={Boolean(notificationAnchor)}
-        onClose={handleNotificationClose}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        PaperProps={{
-          elevation: 3,
-          sx: { mt: 1, minWidth: 300, maxHeight: 400 },
-        }}
-      >
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
-          <Typography variant="h6">Notifications</Typography>
-        </Box>
-        <MenuItem>
-          <Box>
-            <Typography variant="body2">
-              Profile updated successfully
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              1 hour ago
-            </Typography>
-          </Box>
         </MenuItem>
       </Menu>
 
