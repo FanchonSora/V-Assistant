@@ -19,6 +19,16 @@ V-Assistant/
 └── README.md
 ```
 
+## Database Setup
+
+1. Make sure MySQL is running on your system
+
+2. Create the database and tables using the provided SQL script:
+   ```bash
+   mysql -u root -p < backend/db.sql
+   ```
+   Note: Replace `root` with your MySQL username if different. You will be prompted for your MySQL password.
+
 ## Backend Setup
 
 1. Navigate to the backend directory:
